@@ -314,6 +314,33 @@
     ul::-webkit-scrollbar-thumb:hover {
       background: rgba(0, 229, 255, 0.7);
     }
+    
+    /* Notification Styling */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 30, 60, 0.9);
+      color: #e0f7fa;
+      padding: 15px 25px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 229, 255, 0.5);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+      z-index: 1000;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      max-width: 80%;
+      text-align: center;
+      animation: notificationFade 3s forwards;
+    }
+    
+    @keyframes notificationFade {
+      0% { opacity: 0; transform: translate(-50%, 20px); }
+      20% { opacity: 1; transform: translate(-50%, 0); }
+      80% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, 20px); }
+    }
   </style>
 </head>
 <body>
@@ -346,167 +373,246 @@
       <span class="toggle-link" onclick="toggleForms()">⬅ Back to Create Player</span>
     </div>
   </div>
-
-<script>
-  // Digital Rain Effect
-  const rainCanvas = document.getElementById('digitalRain');
-  const rainCtx = rainCanvas.getContext('2d');
   
-  // Set canvas size
-  rainCanvas.width = window.innerWidth;
-  rainCanvas.height = window.innerHeight;
-  
-  // Characters for the digital rain
-  const characters = '01';
-  const fontSize = 14;
-  const columns = rainCanvas.width / fontSize;
-  const drops = [];
-  
-  // Initialize drops
-  for (let i = 0; i < columns; i++) {
-    drops[i] = Math.random() * rainCanvas.height;
-  }
-  
-  // Draw the digital rain
-  function drawRain() {
-    rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
-    rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+  <script>
+    // Digital Rain Effect
+    const rainCanvas = document.getElementById('digitalRain');
+    const rainCtx = rainCanvas.getContext('2d');
     
-    rainCtx.fillStyle = '#00e5ff';
-    rainCtx.font = `${fontSize}px monospace`;
-    
-    for (let i = 0; i < drops.length; i++) {
-      const text = characters.charAt(Math.floor(Math.random() * characters.length));
-      rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
-      
-      if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      
-      drops[i]++;
-    }
-  }
-  
-  // Animation loop for digital rain
-  setInterval(drawRain, 33);
-  
-  // Resize canvas when window is resized
-  window.addEventListener('resize', () => {
+    // Set canvas size
     rainCanvas.width = window.innerWidth;
     rainCanvas.height = window.innerHeight;
-  });
-  
-  // Create floating particles
-  const particlesContainer = document.getElementById('particles');
-  const particleCount = 30;
-  
-  for (let i = 0; i < particleCount; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
     
-    // Random size between 2px and 6px
-    const size = Math.random() * 4 + 2;
-    particle.style.width = `${size}px`;
-    particle.style.height = `${size}px`;
+    // Characters for the digital rain
+    const characters = '01';
+    const fontSize = 14;
+    const columns = rainCanvas.width / fontSize;
+    const drops = [];
     
-    // Random position
-    particle.style.left = `${Math.random() * 100}%`;
-    particle.style.top = `${Math.random() * 100}%`;
-    
-    // Random animation delay
-    particle.style.animationDelay = `${Math.random() * 15}s`;
-    
-    particlesContainer.appendChild(particle);
-  }
-  
-  // Original functionality
-  const form = document.getElementById("playerForm");
-  const loginForm = document.getElementById("loginForm");
-  const playersList = document.getElementById("playersList");
-  const createSection = document.getElementById("createSection");
-  const loginSection = document.getElementById("loginSection");
-  let players = []; // store existing players
-  
-  // ✅ Toggle between Create and Login forms
-  function toggleForms() {
-    createSection.classList.toggle("hidden");
-    loginSection.classList.toggle("hidden");
-  }
-  
-  // ✅ Handle "Add Player"
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const username = formData.get("username").trim();
-    const password = formData.get("password").trim();
-    if (!username || !password) {
-      alert("Please enter a username and password.");
-      return;
+    // Initialize drops
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * rainCanvas.height;
     }
-    // 🔍 Check for duplicate username
-    const existing = players.map(p => p.username.toLowerCase());
-    if (existing.includes(username.toLowerCase())) {
-      alert("This name is Existing");
-      return;
+    
+    // Draw the digital rain
+    function drawRain() {
+      rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+      rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+      
+      rainCtx.fillStyle = '#00e5ff';
+      rainCtx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        
+        drops[i]++;
+      }
     }
-    try {
-      const res = await fetch("https://postgres-test-p05s.onrender.com/create-player", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-      if (!res.ok) throw new Error("Failed to create player");
-      await res.json();
-      localStorage.setItem("loggedInUser", username);
-      window.location.href = "dashboard.html";
-    } catch (err) {
-      console.error("Error creating player:", err);
-      alert("Something went wrong while adding player.");
+    
+    // Animation loop for digital rain
+    setInterval(drawRain, 33);
+    
+    // Resize canvas when window is resized
+    window.addEventListener('resize', () => {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    });
+    
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random size between 2px and 6px
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      
+      particlesContainer.appendChild(particle);
     }
-  });
-  
-  // ✅ Unified login function
-  async function loginPlayer(username, password) {
-    try {
-      const res = await fetch("https://postgres-test-p05s.onrender.com/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-      if (!res.ok) throw new Error("Login failed");
-      const data = await res.json();
-      if (data.success) {
-        localStorage.setItem("loggedInUser", username); // ✅ only if correct login
+    
+    // Original functionality
+    const form = document.getElementById("playerForm");
+    const loginForm = document.getElementById("loginForm");
+    const playersList = document.getElementById("playersList");
+    const createSection = document.getElementById("createSection");
+    const loginSection = document.getElementById("loginSection");
+    let players = []; // store existing players
+    
+    // Function to show notifications
+    function showNotification(message, duration = 3000) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, duration);
+    }
+    
+    // ✅ Toggle between Create and Login forms
+    function toggleForms() {
+      createSection.classList.toggle("hidden");
+      loginSection.classList.toggle("hidden");
+      
+      // Load players when switching to login section
+      if (!loginSection.classList.contains("hidden")) {
+        loadPlayers();
+      }
+    }
+    
+    // ✅ Load existing players
+    async function loadPlayers() {
+      try {
+        const res = await fetch("https://postgres-test-p05s.onrender.com/players");
+        if (!res.ok) throw new Error("Failed to fetch players");
+        players = await res.json();
+        
+        // Clear the list
+        playersList.innerHTML = '';
+        
+        // Add each player to the list
+        players.forEach(player => {
+          const li = document.createElement('li');
+          li.textContent = player.username;
+          playersList.appendChild(li);
+        });
+      } catch (err) {
+        console.error("Error loading players:", err);
+        playersList.innerHTML = '<li>Failed to load players</li>';
+      }
+    }
+    
+    // ✅ Handle "Add Player"
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const username = formData.get("username").trim();
+      const password = formData.get("password").trim();
+      
+      if (!username || !password) {
+        showNotification("Please enter a username and password.");
+        return;
+      }
+      
+      // Check for duplicate username
+      const existing = players.map(p => p.username.toLowerCase());
+      if (existing.includes(username.toLowerCase())) {
+        showNotification("This username already exists.");
+        return;
+      }
+      
+      try {
+        const res = await fetch("https://postgres-test-p05s.onrender.com/create-player", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("Server error:", errorText);
+          throw new Error(`Server returned ${res.status}: ${errorText}`);
+        }
+        
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem("loggedInUser", username);
+          showNotification("Player created successfully!");
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+        } else {
+          showNotification("Failed to create player. Please try again.");
+        }
+      } catch (err) {
+        console.error("Error creating player:", err);
+        showNotification(`Error creating player: ${err.message}`);
+      }
+    });
+    
+    // ✅ Unified login function
+    async function loginPlayer(username, password) {
+      try {
+        const res = await fetch("https://postgres-test-p05s.onrender.com/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        
+        // Handle different response statuses
+        if (res.status === 401) {
+          showNotification("❌ Invalid username or password.");
+          return;
+        }
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("Server error:", errorText);
+          throw new Error(`Server returned ${res.status}: ${errorText}`);
+        }
+        
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem("loggedInUser", username);
+          showNotification("Login successful!");
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+        } else {
+          showNotification("❌ Login failed. Please check your credentials.");
+        }
+      } catch (err) {
+        console.error("Error logging in:", err);
+        showNotification(`Login failed: ${err.message}`);
+      }
+    }
+    
+    // ✅ Handle "Login" form
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(loginForm);
+      const username = formData.get("username").trim();
+      const password = formData.get("password").trim();
+      loginPlayer(username, password);
+    });
+    
+    // Add click event to player list items
+    playersList.addEventListener('click', (e) => {
+      if (e.target.tagName === 'LI') {
+        const username = e.target.textContent.trim();
+        // Prompt for password when clicking on a username
+        const password = prompt(`Enter password for ${username}:`);
+        if (password) {
+          loginPlayer(username, password);
+        }
+      }
+    });
+    
+    // Load players when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if user is already logged in
+      const loggedInUser = localStorage.getItem("loggedInUser");
+      if (loggedInUser) {
         window.location.href = "dashboard.html";
-      } else {
-        alert("❌ Invalid username or password.");
       }
-    } catch (err) {
-      console.error("Error logging in:", err);
-      alert("Login failed. Try again.");
-    }
-  }
-  
-  // ✅ Handle "Login" form
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const formData = new FormData(loginForm);
-    const username = formData.get("username").trim();
-    const password = formData.get("password").trim();
-    loginPlayer(username, password);
-  });
-  
-  // Add click event to player list items
-  playersList.addEventListener('click', (e) => {
-    if (e.target.tagName === 'LI') {
-      const username = e.target.textContent.trim();
-      // Prompt for password when clicking on a username
-      const password = prompt(`Enter password for ${username}:`);
-      if (password) {
-        loginPlayer(username, password);
-      }
-    }
-  });
-</script>
+    });
+  </script>
 </body>
 </html>
