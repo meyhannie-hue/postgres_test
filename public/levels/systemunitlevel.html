@@ -996,63 +996,76 @@
     }
     
     // Show purchase confirmation modal
-    function showPurchaseModal(level, cost) {
-      const modal = document.getElementById('purchaseModal');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalText = document.getElementById('modalText');
-      const confirmBtn = document.getElementById('confirmBtn');
-      const cancelBtn = document.getElementById('cancelBtn');
-      
-      // Set modal content
-      modalTitle.textContent = `Unlock ${level.charAt(0).toUpperCase() + level.slice(1)} Level`;
-      modalText.textContent = `Are you sure you want to spend ${cost} coins to unlock the ${level} level?`;
-      
-      // Set up event listeners
-      confirmBtn.onclick = () => {
-        purchaseLevel(level, cost);
-        modal.classList.remove('active');
-      };
-      
-      cancelBtn.onclick = () => {
-        modal.classList.remove('active');
-      };
-      
-      // Show modal
-      modal.classList.add('active');
-    }
+    // Show purchase confirmation modal
+function showPurchaseModal(level, cost) {
+  const modal = document.getElementById('purchaseModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalText = document.getElementById('modalText');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+
+  modalTitle.textContent = `Unlock ${level.toUpperCase()} Level`;
+  modalText.textContent = `Do you want to unlock the ${level.toUpperCase()} level for ${cost} coins?`;
+
+  modal.classList.add('active');
+
+  confirmBtn.onclick = () => {
+    purchaseLevel(level, cost);
+    modal.classList.remove('active');
+  };
+
+  cancelBtn.onclick = () => {
+    modal.classList.remove('active');
+  };
+}
+
     
     // Purchase level function
     async function purchaseLevel(level, cost) {
-      // Deduct coins
-      const newCoins = window.playerCoins - cost;
-      
-      // Update localStorage for coins
-      localStorage.setItem("coins", newCoins.toString());
-      
-      // Update unlocked levels in localStorage
-      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedSystemUnitLevels") || '{"easy":true,"medium":false,"hard":false}');
-      unlockedLevels[level] = true;
-      localStorage.setItem("unlockedSystemUnitLevels", JSON.stringify(unlockedLevels));
-      
-      // Try to update the database
-      try {
-        const response = await fetch("https://postgres-test-p05s.onrender.com/update-coins", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ username: loggedInUser, coins: newCoins })
-        });
-        
-        if (response.ok) {
-          console.log("Coins updated in database successfully");
-        } else {
-          console.error("Failed to update coins in database");
-        }
-      } catch (err) {
-        console.error("Error updating coins in database:", err);
-      }
-      
+  const newCoins = window.playerCoins - cost;
+
+  // Get current unlocked levels
+  const unlockedLevels = JSON.parse(localStorage.getItem("unlockedSystemUnitLevels") || '{"easy":true,"medium":false,"hard":false}');
+  unlockedLevels[level] = true;
+
+  // Save locally
+  localStorage.setItem("coins", newCoins.toString());
+  localStorage.setItem("unlockedSystemUnitLevels", JSON.stringify(unlockedLevels));
+
+  // Update UI
+  const levelElement = document.getElementById(level + "Level");
+  levelElement.classList.remove("locked");
+  const status = levelElement.querySelector(".level-status");
+  status.classList.remove("locked");
+  status.classList.add("unlocked");
+  status.textContent = "Unlocked";
+
+  document.getElementById("coins").innerText = `💰 ${newCoins}`;
+  window.playerCoins = newCoins;
+
+  // 🔗 Send to backend
+  try {
+    const res = await fetch("https://postgres-test-p05s.onrender.com/update-progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: loggedInUser,
+        coins: newCoins,
+        unlockedLevels
+      })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      console.log("✅ Progress saved:", data);
+    } else {
+      console.error("⚠️ Failed to update:", data.error);
+    }
+  } catch (err) {
+    console.error("Error updating progress:", err);
+  }
+}
+ { 
       // Update the UI for the level card
       const levelElement = document.getElementById(level + "Level");
       levelElement.classList.remove("locked");
@@ -1079,8 +1092,7 @@
       setTimeout(() => {
         notification.remove();
       }, 3000);
-    }
-    
+      }
     function goBack() {
       // Show loading overlay
       const loadingOverlay = document.getElementById('loadingOverlay');

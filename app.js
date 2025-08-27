@@ -221,6 +221,55 @@ app.post("/api/reward", async (req, res) => {
     res.status(500).json({ error: "Failed to apply reward" });
   }
 });
+app.post("/update-coins", async (req, res) => {
+  try {
+    const { username, coins } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ error: "Username required" });
+    }
+
+    await sequelize.query(
+      "UPDATE players SET coins = :coins WHERE username = :username",
+      {
+        replacements: { coins, username },
+      }
+    );
+
+    res.json({ success: true, coins });
+  } catch (err) {
+    console.error("Error updating coins:", err);
+    res.status(500).json({ error: "Failed to update coins" });
+  }
+});
+// Add this route in server.js
+app.post("/update-progress", async (req, res) => {
+  try {
+    const { username, coins, unlockedLevels } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ error: "Username required" });
+    }
+
+    await sequelize.query(
+      "UPDATE players SET coins = :coins, unlocked_levels = :unlockedLevels WHERE username = :username",
+      {
+        replacements: {
+          coins,
+          unlockedLevels: JSON.stringify(unlockedLevels),
+          username,
+        },
+      }
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error updating progress:", err);
+    res.status(500).json({ error: "Failed to update progress" });
+  }
+});
+
+
 
 
 // Serve static files from  the "public" directory
