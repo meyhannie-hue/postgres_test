@@ -832,13 +832,6 @@
         document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
       }
     }
-    const unlockedLevels = loggedInPlayer?.unlocked_levels 
-  ? JSON.parse(loggedInPlayer.unlocked_levels) 
-  : { easy: true, medium: false, hard: false };
-
-localStorage.setItem("unlockedLevels", JSON.stringify(unlockedLevels));
-checkUnlockedLevels();
-
     
     // Update progress bars based on coins
     function updateProgressBars(coins) {
@@ -935,46 +928,48 @@ checkUnlockedLevels();
     
     // Purchase level function
     async function purchaseLevel(level, cost) {
-  const newCoins = window.playerCoins - cost;
-
-  const unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
-  unlockedLevels[level] = true;
-
-  localStorage.setItem("coins", newCoins.toString());
-  localStorage.setItem("unlockedLevels", JSON.stringify(unlockedLevels));
-
-  try {
-    const response = await fetch("https://postgres-test-p05s.onrender.com/update-progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: loggedInUser,
-        coins: newCoins,
-        unlockedLevels
-      })
-    });
-
-    if (response.ok) {
-      console.log("✅ Progress updated in database");
-    } else {
-      console.error("⚠️ Failed to update DB");
-    }
-  } catch (err) {
-    console.error("Error updating DB:", err);
-  }
-
-  // Update UI
-  const levelElement = document.getElementById(level + "Level");
-  levelElement.classList.remove("locked");
-  const status = levelElement.querySelector(".level-status");
-  status.classList.remove("locked");
-  status.classList.add("unlocked");
-  status.textContent = "Unlocked";
-
-  document.getElementById("coins").innerText = `💰 ${newCoins}`;
-  window.playerCoins = newCoins;
-
-  
+      // Deduct coins
+      const newCoins = window.playerCoins - cost;
+      
+      // Update localStorage for coins
+      localStorage.setItem("coins", newCoins.toString());
+      
+      // Update unlocked levels in localStorage
+      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
+      unlockedLevels[level] = true;
+      localStorage.setItem("unlockedLevels", JSON.stringify(unlockedLevels));
+      
+      // Try to update the database
+      try {
+        const response = await fetch("https://postgres-test-p05s.onrender.com/update-coins", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ 
+            username: loggedInUser, 
+            coins: newCoins,
+            unlockedLevels: unlockedLevels
+          })
+        });
+        
+        if (response.ok) {
+          console.log("Coins and unlocked levels updated in database successfully");
+        } else {
+          console.error("Failed to update coins and unlocked levels in database");
+        }
+      } catch (err) {
+        console.error("Error updating coins and unlocked levels in database:", err);
+      }
+      
+      // Update the UI for the level card
+      const levelElement = document.getElementById(level + "Level");
+      levelElement.classList.remove("locked");
+      const statusElement = levelElement.querySelector(".level-status");
+      statusElement.classList.remove("locked");
+      statusElement.classList.add("unlocked");
+      statusElement.textContent = "Unlocked";
+      
       // Update progress bar to 100%
       const progressBar = document.getElementById(level + "Progress");
       progressBar.style.width = "100%";
