@@ -231,15 +231,19 @@
       font-weight: 500;
     }
     
-    #points { 
+    /* Updated coins display to match dashboard */
+    .coins-display {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #00e5ff;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
       animation: pulse 2s infinite;
-      color: #39ff14;
     }
     
     @keyframes pulse {
-      0% { text-shadow: 0 0 5px rgba(57, 255, 20, 0.7); }
-      50% { text-shadow: 0 0 15px rgba(57, 255, 20, 0.9); }
-      100% { text-shadow: 0 0 5px rgba(57, 255, 20, 0.7); }
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
     }
     
     .content-title {
@@ -454,40 +458,41 @@
       <div class="back-btn" onclick="goBack()">⤺</div>
       <div class="title">TECHY ME</div>
       <div class="user-info">
-        <span id="points">💰 0</span>
+        <!-- Updated coins display to match dashboard -->
+        <div id="coins" class="coins-display">💰 0</div>
         <span id="usernameDisplay">Guest</span>
       </div>
     </header>
     <div class="content-title">NETWORKING</div>
     <div class="level-buttons">
-  <div class="level" id="easyLevel" onclick="startLevel('easy')">
-    <div class="connection-effect">
-      <div class="connection-line" style="top: 20%;"></div>
-      <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
-      <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+      <div class="level" id="easyLevel" onclick="startLevel('easy')">
+        <div class="connection-effect">
+          <div class="connection-line" style="top: 20%;"></div>
+          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+        </div>
+        🟢 Easy
+        <div class="description">Basic networking setup</div>
+      </div>
+      <div class="level locked" id="mediumLevel" onclick="startLevel('medium')">
+        <div class="connection-effect">
+          <div class="connection-line" style="top: 20%;"></div>
+          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+        </div>
+        🟡 Medium
+        <div class="description">Intermediate networking tasks</div>
+      </div>
+      <div class="level locked" id="hardLevel" onclick="startLevel('hard')">
+        <div class="connection-effect">
+          <div class="connection-line" style="top: 20%;"></div>
+          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+        </div>
+        🔴 Hard
+        <div class="description">Advanced networking challenges</div>
+      </div>
     </div>
-    🟢 Easy
-    <div class="description">Basic networking setup</div>
-  </div>
-  <div class="level locked" id="mediumLevel" onclick="startLevel('medium')">
-    <div class="connection-effect">
-      <div class="connection-line" style="top: 20%;"></div>
-      <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
-      <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
-    </div>
-    🟡 Medium
-    <div class="description">Intermediate networking tasks</div>
-  </div>
-  <div class="level locked" id="hardLevel" onclick="startLevel('hard')">
-    <div class="connection-effect">
-      <div class="connection-line" style="top: 20%;"></div>
-      <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
-      <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
-    </div>
-    🔴 Hard
-    <div class="description">Advanced networking challenges</div>
-  </div>
-</div>
   </div>
   
   <script>
@@ -545,31 +550,31 @@
         const players = await res.json();
         const loggedInPlayer = players.find(p => p.username === loggedInUser);
         const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
-        document.getElementById("points").innerText = `💰 ${coins}`;
+        document.getElementById("coins").textContent = `💰 ${coins}`;
         window.playerCoins = coins;
         
         // Update localStorage with the latest coins from database
-        localStorage.setItem("points", coins.toString());
+        localStorage.setItem("coins", coins.toString());
         
-        // Level unlocking logic
-        if (coins >= 1500) {
+        // Level unlocking logic based on coins (matching dashboard thresholds)
+        if (coins >= 4560) {
           document.getElementById("mediumLevel").classList.remove("locked");
         }
-        if (coins >= 3000) {
+        if (coins >= 9480) {
           document.getElementById("hardLevel").classList.remove("locked");
         }
       } catch (err) {
         console.error("Error loading user data:", err);
         // Fallback to localStorage if database fetch fails
-        const fallbackCoins = localStorage.getItem("points") || 0;
-        document.getElementById("points").innerText = `💰 ${fallbackCoins}`;
+        const fallbackCoins = localStorage.getItem("coins") || 0;
+        document.getElementById("coins").textContent = `💰 ${fallbackCoins}`;
         window.playerCoins = parseInt(fallbackCoins);
         
         // Apply unlock logic with fallback coins
-        if (window.playerCoins >= 1500) {
+        if (window.playerCoins >= 4560) {
           document.getElementById("mediumLevel").classList.remove("locked");
         }
-        if (window.playerCoins >= 3000) {
+        if (window.playerCoins >= 9480) {
           document.getElementById("hardLevel").classList.remove("locked");
         }
       }
@@ -587,9 +592,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "Complete Easy level and earn 1500 points to unlock!";
+          notification.textContent = "Earn 4560 coins to unlock Medium level!";
         } else if (level === "hard") {
-          notification.textContent = "Complete Medium level and earn 3000 points to unlock!";
+          notification.textContent = "Earn 9480 coins to unlock Hard level!";
         }
         
         document.body.appendChild(notification);

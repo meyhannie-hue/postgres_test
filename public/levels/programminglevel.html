@@ -203,16 +203,18 @@
       text-shadow: 0 0 5px rgba(0, 245, 255, 0.7);
     }
     
-    .points {
-      color: #39ff14;
+    /* Updated coins display to match dashboard */
+    .coins-display {
+      color: #00e5ff;
       font-weight: 600;
-      text-shadow: 0 0 5px rgba(57, 255, 20, 0.7);
-      animation: pointsGlow 2s infinite alternate;
+      text-shadow: 0 0 5px rgba(0, 229, 255, 0.7);
+      animation: pulse 2s infinite;
     }
     
-    @keyframes pointsGlow {
-      from { text-shadow: 0 0 5px rgba(57, 255, 20, 0.7); }
-      to { text-shadow: 0 0 15px rgba(57, 255, 20, 0.9); }
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
     }
     
     /* Content Title */
@@ -578,58 +580,59 @@
       <div class="title">Techy Me</div>
       <div class="user-info">
         <div class="username" id="usernameDisplay">User</div>
-        <div class="points" id="points">💰 0</div>
+        <!-- Updated coins display to match dashboard -->
+        <div id="coins" class="coins-display">💰 0</div>
       </div>
     </div>
     
     <div class="content-title">Programming</div>
     
     <div class="level-cards">
-  <div class="level-card" id="easyLevel" onclick="startLevel('easy')">
-    <div class="cyber-badge">Cyber Task</div>
-    <div class="level-header">
-      <div class="level-name">
-        <span class="emoji">🟢</span>
-        <span>Easy</span>
+      <div class="level-card" id="easyLevel" onclick="startLevel('easy')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🟢</span>
+            <span>Easy</span>
+          </div>
+          <div class="level-status unlocked">Unlocked</div>
+        </div>
+        <div class="level-description">Beginner coding challenges to build your programming foundation</div>
+        <div class="progress-container">
+          <div class="progress-bar easy" id="easyProgress"></div>
+        </div>
       </div>
-      <div class="level-status unlocked">Unlocked</div>
-    </div>
-    <div class="level-description">Beginner coding challenges to build your programming foundation</div>
-    <div class="progress-container">
-      <div class="progress-bar easy" id="easyProgress"></div>
-    </div>
-  </div>
-  
-  <div class="level-card locked" id="mediumLevel" onclick="startLevel('medium')">
-    <div class="cyber-badge">Cyber Task</div>
-    <div class="level-header">
-      <div class="level-name">
-        <span class="emoji">🟡</span>
-        <span>Medium</span>
+      
+      <div class="level-card locked" id="mediumLevel" onclick="startLevel('medium')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🟡</span>
+            <span>Medium</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Intermediate coding tasks to enhance your skills</div>
+        <div class="progress-container">
+          <div class="progress-bar medium" id="mediumProgress"></div>
+        </div>
       </div>
-      <div class="level-status locked">Locked</div>
-    </div>
-    <div class="level-description">Intermediate coding tasks to enhance your skills</div>
-    <div class="progress-container">
-      <div class="progress-bar medium" id="mediumProgress"></div>
-    </div>
-  </div>
-  
-  <div class="level-card locked" id="hardLevel" onclick="startLevel('hard')">
-    <div class="cyber-badge">Cyber Task</div>
-    <div class="level-header">
-      <div class="level-name">
-        <span class="emoji">🔴</span>
-        <span>Hard</span>
+      
+      <div class="level-card locked" id="hardLevel" onclick="startLevel('hard')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🔴</span>
+            <span>Hard</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Advanced programming problems for elite coders</div>
+        <div class="progress-container">
+          <div class="progress-bar hard" id="hardProgress"></div>
+        </div>
       </div>
-      <div class="level-status locked">Locked</div>
     </div>
-    <div class="level-description">Advanced programming problems for elite coders</div>
-    <div class="progress-container">
-      <div class="progress-bar hard" id="hardProgress"></div>
-    </div>
-  </div>
-</div>
   </div>
   
   <div class="loading-overlay" id="loadingOverlay">
@@ -675,51 +678,53 @@
         const players = await res.json();
         const loggedInPlayer = players.find(p => p.username === loggedInUser);
         const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
-        document.getElementById("points").innerText = `💰 ${coins}`;
+        document.getElementById("coins").innerText = `💰 ${coins}`;
         window.playerCoins = coins;
         
         // Update localStorage with the latest coins from database
-        localStorage.setItem("points", coins.toString());
+        localStorage.setItem("coins", coins.toString());
         
-        // Level unlocking logic
-        if (coins >= 6000) {
+        // Level unlocking logic - updated to match dashboard thresholds
+        if (coins >= 4560) {
           document.getElementById("mediumLevel").classList.remove("locked");
           document.querySelector("#mediumLevel .level-status").classList.remove("locked");
           document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
           document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
         }
-        if (coins >= 7500) {
+        if (coins >= 9480) {
           document.getElementById("hardLevel").classList.remove("locked");
           document.querySelector("#hardLevel .level-status").classList.remove("locked");
           document.querySelector("#hardLevel .level-status").classList.add("unlocked");
           document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
         }
         
-        // Simulate progress bars
+        // Simulate progress bars based on coin progress
         setTimeout(() => {
           document.getElementById("easyProgress").style.width = "100%";
-          if (coins >= 6000) {
-            document.getElementById("mediumProgress").style.width = "65%";
+          if (coins >= 4560) {
+            const mediumProgress = Math.min(100, (coins / 4560) * 100);
+            document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
           }
-          if (coins >= 7500) {
-            document.getElementById("hardProgress").style.width = "30%";
+          if (coins >= 9480) {
+            const hardProgress = Math.min(100, (coins / 9480) * 100);
+            document.getElementById("hardProgress").style.width = `${hardProgress}%`;
           }
         }, 500);
       } catch (err) {
         console.error("Error loading user data:", err);
         // Fallback to localStorage if database fetch fails
-        const fallbackCoins = localStorage.getItem("points") || 0;
-        document.getElementById("points").innerText = `💰 ${fallbackCoins}`;
+        const fallbackCoins = localStorage.getItem("coins") || 0;
+        document.getElementById("coins").innerText = `💰 ${fallbackCoins}`;
         window.playerCoins = parseInt(fallbackCoins);
         
         // Apply unlock logic with fallback coins
-        if (window.playerCoins >= 6000) {
+        if (window.playerCoins >= 4560) {
           document.getElementById("mediumLevel").classList.remove("locked");
           document.querySelector("#mediumLevel .level-status").classList.remove("locked");
           document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
           document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
         }
-        if (window.playerCoins >= 7500) {
+        if (window.playerCoins >= 9480) {
           document.getElementById("hardLevel").classList.remove("locked");
           document.querySelector("#hardLevel .level-status").classList.remove("locked");
           document.querySelector("#hardLevel .level-status").classList.add("unlocked");
@@ -729,11 +734,13 @@
         // Simulate progress bars with fallback coins
         setTimeout(() => {
           document.getElementById("easyProgress").style.width = "100%";
-          if (window.playerCoins >= 6000) {
-            document.getElementById("mediumProgress").style.width = "65%";
+          if (window.playerCoins >= 4560) {
+            const mediumProgress = Math.min(100, (window.playerCoins / 4560) * 100);
+            document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
           }
-          if (window.playerCoins >= 7500) {
-            document.getElementById("hardProgress").style.width = "30%";
+          if (window.playerCoins >= 9480) {
+            const hardProgress = Math.min(100, (window.playerCoins / 9480) * 100);
+            document.getElementById("hardProgress").style.width = `${hardProgress}%`;
           }
         }, 500);
       }
@@ -747,9 +754,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "ACCESS DENIED: Complete Easy level and earn 6000 points to unlock";
+          notification.textContent = "ACCESS DENIED: Earn 4560 coins to unlock Medium level";
         } else if (level === "hard") {
-          notification.textContent = "ACCESS DENIED: Complete Medium level and earn 7500 points to unlock";
+          notification.textContent = "ACCESS DENIED: Earn 9480 coins to unlock Hard level";
         }
         
         document.body.appendChild(notification);

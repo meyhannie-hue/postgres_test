@@ -775,6 +775,9 @@
         document.getElementById("coins").textContent = `💰 ${coins}`;
         window.playerCoins = coins;
         
+        // Update localStorage with the latest coins from database
+        localStorage.setItem("coins", coins.toString());
+        
         // Update level unlocking based on coins
         updateLevelUnlocking(coins);
         
