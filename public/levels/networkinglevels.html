@@ -433,34 +433,34 @@
     </header>
     <div class="content-title">NETWORKING</div>
     <div class="level-buttons">
-      <div class="level" onclick="startLevel('easy')">
-        <div class="connection-effect">
-          <div class="connection-line" style="top: 20%;"></div>
-          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
-          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
-        </div>
-        🟢 Easy
-        <div class="description">Basic networking setup</div>
-      </div>
-      <div class="level locked" id="mediumLevel" onclick="startLevel('medium')">
-        <div class="connection-effect">
-          <div class="connection-line" style="top: 20%;"></div>
-          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
-          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
-        </div>
-        🟡 Medium
-        <div class="description">Intermediate networking tasks</div>
-      </div>
-      <div class="level locked" id="hardLevel" onclick="startLevel('hard')">
-        <div class="connection-effect">
-          <div class="connection-line" style="top: 20%;"></div>
-          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
-          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
-        </div>
-        🔴 Hard
-        <div class="description">Advanced networking challenges</div>
-      </div>
+  <div class="level" id="easyLevel" onclick="startLevel('easy')">
+    <div class="connection-effect">
+      <div class="connection-line" style="top: 20%;"></div>
+      <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+      <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
     </div>
+    🟢 Easy
+    <div class="description">Basic networking setup</div>
+  </div>
+  <div class="level locked" id="mediumLevel" onclick="startLevel('medium')">
+    <div class="connection-effect">
+      <div class="connection-line" style="top: 20%;"></div>
+      <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+      <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+    </div>
+    🟡 Medium
+    <div class="description">Intermediate networking tasks</div>
+  </div>
+  <div class="level locked" id="hardLevel" onclick="startLevel('hard')">
+    <div class="connection-effect">
+      <div class="connection-line" style="top: 20%;"></div>
+      <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+      <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+    </div>
+    🔴 Hard
+    <div class="description">Advanced networking challenges</div>
+  </div>
+</div>
   </div>
   
   <script>
@@ -520,110 +520,113 @@
     if (userPoints >= 3000) {
       document.getElementById("hardLevel").classList.remove("locked");
     }
-    
+
     function startLevel(level) {
-      const levelElement = document.getElementById(level + "Level");
-      if (levelElement.classList.contains("locked")) {
-        // Create a notification instead of alert
-        const notification = document.createElement('div');
-        notification.style.position = 'fixed';
-        notification.style.bottom = '20px';
-        notification.style.left = '50%';
-        notification.style.transform = 'translateX(-50%)';
-        notification.style.background = 'rgba(13, 13, 13, 0.9)';
-        notification.style.color = '#ff5555';
-        notification.style.padding = '15px 25px';
-        notification.style.borderRadius = '10px';
-        notification.style.border = '1px solid #ff5555';
-        notification.style.boxShadow = '0 0 15px rgba(255, 85, 85, 0.5)';
-        notification.style.zIndex = '1000';
-        notification.style.animation = 'fadeInOut 3s forwards';
-        
-        if (level === "medium") {
-          notification.textContent = "Complete Easy level and earn 1500 points to unlock!";
-        } else if (level === "hard") {
-          notification.textContent = "Complete Medium level and earn 3000  points to unlock!";
-        }
-        
-        document.body.appendChild(notification);
-        
-        // Remove notification after animation
-        setTimeout(() => {
-          notification.remove();
-        }, 3000);
-        
-        return;
-      }
-      
-      // Create connection effect before navigating
-      const connectionOverlay = document.createElement('div');
-      connectionOverlay.style.position = 'fixed';
-      connectionOverlay.style.top = '0';
-      connectionOverlay.style.left = '0';
-      connectionOverlay.style.width = '100%';
-      connectionOverlay.style.height = '100%';
-      connectionOverlay.style.background = 'rgba(13, 13, 13, 0.8)';
-      connectionOverlay.style.zIndex = '1000';
-      connectionOverlay.style.display = 'flex';
-      connectionOverlay.style.justifyContent = 'center';
-      connectionOverlay.style.alignItems = 'center';
-      connectionOverlay.style.flexDirection = 'column';
-      
-      const connectionText = document.createElement('div');
-      connectionText.textContent = 'ESTABLISHING CONNECTION...';
-      connectionText.style.color = '#00d4ff';
-      connectionText.style.fontSize = '24px';
-      connectionText.style.fontWeight = 'bold';
-      connectionText.style.marginBottom = '20px';
-      connectionText.style.textShadow = '0 0 10px rgba(0, 212, 255, 0.7)';
-      
-      const progressBar = document.createElement('div');
-      progressBar.style.width = '300px';
-      progressBar.style.height = '4px';
-      progressBar.style.background = 'rgba(0, 212, 255, 0.2)';
-      progressBar.style.borderRadius = '2px';
-      progressBar.style.overflow = 'hidden';
-      progressBar.style.position = 'relative';
-      
-      const progressFill = document.createElement('div');
-      progressFill.style.position = 'absolute';
-      progressFill.style.top = '0';
-      progressFill.style.left = '0';
-      progressFill.style.height = '100%';
-      progressFill.style.width = '0%';
-      progressFill.style.background = 'linear-gradient(90deg, #00d4ff, #39ff14)';
-      progressFill.style.boxShadow = '0 0 10px rgba(57, 255, 20, 0.7)';
-      progressFill.style.animation = 'progressFill 1.5s forwards';
-      
-      progressBar.appendChild(progressFill);
-      connectionOverlay.appendChild(connectionText);
-      connectionOverlay.appendChild(progressBar);
-      document.body.appendChild(connectionOverlay);
-      
-      // Add progress animation
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes progressFill {
-          0% { width: 0%; }
-          100% { width: 100%; }
-        }
-        @keyframes fadeInOut {
-          0% { opacity: 0; transform: translate(-50%, 20px); }
-          20% { opacity: 1; transform: translate(-50%, 0); }
-          80% { opacity: 1; transform: translate(-50%, 0); }
-          100% { opacity: 0; transform: translate(-50%, 20px); }
-        }
-      `;
-      document.head.appendChild(style);
-      
-      // Navigate after connection animation
-      setTimeout(() => {
-        if (level === "easy") window.location.href = `../networking/easy.html`;
-        if (level === "medium") window.location.href = `../networking/medium.html`;
-        if (level === "hard") window.location.href = `../networking/hard.html`;
-      }, 1500);
+  const levelElement = document.getElementById(level + "Level");
+  if (!levelElement) {
+    console.error(`Element with id="${level}Level" not found.`);
+    return;
+  }
+  if (levelElement.classList.contains("locked")) {
+    // Create a notification instead of alert
+    const notification = document.createElement('div');
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.background = 'rgba(13, 13, 13, 0.9)';
+    notification.style.color = '#ff5555';
+    notification.style.padding = '15px 25px';
+    notification.style.borderRadius = '10px';
+    notification.style.border = '1px solid #ff5555';
+    notification.style.boxShadow = '0 0 15px rgba(255, 85, 85, 0.5)';
+    notification.style.zIndex = '1000';
+    notification.style.animation = 'fadeInOut 3s forwards';
+    
+    if (level === "medium") {
+      notification.textContent = "Complete Easy level and earn 1500 points to unlock!";
+    } else if (level === "hard") {
+      notification.textContent = "Complete Medium level and earn 3000 points to unlock!";
     }
     
+    document.body.appendChild(notification);
+    
+    // Remove notification after animation
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+    
+    return;
+  }
+  
+  // Create connection effect before navigating
+  const connectionOverlay = document.createElement('div');
+  connectionOverlay.style.position = 'fixed';
+  connectionOverlay.style.top = '0';
+  connectionOverlay.style.left = '0';
+  connectionOverlay.style.width = '100%';
+  connectionOverlay.style.height = '100%';
+  connectionOverlay.style.background = 'rgba(13, 13, 13, 0.8)';
+  connectionOverlay.style.zIndex = '1000';
+  connectionOverlay.style.display = 'flex';
+  connectionOverlay.style.justifyContent = 'center';
+  connectionOverlay.style.alignItems = 'center';
+  connectionOverlay.style.flexDirection = 'column';
+  
+  const connectionText = document.createElement('div');
+  connectionText.textContent = 'ESTABLISHING CONNECTION...';
+  connectionText.style.color = '#00d4ff';
+  connectionText.style.fontSize = '24px';
+  connectionText.style.fontWeight = 'bold';
+  connectionText.style.marginBottom = '20px';
+  connectionText.style.textShadow = '0 0 10px rgba(0, 212, 255, 0.7)';
+  
+  const progressBar = document.createElement('div');
+  progressBar.style.width = '300px';
+  progressBar.style.height = '4px';
+  progressBar.style.background = 'rgba(0, 212, 255, 0.2)';
+  progressBar.style.borderRadius = '2px';
+  progressBar.style.overflow = 'hidden';
+  progressBar.style.position = 'relative';
+  
+  const progressFill = document.createElement('div');
+  progressFill.style.position = 'absolute';
+  progressFill.style.top = '0';
+  progressFill.style.left = '0';
+  progressFill.style.height = '100%';
+  progressFill.style.width = '0%';
+  progressFill.style.background = 'linear-gradient(90deg, #00d4ff, #39ff14)';
+  progressFill.style.boxShadow = '0 0 10px rgba(57, 255, 20, 0.7)';
+  progressFill.style.animation = 'progressFill 1.5s forwards';
+  
+  progressBar.appendChild(progressFill);
+  connectionOverlay.appendChild(connectionText);
+  connectionOverlay.appendChild(progressBar);
+  document.body.appendChild(connectionOverlay);
+  
+  // Add progress animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes progressFill {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, 20px); }
+      20% { opacity: 1; transform: translate(-50%, 0); }
+      80% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, 20px); }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Navigate after connection animation
+  setTimeout(() => {
+    if (level === "easy") window.location.href = `../networking/easy.html`;
+    if (level === "medium") window.location.href = `../networking/medium.html`;
+    if (level === "hard") window.location.href = `../networking/hard.html`;
+  }, 1500);
+}    
     function goBack() { 
       // Create a disconnection effect
       const disconnectionOverlay = document.createElement('div');
