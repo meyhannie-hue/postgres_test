@@ -341,6 +341,21 @@
       80% { opacity: 1; transform: translate(-50%, 0); }
       100% { opacity: 0; transform: translate(-50%, 20px); }
     }
+    
+    /* Username validation styling */
+    .username-validation {
+      font-size: 12px;
+      margin-top: -15px;
+      margin-bottom: 10px;
+      text-align: left;
+      color: #ff5252;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .username-validation.show {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -353,7 +368,8 @@
     <div id="createSection">
       <h1 data-text="Create a Player">Create a Player</h1>
       <form id="playerForm">
-        <input type="text" name="username" placeholder="Enter Username" required />
+        <input type="text" name="username" placeholder="Enter Username" required id="usernameInput" />
+        <div class="username-validation" id="usernameValidation">Username already exists</div>
         <input type="password" name="password" placeholder="Enter Password" required />
         <button class="btn" type="submit">➕ Add Player</button>
       </form>
@@ -452,6 +468,8 @@
     const playersList = document.getElementById("playersList");
     const createSection = document.getElementById("createSection");
     const loginSection = document.getElementById("loginSection");
+    const usernameInput = document.getElementById("usernameInput");
+    const usernameValidation = document.getElementById("usernameValidation");
     let players = []; // store existing players
     
     // Function to show notifications
@@ -499,6 +517,39 @@
       }
     }
     
+    // ✅ Check if username exists (case insensitive)
+    function usernameExists(username) {
+      if (!players || players.length === 0) return false;
+      return players.some(player => 
+        player.username.toLowerCase() === username.toLowerCase()
+      );
+    }
+    
+    // ✅ Real-time username validation
+    usernameInput.addEventListener('input', async () => {
+      const username = usernameInput.value.trim();
+      
+      if (username.length === 0) {
+        usernameValidation.classList.remove('show');
+        return;
+      }
+      
+      // Load latest players to check against current database
+      try {
+        const res = await fetch("https://postgres-test-p05s.onrender.com/players");
+        if (!res.ok) throw new Error("Failed to fetch players");
+        players = await res.json();
+        
+        if (usernameExists(username)) {
+          usernameValidation.classList.add('show');
+        } else {
+          usernameValidation.classList.remove('show');
+        }
+      } catch (err) {
+        console.error("Error checking username:", err);
+      }
+    });
+    
     // ✅ Handle "Add Player"
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -511,10 +562,21 @@
         return;
       }
       
-      // Check for duplicate username
-      const existing = players.map(p => p.username.toLowerCase());
-      if (existing.includes(username.toLowerCase())) {
-        showNotification("This username already exists.");
+      // Load latest players to ensure we have the most up-to-date list
+      try {
+        const res = await fetch("https://postgres-test-p05s.onrender.com/players");
+        if (!res.ok) throw new Error("Failed to fetch players");
+        players = await res.json();
+      } catch (err) {
+        console.error("Error loading players:", err);
+        showNotification("Error checking for existing usernames. Please try again.");
+        return;
+      }
+      
+      // Check for duplicate username (case insensitive)
+      if (usernameExists(username)) {
+        showNotification("This username already exists in the database. Please choose a different one.");
+        usernameValidation.classList.add('show');
         return;
       }
       
@@ -528,6 +590,16 @@
         if (!res.ok) {
           const errorText = await res.text();
           console.error("Server error:", errorText);
+          
+          // Check if error is due to duplicate username
+          if (res.status === 409 || errorText.toLowerCase().includes("duplicate") || 
+              errorText.toLowerCase().includes("already exists")) {
+            showNotification("This username already exists in the database. Please choose a different one.");
+            // Reload players to update our local list
+            loadPlayers();
+            return;
+          }
+          
           throw new Error(`Server returned ${res.status}: ${errorText}`);
         }
         
@@ -612,6 +684,9 @@
       if (loggedInUser) {
         window.location.href = "dashboard.html";
       }
+      
+      // Load players for validation
+      loadPlayers();
     });
   </script>
 </body>
