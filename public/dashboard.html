@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techy Me</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
+      color: #e0f7fa;
+      overflow: hidden;
+    }
+    
+    /* Digital Rain Background */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    
+    /* Circuit Board Pattern */
+    .circuit-board {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    /* Circuit Lines Animation */
+    .circuit-lines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .circuit-line {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
+      height: 1px;
+      transform-origin: left center;
+      animation: circuit-flow 8s linear infinite;
+    }
+    
+    @keyframes circuit-flow {
+      0% {
+        transform: scaleX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: scaleX(1);
+        opacity: 0;
+      }
+    }
+    
+    /* Binary Code Animation */
+    .binary-code {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.03;
+      pointer-events: none;
+      font-family: monospace;
+      font-size: 14px;
+      color: #00e5ff;
+      overflow: hidden;
+    }
+    
+    .binary-char {
+      position: absolute;
+      animation: binary-fall 10s linear infinite;
+    }
+    
+    @keyframes binary-fall {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+    
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      margin: auto;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 30, 60, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Circuit Pattern Overlay */
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.03) 10px,
+        rgba(0, 229, 255, 0.03) 20px
+      );
+      z-index: -1;
+    }
+    
+    header {
+      position: relative;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    
+    .coins-display {
+      position: absolute;
+      left: 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #00e5ff;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+    }
+    
+    .title {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #00e5ff;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+      animation: glitch 5s infinite;
+      position: relative;
+    }
+    
+    .title::before, .title::after {
+      content: "TECHY ME";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .title::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00e5ff;
+      z-index: -1;
+    }
+    
+    .title::after {
+      animation: glitch-2 0.5s infinite;
+      color: #0078d4;
+      z-index: -2;
+    }
+    
+    @keyframes glitch {
+      0%, 100% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      20% { text-shadow: -2px 0 #00e5ff, 2px 0 #0078d4; }
+      40% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+      60% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      80% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+    }
+    
+    @keyframes glitch-1 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
+      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
+      60% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
+      80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
+    }
+    
+    @keyframes glitch-2 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
+      40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
+      60% { clip-path: inset(30% 0 40% 0); transform: translate(0); }
+      80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
+    }
+    
+    .logout-btn {
+      position: absolute;
+      right: 20px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #00e5ff;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .logout-btn:hover {
+      transform: scale(1.2) rotate(90deg);
+      color: #ff5252;
+    }
+    
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      flex-grow: 1;
+      gap: 20px;
+      padding: 80px 20px 120px;
+    }
+    
+    .feature {
+      width: 90%;
+      max-width: 320px;
+      background: rgba(0, 30, 60, 0.6);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      color: #e0f7fa;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    
+    /* Circuit Pattern Overlay for Feature Cards */
+    .feature::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.05) 10px,
+        rgba(0, 229, 255, 0.05) 20px
+      );
+      z-index: -1;
+    }
+    
+    .feature:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0, 229, 255, 0.3);
+      border-color: rgba(0, 229, 255, 0.6);
+    }
+    
+    .feature.locked {
+      opacity: 0.6;
+      filter: grayscale(100%);
+      cursor: not-allowed;
+    }
+    
+    .feature.locked:hover {
+      transform: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      border-color: rgba(0, 229, 255, 0.3);
+    }
+    
+    .feature .description {
+      font-size: 14px;
+      font-weight: 400;
+      color: #90caf9;
+      margin-top: 10px;
+    }
+    
+    .feature.locked .description {
+      color: #546e7a;
+    }
+    
+    /* Lock icon for locked features */
+    .feature.locked::after {
+      content: '🔒';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+    }
+    
+    /* Feature icon animation */
+    .feature-icon {
+      display: inline-block;
+      margin-bottom: 10px;
+      animation: icon-pulse 2s infinite alternate;
+    }
+    
+    @keyframes icon-pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.1); }
+    }
+    
+    /* Glow effect for unlocked features */
+    .feature:not(.locked) {
+      animation: feature-glow 4s infinite alternate;
+    }
+    
+    @keyframes feature-glow {
+      0% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+      100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 229, 255, 0.4); }
+    }
+    
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: rgba(0, 30, 60, 0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0, 229, 255, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      z-index: 10;
+    }
+    
+    .icon {
+      font-size: 30px;
+      color: #90caf9;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.3s ease;
+      position: relative;
+    }
+    
+    .icon:hover {
+      transform: scale(1.2);
+      color: #00e5ff;
+    }
+    
+    .icon.active {
+      background: rgba(0, 229, 255, 0.2);
+      padding: 8px 12px;
+      border-radius: 50%;
+      color: #00e5ff;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+    
+    /* Glow effect for active icon */
+    .icon.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.3);
+      z-index: -1;
+      animation: pulse-icon 2s infinite;
+    }
+    
+    @keyframes pulse-icon {
+      0% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 0.5; }
+    }
+    
+    @media (orientation: landscape) {
+      .app-container {
+        max-width: 680px;
+      }
+      main {
+        flex-direction: row;
+        padding: 50px;
+        flex-wrap: wrap;
+      }
+      .feature {
+        flex: 1 1 calc(33% - 10px);
+        margin: 5px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .coins-display {
+        font-size: 20px;
+      }
+      .feature div {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas class="digital-rain" id="digitalRain"></canvas>
+  <div class="circuit-board"></div>
+  <div class="particles" id="particles"></div>
+  <div class="circuit-lines" id="circuitLines"></div>
+  <div class="binary-code" id="binaryCode"></div>
+  
+  <div class="app-container">
+    <header>
+      <div id="coins" class="coins-display">💰 0</div>
+      <div class="title">TECHY ME</div>
+      <div class="logout-btn" onclick="logout()" title="Logout">⍈</div>
+    </header>
+    <main>
+      <div class="feature" onclick="goToNetworking()" id="networkingFeature">
+        <div class="feature-icon">⚙️</div>
+        Networking
+        <div class="description">Wiring Scheme</div>
+      </div>
+      <div class="feature" onclick="handleProgrammingClick()" id="programmingFeature">
+        <div class="feature-icon">💻</div>
+        Programming
+        <div class="description">HTML/CSS, PHP, & JS</div>
+      </div>
+      <div class="feature" onclick="handleSystemUnitClick()" id="systemUnitFeature">
+        <div class="feature-icon">🧩</div>
+        System Unit
+        <div class="description">Assemble/Disassemble</div>
+      </div>
+    </main>
+    <footer>
+      <div class="icon" onclick="gotoAbout()">🧾</div>
+      <div class="icon" onclick="gotoLeaderboard()">📊</div>
+      <div class="icon active" onclick="gotoDashboard()">👑</div>
+      <div class="icon" onclick="gotoSetting()">⚙️</div>
+    </footer>
+  </div>
+  
+  <script>
+    // Digital Rain Effect
+    const rainCanvas = document.getElementById('digitalRain');
+    const rainCtx = rainCanvas.getContext('2d');
+    
+    // Set canvas size
+    rainCanvas.width = window.innerWidth;
+    rainCanvas.height = window.innerHeight;
+    
+    // Characters for the digital rain
+    const characters = '01';
+    const fontSize = 14;
+    const columns = rainCanvas.width / fontSize;
+    const drops = [];
+    
+    // Initialize drops
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * rainCanvas.height;
+    }
+    
+    // Draw the digital rain
+    function drawRain() {
+      rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+      rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+      
+      rainCtx.fillStyle = '#00e5ff';
+      rainCtx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        
+        drops[i]++;
+      }
+    }
+    
+    // Animation loop for digital rain
+    setInterval(drawRain, 33);
+    
+    // Resize canvas when window is resized
+    window.addEventListener('resize', () => {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    });
+    
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random size between 2px and 6px
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Random color - different shades of blue/cyan
+      const colors = ['#00e5ff', '#0078d4', '#90caf9', '#4fc3f7'];
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      
+      particlesContainer.appendChild(particle);
+    }
+    
+    // Create circuit lines
+    const circuitLinesContainer = document.getElementById('circuitLines');
+    const lineCount = 8;
+    
+    for (let i = 0; i < lineCount; i++) {
+      const line = document.createElement('div');
+      line.className = 'circuit-line';
+      
+      // Random position
+      line.style.top = `${Math.random() * 100}%`;
+      line.style.left = '0';
+      line.style.width = `${Math.random() * 30 + 20}%`;
+      
+      // Random animation delay and duration
+      const delay = Math.random() * 8;
+      const duration = Math.random() * 4 + 6;
+      line.style.animationDelay = `${delay}s`;
+      line.style.animationDuration = `${duration}s`;
+      
+      circuitLinesContainer.appendChild(line);
+    }
+    
+    // Create binary code animation
+    const binaryCodeContainer = document.getElementById('binaryCode');
+    const binaryCount = 50;
+    
+    for (let i = 0; i < binaryCount; i++) {
+      const char = document.createElement('div');
+      char.className = 'binary-char';
+      char.textContent = Math.random() > 0.5 ? '1' : '0';
+      
+      // Random position
+      char.style.left = `${Math.random() * 100}%`;
+      char.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay and duration
+      const delay = Math.random() * 10;
+      const duration = Math.random() * 5 + 8;
+      char.style.animationDelay = `${delay}s`;
+      char.style.animationDuration = `${duration}s`;
+      
+      binaryCodeContainer.appendChild(char);
+    }
+    
+    // Original functionality
+    const playerName = localStorage.getItem("loggedInUser");
+    if (!playerName) {
+      window.location.href = "index.html";
+    }
+    
+    async function loadDashboard() {
+      try {
+        const res = await fetch("/get-players");
+        const players = await res.json();
+        const loggedInPlayer = players.find(p => p.username === playerName);
+        const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
+        document.getElementById("coins").textContent = `💰 ${coins}`;
+        window.playerCoins= coins;
+        
+        // Unlock logic using coins
+        if (coins < 4560) {
+          document.getElementById("programmingFeature").classList.add("locked");
+        }
+        if (coins < 9480) {
+          document.getElementById("systemUnitFeature").classList.add("locked");
+        }
+      } catch (err) {
+        console.error("Error loading dashboard:", err);
+        alert("❌ Failed to load dashboard.");
+      }
+    }
+    
+    function goToNetworking() {
+      window.location.href = "levels/networkinglevels.html";
+    }
+    
+    function handleProgrammingClick() {
+      if (window.playerCoins < 4560) {
+        alert("❌ Not enough coins to unlock Programming.");
+        return;
+      }
+      window.location.href = "levels/programminglevel.html";
+    }
+    
+    function handleSystemUnitClick() {
+      if (window.playerCoins < 9480) {
+        alert("❌ Not enough coins to unlock System Unit.");
+        return;
+      }
+      window.location.href = "levels/systemunitlevel.html";
+    }
+    
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "index.html";
+    }
+    
+    function gotoAbout() { 
+      window.location.href = "about.html"; 
+    }
+    
+    function gotoLeaderboard() { 
+      window.location.href = "leaderboard.html"; 
+    }
+    
+    function gotoDashboard() { 
+      window.location.href = "dashboard.html"; 
+    }
+    
+    function gotoSetting() { 
+      window.location.href = "settings.html"; 
+    }
+    
+    document.addEventListener("DOMContentLoaded", loadDashboard);
+    let dashCtx;
+
+// === INIT AUDIO ===
+function initAudio() {
+  if (!dashCtx) {
+    dashCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+// === PLAY SOUND ===
+function playSound(freq, type = "sine", duration = 0.2, volume = 0.3) {
+  initAudio();
+  const osc = dashCtx.createOscillator();
+  const gain = dashCtx.createGain();
+
+  osc.type = type;
+  osc.frequency.value = freq;
+
+  gain.gain.value = volume;
+
+  osc.connect(gain);
+  gain.connect(dashCtx.destination);
+
+  osc.start();
+  osc.stop(dashCtx.currentTime + duration);
+}
+
+// === SPECIAL EFFECTS ===
+
+// Hover = soft blip
+function hoverSound() {
+  playSound(440, "sine", 0.15, 0.15);
+}
+
+// Click = deeper tech beep
+function clickSound() {
+  playSound(220, "square", 0.2, 0.25);
+  setTimeout(() => playSound(660, "sine", 0.1, 0.15), 100);
+}
+
+// Navigation success = rising "confirmation" tone
+function navSuccessSound() {
+  playSound(400, "triangle", 0.15, 0.2);
+  setTimeout(() => playSound(600, "triangle", 0.15, 0.2), 150);
+  setTimeout(() => playSound(800, "triangle", 0.25, 0.25), 300);
+}
+
+// === ATTACH TO DASHBOARD ELEMENTS ===
+window.addEventListener("load", () => {
+  initAudio();
+
+  // Example: all buttons get sounds
+  document.querySelectorAll("button, .btn, .menu-item").forEach(el => {
+    el.addEventListener("mouseenter", hoverSound);
+    el.addEventListener("click", clickSound);
+  });
+
+  // Example: simulate "navigation success" when a page link is clicked
+  document.querySelectorAll("a").forEach(el => {
+    el.addEventListener("click", (e) => {
+      navSuccessSound();
+    });
+  });
+});
+  </script>
+</body>
+</html>

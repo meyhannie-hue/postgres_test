@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About - Techy Me</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
+      color: #e0f7fa;
+      overflow-x: hidden;
+    }
+    
+    /* Digital Rain Background */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    
+    /* Circuit Board Pattern */
+    .circuit-board {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      background: #00e5ff;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Circuit Pattern Overlay */
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.03) 10px,
+        rgba(0, 229, 255, 0.03) 20px
+      );
+      z-index: -1;
+    }
+    
+    main {
+      flex: 1;
+      padding: 40px 20px 80px; /* bottom padding to prevent overlap with footer */
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    
+    .about-card {
+      background: rgba(0, 30, 60, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.6s ease;
+      max-width: 800px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Circuit Pattern Overlay for Card */
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.05) 10px,
+        rgba(0, 229, 255, 0.05) 20px
+      );
+      z-index: -1;
+    }
+    
+    .about-icon {
+      font-size: 48px;
+      color: #00e5ff;
+      text-align: center;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+    }
+    
+    .about-title {
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
+      margin: 10px 0 25px;
+      color: #00e5ff;
+      position: relative;
+      animation: glitch 5s infinite;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+    }
+    
+    .about-title::before, .about-title::after {
+      content: "About TECHY ME";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .about-title::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00e5ff;
+      z-index: -1;
+    }
+    
+    .about-title::after {
+      animation: glitch-2 0.5s infinite;
+      color: #0078d4;
+      z-index: -2;
+    }
+    
+    @keyframes glitch {
+      0%, 100% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      20% { text-shadow: -2px 0 #00e5ff, 2px 0 #0078d4; }
+      40% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+      60% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      80% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+    }
+    
+    @keyframes glitch-1 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
+      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
+      60% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
+      80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
+    }
+    
+    @keyframes glitch-2 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
+      40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
+      60% { clip-path: inset(30% 0 40% 0); transform: translate(0); }
+      80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
+    }
+    
+    .about-description {
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      text-align: justify;
+      color: #e0f7fa;
+    }
+    
+    .about-description ul {
+      padding-left: 20px;
+    }
+    
+    .about-description li {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 5px;
+      animation: listItemFade 0.5s ease forwards;
+      opacity: 0;
+    }
+    
+    /* Stagger animation for list items */
+    .about-description li:nth-child(1) { animation-delay: 0.1s; }
+    .about-description li:nth-child(2) { animation-delay: 0.2s; }
+    .about-description li:nth-child(3) { animation-delay: 0.3s; }
+    .about-description li:nth-child(4) { animation-delay: 0.4s; }
+    .about-description li:nth-child(5) { animation-delay: 0.5s; }
+    .about-description li:nth-child(6) { animation-delay: 0.6s; }
+    .about-description li:nth-child(7) { animation-delay: 0.7s; }
+    .about-description li:nth-child(8) { animation-delay: 0.8s; }
+    
+    @keyframes listItemFade {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    /* IT-themed hover effect for list items */
+    .about-description li:hover {
+      color: #00e5ff;
+      transform: translateX(5px);
+      transition: all 0.3s ease;
+    }
+    
+    .acknowledgment {
+      background: rgba(0, 30, 60, 0.7);
+      border-left: 4px solid #00e5ff;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #e0f7fa;
+      margin-top: 25px;
+      padding: 18px 20px;
+      position: relative;
+      animation: slideIn 0.8s ease forwards;
+      opacity: 0;
+    }
+    
+    .acknowledgment:nth-of-type(1) { animation-delay: 0.9s; }
+    .acknowledgment:nth-of-type(2) { animation-delay: 1.1s; }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Circuit Pattern Overlay for Acknowledgment */
+    .acknowledgment::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.05) 10px,
+        rgba(0, 229, 255, 0.05) 20px
+      );
+      z-index: -1;
+      border-radius: 10px;
+    }
+    
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(0, 30, 60, 0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0, 229, 255, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      z-index: 10;
+    }
+    
+    .icon {
+      font-size: 28px;
+      color: #90caf9;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.3s ease;
+      position: relative;
+    }
+    
+    .icon:hover {
+      transform: scale(1.2);
+      color: #00e5ff;
+    }
+    
+    .icon.active {
+      background: rgba(0, 229, 255, 0.2);
+      padding: 8px 12px;
+      border-radius: 50%;
+      color: #00e5ff;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+    
+    /* Glow effect for active icon */
+    .icon.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.3);
+      z-index: -1;
+      animation: pulse-icon 2s infinite;
+    }
+    
+    @keyframes pulse-icon {
+      0% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 0.5; }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .about-card {
+        padding: 20px;
+        margin: 10px;
+      }
+      .about-title {
+        font-size: 22px;
+      }
+      .about-description {
+        font-size: 14px;
+      }
+      .acknowledgment {
+        font-size: 13px;
+      }
+      main {
+        padding: 20px 10px 80px; /* match bottom padding on small screens too */
+      }
+      .digital-rain {
+        display: none; /* Hide digital rain on mobile for better performance */
+      }
+      .particles {
+        display: none; /* Hide particles on mobile for better performance */
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas class="digital-rain" id="digitalRain"></canvas>
+  <div class="circuit-board"></div>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <main>
+      <div class="about-card">
+        <div class="about-icon">🧾</div>
+        <div class="about-title">About TECHY ME</div>
+        <div class="about-description">
+  <strong>TECHY ME</strong> is a gamified learning platform that helps students master IT skills through interactive modules and games.
+  <br><br>
+  Tailored for beginners and high school learners, our modules cover:
+  <ul>
+    <li>⚙️ <strong>Networking</strong> – Learn wiring and connections</li>
+    <li>💻 <strong>Programming</strong> – Practice HTML, CSS, JS, PHP</li>
+    <li>🧩 <strong>System Unit</strong> – Assemble/disassemble PC parts</li>
+  </ul>
+  <br>
+  <strong>What makes TECHY ME different?</strong><br>
+  TECHY ME is not just educational — it's interactive, competitive, and user-friendly. It combines visual challenges, problem-solving exercises, and step-by-step tutorials to make learning both efficient and exciting.
+  <br><br>
+  <strong>Key Features:</strong>
+  <ul>
+    <li>🧠 Unlockable difficulty levels and achievements</li>
+    <li>📱 Fully responsive for desktop, tablet, and mobile</li>
+  </ul>
+  <strong>Benefits of Using TECHY ME:</strong>
+  <ul>
+    <li>✅ Learn core IT skills in a structured and fun environment</li>
+    <li>✅ Improve logical thinking and practical problem-solving</li>
+    <li>✅ Build foundational knowledge for future tech careers</li>
+    <li>✅ Encourage self-paced, goal-driven learning</li>
+  </ul>
+  Whether you're new to tech or just want to improve your skills, <strong>TECHY ME</strong> gives you the tools, challenges, and motivation you need to succeed.
+</div>
+<div class="acknowledgment">
+  <strong>Acknowledgment:</strong><br><br>
+  Special thanks to our teachers, mentors, and classmates for their support. This project was made possible by the guidance and encouragement from our school and ICT community.
+</div>
+<div class="acknowledgment">
+  <strong>Developers:</strong><br><br>
+  This platform was developed by a passionate student team dedicated to making tech education more interactive and accessible:
+  <ul style="margin-top: 10px;">
+    <li>👑 <strong>Leader:</strong> Ian Dimaangay</li>
+    <li>👩‍💻 <strong>Members:</strong> Jenalyn Balbada, Sarah Jean Padel</li>
+  </ul>
+</div>
+    </main>
+    <footer>
+  <div class="icon active" onclick="gotoAbout()" style="background: #4e5d78; padding: 8px 12px; border-radius: 50%;">🧾</div> <!-- About icon -->
+  <div class="icon" onclick="gotoLeaderboard()">📊</div>
+  <div class="icon" onclick="gotoDashboard()">👑</div>
+  <div class="icon" onclick="gotoSetting()">⚙️</div>
+</footer>
+  </div>
+  
+  <script>
+    // Digital Rain Effect
+    const rainCanvas = document.getElementById('digitalRain');
+    const rainCtx = rainCanvas.getContext('2d');
+    
+    // Set canvas size
+    rainCanvas.width = window.innerWidth;
+    rainCanvas.height = window.innerHeight;
+    
+    // Characters for the digital rain
+    const characters = '01';
+    const fontSize = 14;
+    const columns = rainCanvas.width / fontSize;
+    const drops = [];
+    
+    // Initialize drops
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * rainCanvas.height;
+    }
+    
+    // Draw the digital rain
+    function drawRain() {
+      rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+      rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+      
+      rainCtx.fillStyle = '#00e5ff';
+      rainCtx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        
+        drops[i]++;
+      }
+    }
+    
+    // Animation loop for digital rain
+    setInterval(drawRain, 33);
+    
+    // Resize canvas when window is resized
+    window.addEventListener('resize', () => {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    });
+    
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random size between 2px and 6px
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      
+      particlesContainer.appendChild(particle);
+    }
+    
+    // Original navigation functions
+    function gotoAbout() { window.location.href = "about.html"; }
+    function gotoLeaderboard() { window.location.href = "leaderboard.html"; }
+    function gotoDashboard() { window.location.href = "dashboard.html"; }
+    function gotoSetting() { window.location.href = "settings.html"; }
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+body {
+  margin: 0;
+  background: #f9f9f9;
+  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-top: 30px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  background: #e0e0e0;
+  color: #333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+.timer {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 10px;
+  color: #555;
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 80px;
+  margin-top: 40px;
+  position: relative;
+  justify-content: space-between;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.slot, .wire {
+  width: 100px;
+  height: 36px;
+  background: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.wire {
+  cursor: grab;
+}
+
+.wire:active {
+  background: #f0f0f0;
+  transform: scale(1.02);
+}
+
+.pin-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #666;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.slot .pin-dot {
+  right: -18px;
+}
+
+.wire .pin-dot {
+  left: -18px;
+}
+
+.submit-btn {
+  display: block;
+  margin: 40px auto;
+  background: #4CAF50;
+  color: white;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background: #45a049;
+}

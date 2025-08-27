@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Unit Levels - Tech Lab Hardware Blueprint</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Roboto Mono', monospace;
+      margin: 0;
+      background: #212121;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #cfd8dc;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Blueprint Grid Background */
+    .blueprint-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: 
+        linear-gradient(rgba(207, 216, 220, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(207, 216, 220, 0.1) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+    
+    /* Circuit Pattern Overlay */
+    .circuit-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 145, 0, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 80% 40%, rgba(255, 145, 0, 0.05) 0%, transparent 15%),
+        radial-gradient(circle at 40% 70%, rgba(255, 145, 0, 0.05) 0%, transparent 25%);
+      pointer-events: none;
+    }
+    
+    /* Floating Hardware Components */
+    .hardware-components {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .hardware-component {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 30s infinite ease-in-out;
+    }
+    
+    .hardware-component.cpu {
+      top: 15%;
+      left: 10%;
+      font-size: 40px;
+      animation-delay: 0s;
+    }
+    
+    .hardware-component.gpu {
+      top: 60%;
+      left: 75%;
+      font-size: 45px;
+      animation-delay: 10s;
+    }
+    
+    .hardware-component.ram {
+      top: 30%;
+      left: 80%;
+      font-size: 35px;
+      animation-delay: 20s;
+    }
+    
+    .hardware-component.motherboard {
+      top: 70%;
+      left: 20%;
+      font-size: 50px;
+      animation-delay: 5s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20px, -20px) rotate(5deg); }
+      50% { transform: translate(-15px, 15px) rotate(-5deg); }
+      75% { transform: translate(10px, 10px) rotate(3deg); }
+    }
+    
+    /* Main Container */
+    .tech-container {
+      max-width: 420px;
+      width: 100%;
+      min-height: 90vh;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 
+        0 0 20px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+      border: 1px solid rgba(207, 216, 220, 0.2);
+      animation: containerEntry 0.8s ease forwards;
+    }
+    
+    /* Blueprint Effect */
+    .tech-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(207, 216, 220, 0.03) 2px,
+        rgba(207, 216, 220, 0.03) 4px
+      );
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    @keyframes containerEntry {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+    
+    /* Header */
+    .tech-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid rgba(207, 216, 220, 0.2);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .back-btn {
+      cursor: pointer;
+      font-size: 20px;
+      color: #cfd8dc;
+      transition: all 0.3s ease;
+      background: rgba(207, 216, 220, 0.1);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .back-btn:hover {
+      background: rgba(255, 145, 0, 0.2);
+      color: #ff9100;
+      transform: scale(1.1);
+    }
+    
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      color: #cfd8dc;
+      flex-grow: 1;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 14px;
+    }
+    
+    .username {
+      color: #cfd8dc;
+      font-weight: 500;
+    }
+    
+    .points {
+      color: #ff9100;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    /* Content Title */
+    .content-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 30px 0;
+      color: #cfd8dc;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .content-title::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: #ff9100;
+    }
+    
+    .content-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: #ff9100;
+    }
+    
+    /* Level Cards */
+    .level-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      padding: 0 20px 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .level-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(207, 216, 220, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+    
+    /* Blueprint Border Effect */
+    .level-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent 48%, rgba(255, 145, 0, 0.1) 50%, transparent 52%);
+      background-size: 200% 200%;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.4s ease;
+    }
+    
+    .level-card:hover::before {
+      opacity: 1;
+      animation: blueprintScan 3s linear infinite;
+    }
+    
+    @keyframes blueprintScan {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 200%; }
+    }
+    
+    .level-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(255, 145, 0, 0.2);
+      border-color: rgba(255, 145, 0, 0.5);
+    }
+    
+    .level-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: rgba(100, 100, 100, 0.3);
+    }
+    
+    .level-card.locked::before {
+      display: none;
+    }
+    
+    /* Level Header */
+    .level-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .level-name {
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .level-name .icon {
+      font-size: 24px;
+      transition: all 0.3s ease;
+    }
+    
+    .level-card:hover .level-name .icon {
+      color: #ff9100;
+      transform: scale(1.2);
+    }
+    
+    .level-status {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .level-status.unlocked {
+      background: rgba(255, 145, 0, 0.2);
+      color: #ff9100;
+      border: 1px solid rgba(255, 145, 0, 0.3);
+    }
+    
+    .level-status.locked {
+      background: rgba(100, 100, 100, 0.2);
+      color: #aaaaaa;
+      border: 1px solid rgba(100, 100, 100, 0.3);
+    }
+    
+    /* Level Description */
+    .level-description {
+      color: #aaaaaa;
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+      transition: width 0.8s ease;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+    
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .progress-bar.easy {
+      background: linear-gradient(90deg, #4caf50, #8bc34a);
+    }
+    
+    .progress-bar.medium {
+      background: linear-gradient(90deg, #ff9100, #ffb74d);
+    }
+    
+    .progress-bar.hard {
+      background: linear-gradient(90deg, #f44336, #ef5350);
+    }
+    
+    /* Tech Badge */
+    .tech-badge {
+      display: inline-block;
+      background: rgba(255, 145, 0, 0.1);
+      color: #ff9100;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 145, 0, 0.2);
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(33, 33, 33, 0.95);
+      color: #ff9100;
+      padding: 15px 25px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 145, 0, 0.3);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      opacity: 0;
+      animation: notificationFade 3s forwards;
+    }
+    
+    @keyframes notificationFade {
+      0% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px);
+      }
+      20% { 
+        opacity: 1; 
+        transform: translate(-50%, 0);
+      }
+      80% { 
+        opacity: 1; 
+        transform: translate(-50%, 0);
+      }
+      100% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px);
+      }
+    }
+    
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(33, 33, 33, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .loading-content {
+      text-align: center;
+    }
+    
+    .loading-text {
+      color: #cfd8dc;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .loading-hardware {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    
+    .hardware-icon {
+      font-size: 24px;
+      animation: hardwarePulse 1.5s infinite ease-in-out;
+    }
+    
+    .hardware-icon:nth-child(1) {
+      color: #ff9100;
+      animation-delay: 0s;
+    }
+    
+    .hardware-icon:nth-child(2) {
+      color: #cfd8dc;
+      animation-delay: 0.3s;
+    }
+    
+    .hardware-icon:nth-child(3) {
+      color: #ff9100;
+      animation-delay: 0.6s;
+    }
+    
+    @keyframes hardwarePulse {
+      0%, 100% { 
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% { 
+        transform: scale(1.3);
+        opacity: 1;
+      }
+    }
+    
+    /* Draggable PC Parts */
+    .pc-parts-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 15px;
+      z-index: 100;
+    }
+    
+    .pc-part {
+      width: 60px;
+      height: 60px;
+      background: rgba(33, 33, 33, 0.8);
+      border: 1px solid rgba(207, 216, 220, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      cursor: grab;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .pc-part:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      border-color: #ff9100;
+    }
+    
+    .pc-part:active {
+      cursor: grabbing;
+    }
+    
+    .pc-part.dragging {
+      opacity: 0.8;
+      transform: scale(1.1);
+      z-index: 1000;
+      box-shadow: 0 10px 20px rgba(255, 145, 0, 0.3);
+    }
+    
+    /* Drop Zone */
+    .drop-zone {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      border: 2px dashed rgba(207, 216, 220, 0.3);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      background: rgba(33, 33, 33, 0.7);
+    }
+    
+    .drop-zone.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .drop-zone.hover {
+      border-color: #ff9100;
+      background: rgba(255, 145, 0, 0.1);
+    }
+    
+    .drop-zone-text {
+      color: #cfd8dc;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      .tech-container {
+        min-height: 95vh;
+        border-radius: 0;
+      }
+      
+      .content-title {
+        font-size: 24px;
+      }
+      
+      .level-card {
+        padding: 15px;
+      }
+      
+      .level-name {
+        font-size: 18px;
+      }
+      
+      .pc-parts-container {
+        bottom: 10px;
+        right: 10px;
+      }
+      
+      .pc-part {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="blueprint-grid"></div>
+  <div class="circuit-pattern"></div>
+  <div class="hardware-components" id="hardwareComponents"></div>
+  
+  <div class="tech-container">
+    <div class="tech-header">
+      <div class="back-btn" onclick="goBack()">←</div>
+      <div class="title">Techy Me</div>
+      <div class="user-info">
+        <div class="username" id="usernameDisplay">User</div>
+        <div class="points" id="points"><span>💰</span> <span>0</span></div>
+      </div>
+    </div>
+    
+    <div class="content-title">System Unit</div>
+    
+    <div class="level-cards">
+      <div class="level-card" onclick="startLevel('easy')">
+        <div class="tech-badge">Hardware Lab</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="icon">🖥️</span>
+            <span>Basic</span>
+          </div>
+          <div class="level-status unlocked">Unlocked</div>
+        </div>
+        <div class="level-description">Identify basic PC components and their functions</div>
+        <div class="progress-container">
+          <div class="progress-bar easy" id="easyProgress"></div>
+        </div>
+      </div>
+      
+      <div class="level-card locked" id="mediumLevel" onclick="startLevel('medium')">
+        <div class="tech-badge">Hardware Lab</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="icon">🔧</span>
+            <span>Intermediate</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Assembly procedures and compatibility checks</div>
+        <div class="progress-container">
+          <div class="progress-bar medium" id="mediumProgress"></div>
+        </div>
+      </div>
+      
+      <div class="level-card locked" id="hardLevel" onclick="startLevel('hard')">
+        <div class="tech-badge">Hardware Lab</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="icon">⚡</span>
+            <span>Advanced</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Troubleshooting and optimization techniques</div>
+        <div class="progress-container">
+          <div class="progress-bar hard" id="hardProgress"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- PC Parts for Drag and Drop -->
+  <div class="pc-parts-container">
+    <div class="pc-part" draggable="true" data-part="cpu">🧠</div>
+    <div class="pc-part" draggable="true" data-part="gpu">🎮</div>
+    <div class="pc-part" draggable="true" data-part="ram">💾</div>
+  </div>
+  
+  <!-- Drop Zone -->
+  <div class="drop-zone" id="dropZone">
+    <div class="pc-part" style="width: 80px; height: 80px; font-size: 40px;">🖥️</div>
+    <div class="drop-zone-text">Drop PC parts here</div>
+  </div>
+  
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-text" id="loadingText">Initializing...</div>
+      <div class="loading-hardware">
+        <div class="hardware-icon">🖥️</div>
+        <div class="hardware-icon">🔧</div>
+        <div class="hardware-icon">⚡</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Create floating hardware components
+    const hardwareComponents = document.getElementById('hardwareComponents');
+    const components = [
+      { class: 'cpu', icon: '🧠' },
+      { class: 'gpu', icon: '🎮' },
+      { class: 'ram', icon: '💾' },
+      { class: 'motherboard', icon: '🔌' }
+    ];
+    
+    components.forEach(component => {
+      const div = document.createElement('div');
+      div.className = `hardware-component ${component.class}`;
+      div.textContent = component.icon;
+      hardwareComponents.appendChild(div);
+    });
+    
+    // User info
+    const loggedInUser = localStorage.getItem("loggedInUser") || "User";
+    const points = localStorage.getItem("points") || 0;
+    document.getElementById("usernameDisplay").innerText = loggedInUser;
+    document.querySelector("#points span:last-child").innerText = points;
+    
+    // Level unlocking logic
+    const userPoints = parseInt(points) || 0;
+    if (userPoints >= 9000) {
+      document.getElementById("mediumLevel").classList.remove("locked");
+      document.querySelector("#mediumLevel .level-status").classList.remove("locked");
+      document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
+      document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
+    }
+    if (userPoints >= 10200) {
+      document.getElementById("hardLevel").classList.remove("locked");
+      document.querySelector("#hardLevel .level-status").classList.remove("locked");
+      document.querySelector("#hardLevel .level-status").classList.add("unlocked");
+      document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
+    }
+    
+    // Simulate progress bars
+    setTimeout(() => {
+      document.getElementById("easyProgress").style.width = "100%";
+      if (userPoints >= 9000) {
+        document.getElementById("mediumProgress").style.width = "65%";
+      }
+      if (userPoints >= 10200) {
+        document.getElementById("hardProgress").style.width = "30%";
+      }
+    }, 500);
+    
+    function startLevel(level) {
+      const levelElement = document.getElementById(level + "Level");
+      if (levelElement.classList.contains("locked")) {
+        // Create notification
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        
+        if (level === "medium") {
+          notification.textContent = "ACCESS DENIED: Complete Basic level and earn 9000 points to unlock";
+        } else if (level === "hard") {
+          notification.textContent = "ACCESS DENIED: Complete Intermediate level and earn 10200 points to unlock";
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+        
+        return;
+      }
+      
+      // Show loading overlay
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      
+      loadingOverlay.classList.add('active');
+      
+      if (level === "easy") {
+        loadingText.textContent = "Initializing Hardware Lab...";
+      } else if (level === "medium") {
+        loadingText.textContent = "Preparing Assembly Bench...";
+      } else if (level === "hard") {
+        loadingText.textContent = "Loading Diagnostic Tools...";
+      }
+      
+      // Navigate after loading animation
+      setTimeout(() => {
+        if (level === "easy") window.location.href = `../systemunit/easy.html`;
+        if (level === "medium") window.location.href = `../systemunit/medium.html`;
+        if (level === "hard") window.location.href = `../systemunit/hard.html`;
+      }, 2000);
+    }
+    
+    function goBack() {
+      // Show loading overlay
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      
+      loadingOverlay.classList.add('active');
+      loadingText.textContent = "Exiting Hardware Lab...";
+      
+      // Navigate after loading animation
+      setTimeout(() => {
+        window.location.href = "../dashboard.html";
+      }, 1500);
+    }
+    
+    // Drag and Drop functionality
+    const pcParts = document.querySelectorAll('.pc-part');
+    const dropZone = document.getElementById('dropZone');
+    
+    pcParts.forEach(part => {
+      part.addEventListener('dragstart', handleDragStart);
+      part.addEventListener('dragend', handleDragEnd);
+    });
+    
+    dropZone.addEventListener('dragover', handleDragOver);
+    dropZone.addEventListener('drop', handleDrop);
+    dropZone.addEventListener('dragenter', handleDragEnter);
+    dropZone.addEventListener('dragleave', handleDragLeave);
+    
+    let draggedElement = null;
+    
+    function handleDragStart(e) {
+      draggedElement = this;
+      this.classList.add('dragging');
+      dropZone.classList.add('active');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML);
+    }
+    
+    function handleDragEnd(e) {
+      this.classList.remove('dragging');
+      
+      pcParts.forEach(part => {
+        part.classList.remove('dragging');
+      });
+    }
+    
+    function handleDragOver(e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+    
+    function handleDrop(e) {
+      if (e.stopPropagation) {
+        e.stopPropagation();
+      }
+      
+      if (draggedElement !== this) {
+        // Create a magnetic snap effect
+        const clone = draggedElement.cloneNode(true);
+        clone.style.position = 'absolute';
+        clone.style.top = '50%';
+        clone.style.left = '50%';
+        clone.style.transform = 'translate(-50%, -50%) scale(1.5)';
+        clone.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        
+        dropZone.appendChild(clone);
+        
+        // Add glow effect
+        setTimeout(() => {
+          clone.style.boxShadow = '0 0 20px rgba(255, 145, 0, 0.8)';
+        }, 100);
+        
+        // Remove after animation
+        setTimeout(() => {
+          clone.style.opacity = '0';
+          setTimeout(() => {
+            clone.remove();
+            dropZone.classList.remove('active');
+          }, 500);
+        }, 1500);
+        
+        // Show notification
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = `${draggedElement.dataset.part.toUpperCase()} installed successfully!`;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      }
+      
+      return false;
+    }
+    
+    function handleDragEnter(e) {
+      this.classList.add('hover');
+    }
+    
+    function handleDragLeave(e) {
+      this.classList.remove('hover');
+    }
+  </script>
+</body>
+</html>

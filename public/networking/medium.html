@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Networking Medium Level - Crossover Cable</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { 
+      margin: 0; 
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      color: #00ffff;
+    }
+    
+    /* Circuit Board Background */
+    .circuit-board {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    /* Animated Circuit Traces */
+    .circuit-traces {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    
+    .circuit-trace {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+      height: 2px;
+      animation: traceFlow 8s linear infinite;
+    }
+    
+    @keyframes traceFlow {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    /* Digital Rain Background */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      background: #00e5ff;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    /* App Container */
+    .app-container {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 25px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 229, 255, 0.3);
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 20px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      animation: appContainerEntry 0.8s ease forwards;
+      position: relative;
+    }
+    
+    /* Circuit Pattern Overlay for App Container */
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.03) 10px,
+        rgba(0, 229, 255, 0.03) 20px
+      );
+      z-index: -1;
+      border-radius: 25px;
+    }
+    
+    /* Scanning Line Animation */
+    .app-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.7), transparent);
+      animation: scanLine 4s linear infinite;
+      z-index: 1;
+    }
+    
+    @keyframes scanLine {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+    
+    @keyframes appContainerEntry {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(74, 44, 80, 0.8);
+      color: #fff;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+    }
+    
+    .header-title {
+      font-size: 20px;
+      flex-grow: 1;
+      text-align: center;
+      font-weight: bold;
+      color: #00ffff;
+      animation: glow 2s infinite alternate;
+      position: relative;
+    }
+    
+    .header-title::before, .header-title::after {
+      content: "Networking Medium Level - Crossover Cable";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .header-title::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00e5ff;
+      z-index: -1;
+    }
+    
+    .header-title::after {
+      animation: glitch-2 0.5s infinite;
+      color: #0078d4;
+      z-index: -2;
+    }
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      to { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+    }
+    
+    @keyframes glitch {
+      0%, 100% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      20% { text-shadow: -2px 0 #00e5ff, 2px 0 #0078d4; }
+      40% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+      60% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      80% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+    }
+    
+    @keyframes glitch-1 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
+      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
+      60% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
+      80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
+    }
+    
+    @keyframes glitch-2 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
+      40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
+      60% { clip-path: inset(30% 0 40% 0); transform: translate(0); }
+      80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
+    }
+    
+    .back-button { 
+      cursor: pointer; 
+      font-size: 20px; 
+      color: #ff00ff;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .back-button:hover { 
+      transform: scale(1.2) rotate(-30deg); 
+      color: #ff5eff;
+    }
+    
+    .placeholder { width: 30px; }
+    
+    .instructions { 
+      background: rgba(0, 30, 60, 0.5);
+      padding: 20px;
+      font-size: 18px;
+      text-align: center;
+      border-bottom: 2px solid rgba(0, 229, 255, 0.3);
+      min-height: 60px;
+      position: relative;
+      z-index: 2;
+      animation: fadeIn 1s ease forwards;
+    }
+    
+    .instructions ul {
+      text-align: left;
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+    
+    .instructions strong { color: #00e5ff; }
+    
+    .tutorial-box { 
+      margin: 15px auto; 
+      padding: 12px 15px; 
+      border: 1px solid #0056b3; 
+      border-radius: 4px; 
+      background: rgba(0, 20, 40, 0.8); 
+      box-shadow: 0 0 10px rgba(0, 86, 179, 0.3); 
+      text-align: center; 
+      max-width: 500px; 
+      min-height: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tutorial-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 229, 255, 0.05) 2px,
+        rgba(0, 229, 255, 0.05) 4px
+      );
+      z-index: -1;
+    }
+    
+    .tutorial-step { 
+      font-size: 14px; 
+      color: #e0f7fa; 
+      opacity: 0; 
+      transform: translateY(10px); 
+      transition: opacity 0.6s ease, transform 0.6s ease; 
+      position: relative;
+    }
+    
+    .tutorial-step.active { 
+      opacity: 1; 
+      transform: translateY(0); 
+      color: #00e5ff; 
+      animation: typing 1.5s steps(20, end);
+    }
+    
+    .video-caption { 
+      font-size: 13px; 
+      margin-top: 8px; 
+      color: #90caf9; 
+      font-style: italic; 
+    }
+    
+    .start-btn { 
+      margin: 15px auto;
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(45deg, #9527ae, #00ffff);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 90%;
+      max-width: 700px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      animation: fadeIn 1.6s ease forwards;
+    }
+    
+    .start-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+    
+    .start-btn:hover::before {
+      transform: translateX(100%);
+    }
+    
+    .start-btn:hover { 
+      background: linear-gradient(45deg, #219150, #ff00ff);
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+    
+    .game-section { 
+      display: none; 
+      flex-direction: column; 
+      align-items: center; 
+      width: 100%; 
+      opacity: 0; 
+      animation: fadeIn 1s ease forwards; 
+    }
+    
+    .timer { 
+      font-size: 16px; 
+      margin-bottom: 12px; 
+      color: #00e5ff; 
+      animation: pulse 2s infinite;
+      text-shadow: 0 0 5px rgba(0, 229, 255, 0.7);
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .game { 
+      display: flex; 
+      position: relative; 
+      justify-content: center; 
+      width: 90%; 
+      max-width: 800px; 
+    }
+    
+    #lineCanvas { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      z-index: 2; 
+      pointer-events: none; 
+    }
+    
+    .column { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px; 
+      padding: 5px; 
+      z-index: 1; 
+    }
+    
+    #pinColumn { 
+      margin-right: auto; 
+      align-items: flex-end; 
+    }
+    
+    #wireColumn { 
+      margin-left: auto; 
+      align-items: flex-start; 
+    }
+    
+    .slot, .wire {
+      position: relative;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: grab;
+      user-select: none;
+      width: 90px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .slot { 
+      background: rgba(0, 30, 60, 0.7); 
+      border: 1px dashed #0056b3; 
+      color: #e0f7fa; 
+    }
+    
+    .slot.hover { 
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); 
+      transform: scale(1.05); 
+    }
+    
+    .wire { 
+      color: #0a1929; 
+      border: 1px solid #0056b3; 
+      background: #e0f7fa; 
+      transition: transform 0.2s ease; 
+    }
+    
+    .wire:active { 
+      transform: scale(1.1); 
+    }
+    
+    .wire.correct { 
+      animation: glow 1s infinite alternate, pulse-success 1.5s infinite; 
+    }
+    
+    .wire.incorrect { 
+      animation: shake 0.4s, error-flash 0.5s; 
+    }
+    
+    .pin-dot { 
+      position: absolute; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      width: 12px; 
+      height: 12px; 
+      border-radius: 50%; 
+      background: #00e5ff;
+      box-shadow: 0 0 5px rgba(0, 229, 255, 0.7);
+    }
+    
+    .slot .pin-dot { 
+      right: -10px; 
+    }
+    
+    .wire .pin-dot { 
+      left: -10px; 
+    }
+    
+    .submit-btn {
+      margin: 20px;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #9527ae, #00ffff);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+      color: #ffffff;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
+      position: relative;
+      overflow: hidden;
+      width: 90%;
+      max-width: 700px;
+    }
+    
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+    
+    .submit-btn:hover { 
+      background: linear-gradient(45deg, #219150, #ff00ff); 
+      color: #ffffff; 
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.7); 
+    }
+    
+    #result { 
+      font-size: 16px; 
+      font-weight: bold; 
+      margin: 8px; 
+      text-align: center; 
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Data Packets */
+    .data-packet {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #39ff14;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #39ff14;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(10px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+    
+    @keyframes pulse { 
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); } 
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); } 
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); } 
+    }
+    
+    @keyframes glow { 
+      from { box-shadow: 0 0 5px rgba(0, 229, 255, 0.7); } 
+      to { box-shadow: 0 0 15px rgba(0, 229, 255, 0.9); } 
+    }
+    
+    @keyframes shake { 
+      0% { transform: translateX(0); } 
+      25% { transform: translateX(-5px); } 
+      50% { transform: translateX(5px); } 
+      75% { transform: translateX(-5px); } 
+      100% { transform: translateX(0); } 
+    }
+    
+    @keyframes scan-line {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+    
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    
+    @keyframes pulse-success {
+      0% { box-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { box-shadow: 0 0 15px rgba(0, 229, 255, 0.9), 0 0 20px rgba(0, 229, 255, 0.5); }
+      100% { box-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+    }
+    
+    @keyframes error-flash {
+      0%, 100% { background-color: #e0f7fa; }
+      25%, 75% { background-color: #ffcccc; }
+      50% { background-color: #ff9999; }
+    }
+    
+    @keyframes dataFlow {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      .app-container { 
+        border-radius: 0; 
+        height: 100vh; 
+      }
+      .header-title { 
+        font-size: 16px; 
+      }
+      .back-button {
+        font-size: 18px;
+      }
+      .instructions {
+        padding: 15px;
+        font-size: 14px;
+      }
+      .tutorial-box {
+        margin: 10px auto;
+        padding: 10px 12px;
+        max-width: 90%;
+      }
+      .tutorial-step {
+        font-size: 13px;
+      }
+      .start-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+      .game {
+        width: 95%;
+      }
+      .slot, .wire {
+        width: 70px;
+        font-size: 10px;
+        padding: 5px 8px;
+      }
+      .submit-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
+      .digital-rain {
+        display: none; /* Hide digital rain on mobile for better performance */
+      }
+      .particles {
+        display: none; /* Hide particles on mobile for better performance */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Digital Rain Background -->
+  <canvas class="digital-rain" id="digitalRain"></canvas>
+  
+  <!-- Circuit Board Pattern -->
+  <div class="circuit-board"></div>
+  
+  <!-- Circuit Traces -->
+  <div class="circuit-traces" id="circuitTraces"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- App Container -->
+  <div class="app-container">
+    <!-- Header with Back Button -->
+    <header>
+      <div class="back-button" onclick="window.history.back()">⤺</div>
+      <div class="header-title">Networking Medium Level - Crossover Cable</div>
+      <div class="placeholder"></div>
+    </header>
+    
+    <!-- Instructions -->
+    <div class="instructions" id="instructions">
+      <p><strong>Instructions:</strong></p>
+      <ul>
+        <li>Drag each <strong>wire</strong> from the right column and drop it onto the correct <strong>pin</strong> (1–8).</li>
+        <li>You have <strong>45 seconds</strong> to complete the task.</li>
+        <li>Click <strong>Submit</strong> to check your connections.</li>
+      </ul>
+      <div class="tutorial-box" id="tutorialBox">
+        <div class="tutorial-step active">👋 This is a <strong>Crossover Cable</strong>.</div>
+        <div class="tutorial-step">➡ Drag a wire from the right side.</div>
+        <div class="tutorial-step">⬅ Drop it onto the correct pin (1–8).</div>
+        <div class="tutorial-step">✅ Match all 8 wires in the correct crossover order.</div>
+        <div class="tutorial-step">▶ Click "Start Game" when ready!</div>
+      </div>
+      <p class="video-caption">📘 Steps auto-play below instead of video</p>
+      <button class="start-btn" onclick="startGame()">▶ Start Game</button>
+    </div>
+    
+    <!-- Game Section -->
+    <div class="game-section" id="gameSection">
+      <div class="timer">⏳ Time left: <span id="countdown">0:45</span></div>
+      <div class="game">
+        <canvas id="lineCanvas" width="1200" height="600"></canvas>
+        <div class="column" id="pinColumn"></div>
+        <div class="column" id="wireColumn"></div>
+      </div>
+      <button class="submit-btn" onclick="checkWiring()">Submit</button>
+      <div id="result"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random size between 2px and 6px
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      
+      particlesContainer.appendChild(particle);
+    }
+    
+    // Create circuit traces
+    const circuitTraces = document.getElementById('circuitTraces');
+    const traceCount = 15;
+    
+    for (let i = 0; i < traceCount; i++) {
+      const trace = document.createElement('div');
+      trace.className = 'circuit-trace';
+      trace.style.top = `${Math.random() * 100}%`;
+      trace.style.width = `${Math.random() * 30 + 10}%`;
+      trace.style.animationDelay = `${Math.random() * 8}s`;
+      trace.style.animationDuration = `${Math.random() * 5 + 5}s`;
+      circuitTraces.appendChild(trace);
+    }
+    
+    // Digital Rain Effect (Purely Visual)
+    const rainCanvas = document.getElementById('digitalRain');
+    const rainCtx = rainCanvas.getContext('2d');
+    
+    // Set canvas size
+    rainCanvas.width = window.innerWidth;
+    rainCanvas.height = window.innerHeight;
+    
+    // Characters for the digital rain
+    const characters = '01';
+    const fontSize = 14;
+    const columns = rainCanvas.width / fontSize;
+    const drops = [];
+    
+    // Initialize drops
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * rainCanvas.height;
+    }
+    
+    // Draw the digital rain
+    function drawRain() {
+      rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+      rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+      
+      rainCtx.fillStyle = '#00e5ff';
+      rainCtx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        
+        drops[i]++;
+      }
+    }
+    
+    // Animation loop for digital rain
+    setInterval(drawRain, 33);
+    
+    // Resize canvas when window is resized
+    window.addEventListener('resize', () => {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    });
+    
+    // === Tutorial ===
+    const steps = document.querySelectorAll(".tutorial-step");
+    let stepIndex = 0;
+    setInterval(() => {
+      steps.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
+      stepIndex = (stepIndex + 1) % steps.length;
+    }, 3000);
+    
+    // === Game Variables (Original Backend Logic) ===
+    const canvas = document.getElementById('lineCanvas');
+    const ctx = canvas.getContext('2d');
+    let startWire = null;
+    let connections = [];
+    let timeLeft = 45;
+    let timerStarted = false;
+    let timer;
+    const countdownEl = document.getElementById('countdown');
+    const resultEl = document.getElementById('result');
+    
+    // Animation variables for data flow (Purely Visual)
+    let animationProgress = 0;
+    let animationId = null;
+    
+    function startGame() {
+      document.getElementById("instructions").style.display = "none";
+      const section = document.getElementById("gameSection");
+      section.style.display = "flex";
+      section.style.animation = "fadeIn 1s ease forwards";
+      startAnimation();
+    }
+    
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+    
+    function startTimer() {
+      if (timerStarted) return;
+      timerStarted = true;
+      countdownEl.textContent = formatTime(timeLeft);
+      timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = formatTime(timeLeft);
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          alert("⏰ Time's up! Try again.");
+          location.reload();
+        }
+      }, 1000);
+    }
+    
+    // Build pin slots (Original Backend Logic)
+    const pins = document.getElementById('pinColumn');
+    for (let i = 1; i <= 8; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      slot.dataset.pin = i;
+      slot.innerHTML = `Pin ${i} <span class="pin-dot"></span>`;
+      pins.appendChild(slot);
+      slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('hover'); });
+      slot.addEventListener('dragleave', () => { slot.classList.remove('hover'); });
+      slot.addEventListener('drop', () => {
+        slot.classList.remove('hover');
+        const pin = slot.getAttribute('data-pin');
+        const color = startWire.getAttribute('data-color');
+        connections = connections.filter(c => c.pin !== pin && c.color !== color);
+        connections.push({ pin, color, wire: startWire });
+        drawConnections();
+      });
+    }
+    
+    // Wire colors (8 correct + 2 extra) (Original Backend Logic)
+    const wiresData = {
+      "White-Green": "linear-gradient(to right, white 50%, green 50%)",
+      "Green": "green",
+      "White-Orange": "linear-gradient(to right, white 50%, orange 50%)",
+      "Blue": "blue",
+      "White-Blue": "linear-gradient(to right, white 50%, blue 50%)",
+      "Orange": "orange",
+      "White-Brown": "linear-gradient(to right, white 50%, brown 50%)",
+      "Brown": "brown",
+      "Yellow": "yellow",
+      "Purple": "purple"
+    };
+    
+    // Shuffle wires (Original Backend Logic)
+    const shuffled = Object.keys(wiresData).sort(() => 0.5 - Math.random());
+    const wiresContainer = document.getElementById('wireColumn');
+    shuffled.forEach(color => {
+      const div = document.createElement('div');
+      div.className = 'wire';
+      div.draggable = true;
+      div.dataset.color = color;
+      div.style.background = wiresData[color];
+      div.innerHTML = `<span class="pin-dot"></span> ${color}`;
+      wiresContainer.appendChild(div);
+      div.addEventListener('dragstart', () => { startWire = div; startTimer(); });
+      div.addEventListener('mousedown', startTimer);
+      div.addEventListener('touchstart', startTimer);
+    });
+    
+    // Draw connections with data flow animation (Enhanced but Preserves Original Logic)
+    function drawConnections() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const rect = canvas.getBoundingClientRect();
+      
+      connections.forEach(conn => {
+        const pinDot = document.querySelector(
+          `.slot[data-pin="${conn.pin}"] .pin-dot`
+        ).getBoundingClientRect();
+        const wireDot = conn.wire.querySelector('.pin-dot').getBoundingClientRect();
+        const x1 = wireDot.left + wireDot.width / 2 - rect.left;
+        const y1 = wireDot.top + wireDot.height / 2 - rect.top;
+        const x2 = pinDot.left + pinDot.width / 2 - rect.left;
+        const y2 = pinDot.top + pinDot.height / 2 - rect.top;
+        
+        // Create flowing, loose curves (Original Logic)
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Add natural sag based on wire length and gravity (Original Logic)
+        const sagAmount = Math.min(distance * 0.3, 80);
+        const midX = (x1 + x2) / 2;
+        const midY = (y1 + y2) / 2 + sagAmount;
+        
+        // Add slight random variations for natural look (Original Logic)
+        const variation1X = (Math.random() - 0.5) * 20;
+        const variation1Y = (Math.random() - 0.5) * 15;
+        const variation2X = (Math.random() - 0.5) * 20;
+        const variation2Y = (Math.random() - 0.5) * 15;
+        
+        const cp1X = x1 + dx * 0.3 + variation1X;
+        const cp1Y = y1 + dy * 0.3 + sagAmount * 0.5 + variation1Y;
+        const cp2X = x2 - dx * 0.3 + variation2X;
+        const cp2Y = y2 - dy * 0.3 + sagAmount * 0.5 + variation2Y;
+        
+        // Draw the connection line (Original Logic with IT Theme Colors)
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, x2, y2);
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        
+        // Apply IT theme to connection lines (Visual Enhancement)
+        if (conn.color.includes('-')) {
+          const parts = conn.color.split('-');
+          const c1 = parts[0].toLowerCase();
+          const c2 = parts[1].toLowerCase();
+          const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+          
+          // IT-themed gradient
+          if (c1 === 'white' && c2 === 'green') {
+            gradient.addColorStop(0, '#00e5ff');
+            gradient.addColorStop(1, '#0056b3');
+          } else if (c1 === 'white' && c2 === 'orange') {
+            gradient.addColorStop(0, '#00e5ff');
+            gradient.addColorStop(1, '#0078d4');
+          } else if (c1 === 'white' && c2 === 'blue') {
+            gradient.addColorStop(0, '#00e5ff');
+            gradient.addColorStop(1, '#0056b3');
+          } else if (c1 === 'white' && c2 === 'brown') {
+            gradient.addColorStop(0, '#0078d4');
+            gradient.addColorStop(1, '#0056b3');
+          } else {
+            gradient.addColorStop(0, c1);
+            gradient.addColorStop(1, c2);
+          }
+          
+          ctx.strokeStyle = gradient;
+        } else {
+          // IT-themed solid colors
+          switch(conn.color.toLowerCase()) {
+            case 'green':
+              ctx.strokeStyle = '#00e5ff';
+              break;
+            case 'blue':
+              ctx.strokeStyle = '#0056b3';
+              break;
+            case 'orange':
+              ctx.strokeStyle = '#0078d4';
+              break;
+            case 'brown':
+              ctx.strokeStyle = '#004080';
+              break;
+            case 'yellow':
+              ctx.strokeStyle = '#00d4ff';
+              break;
+            case 'purple':
+              ctx.strokeStyle = '#0080ff';
+              break;
+            default:
+              ctx.strokeStyle = conn.color.toLowerCase();
+          }
+        }
+        
+        // Add glow effect to lines (Visual Enhancement)
+        ctx.shadowColor = '#00e5ff';
+        ctx.shadowBlur = 5;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        
+        // Draw data flow animation (Purely Visual)
+        if (connections.length > 0) {
+          // Calculate position along the bezier curve
+          const t = animationProgress;
+          const t2 = t * t;
+          const t3 = t2 * t;
+          const mt = 1 - t;
+          const mt2 = mt * mt;
+          const mt3 = mt2 * mt;
+          
+          const flowX = mt3 * x1 + 3 * mt2 * t * cp1X + 3 * mt * t2 * cp2X + t3 * x2;
+          const flowY = mt3 * y1 + 3 * mt2 * t * cp1Y + 3 * mt * t2 * cp2Y + t3 * y2;
+          
+          // Draw data packet
+          ctx.beginPath();
+          ctx.arc(flowX, flowY, 6, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          
+          // Add glow to data packet
+          ctx.beginPath();
+          ctx.arc(flowX, flowY, 10, 0, Math.PI * 2);
+          const gradient = ctx.createRadialGradient(flowX, flowY, 0, flowX, flowY, 10);
+          gradient.addColorStop(0, 'rgba(0, 229, 255, 0.8)');
+          gradient.addColorStop(1, 'rgba(0, 229, 255, 0)');
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
+      });
+    }
+    
+    // Start animation loop (Purely Visual)
+    function startAnimation() {
+      function animate() {
+        animationProgress += 0.01;
+        if (animationProgress > 1) animationProgress = 0;
+        
+        drawConnections();
+        animationId = requestAnimationFrame(animate);
+      }
+      
+      if (animationId) cancelAnimationFrame(animationId);
+      animate();
+    }
+    
+    // Start the animation when the game starts (Purely Visual)
+    window.addEventListener('load', () => {
+      startAnimation();
+    });
+    
+    // Check wiring (Original Backend Logic)
+    function checkWiring() {
+      const correctOrder = [
+        'White-Green', 'Green', 'White-Orange','Blue',
+        'White-Blue','Orange',  'White-Brown', 'Brown'
+      ];
+      if (connections.length < 8) {
+        alert("⚠️ Incomplete: Please connect all wires.");
+        return;
+      }
+      const currentOrder = [];
+      for (let i = 1; i <= 8; i++) {
+        const match = connections.find(c => c.pin === i.toString());
+        currentOrder.push(match ? match.color : null);
+      }
+      let correct = 0;
+      connections.forEach(c => c.wire.classList.remove("correct", "incorrect"));
+      correctOrder.forEach((c, i) => {
+        if (c === currentOrder[i]) {
+          correct++;
+          const wireObj = connections.find(conn => conn.color === c);
+          if (wireObj) wireObj.wire.classList.add("correct");
+        } else {
+          const wireObj = connections.find(conn => conn.color === currentOrder[i]);
+          if (wireObj) wireObj.wire.classList.add("incorrect");
+        }
+      });
+      if (correct === 8) {
+        resultEl.textContent = "🎉 Perfect! All wires are correct.";
+        resultEl.style.color = "#00ff00";
+        alert("🎉 Perfect! All wires are correct.");
+        // === Reward API call ===
+        const username = localStorage.getItem("loggedInUser"); // or session variable
+        if (username) {
+          fetch("/api/reward", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username,
+              points: 4560,
+              coins: 3040,
+              reason: "Perfect Score T568B"
+            })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              alert("🏆 You earned 100 points and 100 coins!");
+              // ✅ Redirect after successful reward
+              window.location.href = "../levels/networkinglevels.html";
+            } else {
+              console.error("Reward API failed:", data);
+              // Still redirect even if reward API fails
+              window.location.href = "../levels/networkinglevels.html";
+            }
+          })
+          .catch(err => {
+            console.error("Reward error:", err);
+            // Still redirect if error occurs
+            window.location.href = "../levels/networkinglevels.html";
+          });
+        } else {
+          console.log("username is null");
+          // Redirect even if no username is found
+          window.location.href = "../levels/networkinglevels.html";
+        }
+      } else {
+        alert(`❌ Some wires are incorrect. Correct: ${correct}/8`);
+      }
+    }
+    // === 🎵 GAME MUSIC SYSTEM ===
+  let audioCtx, masterGain, intervalIds = [];
+
+  function startGameMusic() {
+    if (audioCtx) return; // already playing
+
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.8; // 🎚 overall volume
+    masterGain.connect(audioCtx.destination);
+
+    // 🔹 Driving Bassline
+    intervalIds.push(setInterval(() => {
+      playTone(55, "square", 0.3, 0.4); // Low note
+      setTimeout(() => playTone(110, "square", 0.2, 0.3), 200); // Octave hit
+    }, 800));
+
+    // 🔹 Melody Arpeggio (classic retro blips)
+    intervalIds.push(setInterval(() => {
+      let notes = [440, 494, 523, 587, 659, 698, 784]; // C major scale
+      let note = notes[Math.floor(Math.random() * notes.length)];
+      playTone(note, "square", 0.25, 0.25);
+    }, 300));
+
+    // 🔹 Hi-Hat / Percussion
+    intervalIds.push(setInterval(() => {
+      playNoise(0.03, 0.2);
+    }, 200));
+
+    // 🔹 Kick Drum (boom effect)
+    intervalIds.push(setInterval(() => {
+      playKick();
+    }, 1200));
+  }
+
+  function stopGameMusic() {
+    intervalIds.forEach(id => clearInterval(id));
+    intervalIds = [];
+    if (audioCtx) {
+      audioCtx.close();
+      audioCtx = null;
+    }
+  }
+
+  // === SOUND GENERATORS ===
+  function playTone(freq, type, duration, volume) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    gain.gain.value = volume;
+    osc.type = type;
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(masterGain);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  }
+
+  function playNoise(duration, volume) {
+    const bufferSize = audioCtx.sampleRate * duration;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1; // white noise
+    }
+
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    const gain = audioCtx.createGain();
+    gain.gain.value = volume;
+
+    noise.connect(gain);
+    gain.connect(masterGain);
+
+    noise.start();
+    noise.stop(audioCtx.currentTime + duration);
+  }
+
+  function playKick() {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.5);
+
+    gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+
+    osc.connect(gain);
+    gain.connect(masterGain);
+
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.5);
+  }
+
+  // === MODIFY START GAME ===
+  function startGame() {
+    document.getElementById("instructions").style.display = "none";
+    const section = document.getElementById("gameSection");
+    section.style.display = "flex";
+    section.style.animation = "fadeIn 1s ease forwards";
+    startAnimation();
+
+    // 🎵 Start background music
+    startGameMusic();
+  }
+  </script>
+</body>
+</html>

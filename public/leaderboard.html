@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Player Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
+      color: #e0f7fa;
+      overflow: hidden;
+    }
+    
+    /* Digital Rain Background */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    
+    /* Circuit Board Pattern */
+    .circuit-board {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      background: #00e5ff;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    .app-container {
+      max-width: 420px;
+      margin: auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-bottom: 120px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Circuit Pattern Overlay */
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.03) 10px,
+        rgba(0, 229, 255, 0.03) 20px
+      );
+      z-index: -1;
+    }
+    
+    /* Header */
+    header {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: bold;
+      padding: 20px;
+      color: #00e5ff;
+      position: relative;
+      animation: glitch 5s infinite;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+    }
+    
+    header::before, header::after {
+      content: "Player Dashboard";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    header::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00e5ff;
+      z-index: -1;
+    }
+    
+    header::after {
+      animation: glitch-2 0.5s infinite;
+      color: #0078d4;
+      z-index: -2;
+    }
+    
+    @keyframes glitch {
+      0%, 100% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      20% { text-shadow: -2px 0 #00e5ff, 2px 0 #0078d4; }
+      40% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+      60% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      80% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+    }
+    
+    @keyframes glitch-1 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
+      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
+      60% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
+      80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
+    }
+    
+    @keyframes glitch-2 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
+      40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
+      60% { clip-path: inset(30% 0 40% 0); transform: translate(0); }
+      80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
+    }
+    
+    .points-display {
+      position: absolute;
+      left: 20px;
+      top: 22px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #00e5ff;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+    }
+    
+    .logout-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #00e5ff;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .logout-btn:hover {
+      transform: scale(1.2) rotate(90deg);
+      color: #ff5252;
+    }
+    
+    /* Stats Section */
+    .stats {
+      display: flex;
+      gap: 12px;
+      padding: 0 20px;
+      margin-bottom: 15px;
+    }
+    
+    .card {
+      flex: 1;
+      background: rgba(0, 30, 60, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Circuit Pattern Overlay for Cards */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.05) 10px,
+        rgba(0, 229, 255, 0.05) 20px
+      );
+      z-index: -1;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 229, 255, 0.3);
+    }
+    
+    .card h2 {
+      margin: 0;
+      font-size: 1rem;
+      color: #90caf9;
+    }
+    
+    .card p {
+      margin: 8px 0 0;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #00e5ff;
+    }
+    
+    /* Leaderboard */
+    .leaderboard-section {
+      padding: 0 20px 40px;
+    }
+    
+    .leaderboard-section h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #00e5ff;
+      text-align: center;
+      animation: glow 2s infinite alternate;
+    }
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      to { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+    }
+    
+    .leaderboard-box {
+      background: rgba(0, 30, 60, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      max-height: 300px;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    /* Circuit Pattern Overlay for Leaderboard */
+    .leaderboard-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.05) 10px,
+        rgba(0, 229, 255, 0.05) 20px
+      );
+      z-index: -1;
+    }
+    
+    .leaderboard-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+      transition: background 0.3s ease;
+    }
+    
+    .leaderboard-entry:hover {
+      background: rgba(0, 50, 100, 0.5);
+    }
+    
+    .leaderboard-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .rank {
+      font-weight: bold;
+      width: 30px;
+      color: #00e5ff;
+    }
+    
+    .user-info {
+      flex-grow: 1;
+      text-align: left;
+      padding-left: 10px;
+    }
+    
+    .username {
+      font-weight: 500;
+      color: #e0f7fa;
+    }
+    
+    .score {
+      font-weight: bold;
+      color: #00e5ff;
+    }
+    
+    .current-player {
+      background: rgba(0, 100, 200, 0.2);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 229, 255, 0.5);
+    }
+    
+    /* Footer */
+    footer.footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(0, 30, 60, 0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0, 229, 255, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      z-index: 10;
+    }
+    
+    .icon {
+      font-size: 28px;
+      color: #90caf9;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.3s ease;
+      position: relative;
+    }
+    
+    .icon:hover {
+      transform: scale(1.2);
+      color: #00e5ff;
+    }
+    
+    .icon.active {
+      background: rgba(0, 229, 255, 0.2);
+      padding: 8px 12px;
+      border-radius: 50%;
+      color: #00e5ff;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+    
+    /* Glow effect for active icon */
+    .icon.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.3);
+      z-index: -1;
+      animation: pulse-icon 2s infinite;
+    }
+    
+    @keyframes pulse-icon {
+      0% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 0.5; }
+    }
+    
+    /* Scrollbar Styling */
+    .leaderboard-box::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .leaderboard-box::-webkit-scrollbar-track {
+      background: rgba(0, 30, 60, 0.3);
+      border-radius: 4px;
+    }
+    
+    .leaderboard-box::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.5);
+      border-radius: 4px;
+    }
+    
+    .leaderboard-box::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 229, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <canvas class="digital-rain" id="digitalRain"></canvas>
+  <div class="circuit-board"></div>
+  <div class="particles" id="particles"></div>
+  
+  <div class="app-container">
+    <header>
+      <div id="points" class="points-display">💰 0</div>
+      Player Dashboard
+      <div class="logout-btn" onclick="logout()" title="Logout">⍈</div>
+    </header>
+    
+    <div class="stats">
+      <div class="card">
+        <h2>Total Players</h2>
+        <p id="totalPlayers">0</p>
+      </div>
+      <div class="card">
+        <h2>Highest Points</h2>
+        <p id="highestPoints">0</p>
+      </div>
+    </div>
+    
+    <div class="leaderboard-section">
+      <h3>🏆 Leaderboard</h3>
+      <div class="leaderboard-box" id="leaderboard"></div>
+    </div>
+    
+    <footer class="footer">
+      <div class="icon" onclick="gotoAbout()">🧾</div>
+      <div class="icon active" onclick="gotoLeaderboard()">📊</div>
+      <div class="icon" onclick="gotoDashboard()">👑</div>
+      <div class="icon" onclick="gotoSetting()">⚙️</div>
+    </footer>
+  </div>
+  
+  <script>
+    // Digital Rain Effect
+    const rainCanvas = document.getElementById('digitalRain');
+    const rainCtx = rainCanvas.getContext('2d');
+    
+    // Set canvas size
+    rainCanvas.width = window.innerWidth;
+    rainCanvas.height = window.innerHeight;
+    
+    // Characters for the digital rain
+    const characters = '01';
+    const fontSize = 14;
+    const columns = rainCanvas.width / fontSize;
+    const drops = [];
+    
+    // Initialize drops
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * rainCanvas.height;
+    }
+    
+    // Draw the digital rain
+    function drawRain() {
+      rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+      rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+      
+      rainCtx.fillStyle = '#00e5ff';
+      rainCtx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        
+        drops[i]++;
+      }
+    }
+    
+    // Animation loop for digital rain
+    setInterval(drawRain, 33);
+    
+    // Resize canvas when window is resized
+    window.addEventListener('resize', () => {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    });
+    
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random size between 2px and 6px
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      
+      particlesContainer.appendChild(particle);
+    }
+    
+    // Original functionality
+    const playerName = localStorage.getItem("loggedInUser");
+    async function loadDashboard() {
+      try {
+        const res = await fetch("/get-players");
+        const players = await res.json();
+        // Find logged in player
+        const loggedInPlayer = players.find(p => p.username === playerName);
+        // Points display
+        document.getElementById("points").textContent = 
+          loggedInPlayer ? `💰 ${loggedInPlayer.points}` : "💰 0";
+        // Stats
+        document.getElementById("totalPlayers").textContent = players.length;
+        const highest = players.length > 0 ? Math.max(...players.map(p => p.points)) : 0;
+        document.getElementById("highestPoints").textContent = highest;
+        // Leaderboard
+        const leaderboard = document.getElementById("leaderboard");
+        leaderboard.innerHTML = "";
+        players
+          .sort((a, b) => b.points - a.points)
+          .forEach((player, i) => {
+            const div = document.createElement("div");
+            div.className = "leaderboard-entry";
+            if (player.username === playerName) {
+              div.classList.add("current-player");
+            }
+            div.innerHTML = `
+              <div class="rank">${i + 1}</div>
+              <div class="user-info">
+                <div class="username">${player.username}</div>
+              </div>
+              <div class="score">${player.points} pts</div>
+            `;
+            leaderboard.appendChild(div);
+          });
+      } catch (err) {
+        console.error("Error loading dashboard:", err);
+      }
+    }
+    
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "index.html";
+    }
+    
+    function gotoAbout() { 
+      window.location.href = "about.html"; 
+    }
+    
+    function gotoLeaderboard() { 
+      window.location.href = "leaderboard.html"; 
+    }
+    
+    function gotoDashboard() { 
+      window.location.href = "dashboard.html"; 
+    }
+    
+    function gotoSetting() { 
+      window.location.href = "settings.html"; 
+    }
+    
+    document.addEventListener("DOMContentLoaded", loadDashboard);
+  </script>
+</body>
+</html>

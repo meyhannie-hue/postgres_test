@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Networking Levels - Cyber Theme</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #0d0d0d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #00d4ff;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Circuit Board Pattern */
+    .circuit-board {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.15;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 212, 255, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.2) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    /* Animated Circuit Traces */
+    .circuit-traces {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    
+    .circuit-trace {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+      height: 2px;
+      animation: traceMove 8s linear infinite;
+    }
+    
+    @keyframes traceMove {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    /* Data Packets */
+    .data-packets {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .data-packet {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #39ff14;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #39ff14;
+      animation: packetMove 6s linear infinite;
+    }
+    
+    @keyframes packetMove {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    /* Network Ports */
+    .network-ports {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .port {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #00d4ff;
+      animation: portPulse 3s infinite alternate;
+    }
+    
+    .port.active {
+      background: #39ff14;
+      box-shadow: 0 0 15px #39ff14;
+      animation: portActive 1.5s infinite alternate;
+    }
+    
+    @keyframes portPulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.7; }
+    }
+    
+    @keyframes portActive {
+      0% { 
+        box-shadow: 0 0 5px #39ff14;
+        transform: scale(1);
+      }
+      100% { 
+        box-shadow: 0 0 20px #39ff14, 0 0 30px #39ff14;
+        transform: scale(1.2);
+      }
+    }
+    
+    .app-container {
+      max-width: 420px;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      position: relative;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      animation: appContainerEntry 0.8s ease forwards;
+    }
+    
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      border-radius: 20px;
+    }
+    
+    .app-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.7), transparent);
+      animation: scanLine 4s linear infinite;
+      z-index: 1;
+    }
+    
+    @keyframes scanLine {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+    
+    @keyframes appContainerEntry {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(13, 13, 13, 0.7);
+      color: #fff;
+      padding: 20px;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+    }
+    
+    .title {
+      font-size: 20px;
+      text-align: center;
+      color: #00d4ff;
+      flex-grow: 1;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+      animation: glow 2s infinite alternate;
+    }
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 5px rgba(0, 212, 255, 0.7); }
+      to { text-shadow: 0 0 15px rgba(0, 212, 255, 0.9); }
+    }
+    
+    .back-btn {
+      cursor: pointer;
+      font-size: 22px;
+      color: #39ff14;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .back-btn:hover {
+      transform: scale(1.2) rotate(-30deg);
+      color: #7aff7a;
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      color: #00d4ff;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    #points { 
+      animation: pulse 2s infinite;
+      color: #39ff14;
+    }
+    
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(57, 255, 20, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(57, 255, 20, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(57, 255, 20, 0.7); }
+    }
+    
+    .content-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 40px;
+      color: #00d4ff;
+      position: relative;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+    }
+    
+    .level-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
+      gap: 20px;
+      padding: 0 20px 30px 20px;
+    }
+    
+    .level {
+      background: rgba(13, 13, 13, 0.7);
+      color: #00d4ff;
+      border: 2px solid #00d4ff;
+      padding: 16px 25px;
+      border-radius: 15px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+      overflow: hidden;
+    }
+    
+    .level:nth-child(1) { animation-delay: 0.2s; }
+    .level:nth-child(2) { animation-delay: 0.4s; }
+    .level:nth-child(3) { animation-delay: 0.6s; }
+    
+    /* Animated background for level buttons */
+    .level::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        rgba(0, 212, 255, 0) 0%, 
+        rgba(0, 212, 255, 0.3) 50%, 
+        rgba(0, 212, 255, 0) 100%);
+      transform: translateX(-100%);
+      animation: levelBackground 3s linear infinite;
+      z-index: -1;
+    }
+    
+    /* Different animation for locked levels */
+    .level.locked::before {
+      background: linear-gradient(90deg, 
+        rgba(100, 100, 100, 0) 0%, 
+        rgba(100, 100, 100, 0.2) 50%, 
+        rgba(100, 100, 100, 0) 100%);
+      animation: levelBackgroundLocked 4s linear infinite;
+    }
+    
+    @keyframes levelBackground {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    @keyframes levelBackgroundLocked {
+      0% { transform: translateX(-100%); }
+      50% { transform: translateX(0%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    /* Circuit pattern overlay for level buttons */
+    .level::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+      background-size: 10px 10px;
+      z-index: -1;
+      opacity: 0.5;
+    }
+    
+    .level.locked::after {
+      background-image: 
+        linear-gradient(rgba(100, 100, 100, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 100, 100, 0.1) 1px, transparent 1px);
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .level:hover {
+      color: #39ff14;
+      border-color: #39ff14;
+      box-shadow: 0 0 12px #39ff14, 0 0 20px #00d4ff;
+      transform: translateY(-5px);
+    }
+    
+    .level:hover::before {
+      background: linear-gradient(90deg, 
+        rgba(57, 255, 20, 0) 0%, 
+        rgba(57, 255, 20, 0.4) 50%, 
+        rgba(57, 255, 20, 0) 100%);
+    }
+    
+    .level.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      color: #555;
+      border-color: #555;
+    }
+    
+    .level.locked::after {
+      content: " 🔒";
+      font-size: 14px;
+      color: #ff0000;
+    }
+    
+    .level .description {
+      font-size: 13px;
+      font-weight: 400;
+      color: #888;
+      margin-top: 5px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Connection animation when level is selected */
+    .connection-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      overflow: hidden;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .level:hover .connection-effect {
+      opacity: 1;
+    }
+    
+    .connection-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #39ff14, transparent);
+      animation: connectionPulse 1.5s infinite;
+    }
+    
+    @keyframes connectionPulse {
+      0% { width: 0; left: 0; }
+      50% { width: 100%; left: 0; }
+      100% { width: 0; left: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="circuit-board"></div>
+  <div class="circuit-traces" id="circuitTraces"></div>
+  <div class="data-packets" id="dataPackets"></div>
+  <div class="network-ports" id="networkPorts"></div>
+  
+  <div class="app-container">
+    <header>
+      <div class="back-btn" onclick="goBack()">⤺</div>
+      <div class="title">TECHY ME</div>
+      <div class="user-info">
+        <span id="points">💰 0</span>
+        <span id="usernameDisplay">Guest</span>
+      </div>
+    </header>
+    <div class="content-title">NETWORKING</div>
+    <div class="level-buttons">
+      <div class="level" onclick="startLevel('easy')">
+        <div class="connection-effect">
+          <div class="connection-line" style="top: 20%;"></div>
+          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+        </div>
+        🟢 Easy
+        <div class="description">Basic networking setup</div>
+      </div>
+      <div class="level locked" id="mediumLevel" onclick="startLevel('medium')">
+        <div class="connection-effect">
+          <div class="connection-line" style="top: 20%;"></div>
+          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+        </div>
+        🟡 Medium
+        <div class="description">Intermediate networking tasks</div>
+      </div>
+      <div class="level locked" id="hardLevel" onclick="startLevel('hard')">
+        <div class="connection-effect">
+          <div class="connection-line" style="top: 20%;"></div>
+          <div class="connection-line" style="top: 50%; animation-delay: 0.5s;"></div>
+          <div class="connection-line" style="top: 80%; animation-delay: 1s;"></div>
+        </div>
+        🔴 Hard
+        <div class="description">Advanced networking challenges</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Circuit Traces
+    const circuitTraces = document.getElementById('circuitTraces');
+    for (let i = 0; i < 5; i++) {
+      const trace = document.createElement('div');
+      trace.className = 'circuit-trace';
+      trace.style.width = `${Math.random() * 100 + 50}%`;
+      trace.style.top = `${Math.random() * 100}%`;
+      trace.style.left = '0';
+      trace.style.animationDelay = `${Math.random() * 8}s`;
+      circuitTraces.appendChild(trace);
+    }
+    
+    // Data Packets
+    const dataPackets = document.getElementById('dataPackets');
+    for (let i = 0; i < 20; i++) {
+      const packet = document.createElement('div');
+      packet.className = 'data-packet';
+      packet.style.left = `${Math.random() * 100}%`;
+      packet.style.top = `${Math.random() * 100}%`;
+      packet.style.animationDelay = `${Math.random() * 6}s`;
+      dataPackets.appendChild(packet);
+    }
+    
+    // Network Ports
+    const networkPorts = document.getElementById('networkPorts');
+    for (let i = 0; i < 15; i++) {
+      const port = document.createElement('div');
+      port.className = 'port';
+      if (Math.random() > 0.7) port.classList.add('active');
+      port.style.left = `${Math.random() * 100}%`;
+      port.style.top = `${Math.random() * 100}%`;
+      port.style.animationDelay = `${Math.random() * 3}s`;
+      networkPorts.appendChild(port);
+    }
+    
+    // Simulate random port activation
+    setInterval(() => {
+      const ports = document.querySelectorAll('.port');
+      const randomPort = ports[Math.floor(Math.random() * ports.length)];
+      randomPort.classList.toggle('active');
+    }, 2000);
+    
+    // User info
+    const loggedInUser = localStorage.getItem("loggedInUser") || "Guest";
+    const points = localStorage.getItem("points") || 0;
+    document.getElementById("usernameDisplay").innerText = loggedInUser;
+    document.getElementById("points").innerText = `💰 ${points}`;
+    
+    // Level unlocking logic
+    const userPoints = parseInt(points) || 0;
+    if (userPoints >= 1500) {
+      document.getElementById("mediumLevel").classList.remove("locked");
+    }
+    if (userPoints >= 3000) {
+      document.getElementById("hardLevel").classList.remove("locked");
+    }
+    
+    function startLevel(level) {
+      const levelElement = document.getElementById(level + "Level");
+      if (levelElement.classList.contains("locked")) {
+        // Create a notification instead of alert
+        const notification = document.createElement('div');
+        notification.style.position = 'fixed';
+        notification.style.bottom = '20px';
+        notification.style.left = '50%';
+        notification.style.transform = 'translateX(-50%)';
+        notification.style.background = 'rgba(13, 13, 13, 0.9)';
+        notification.style.color = '#ff5555';
+        notification.style.padding = '15px 25px';
+        notification.style.borderRadius = '10px';
+        notification.style.border = '1px solid #ff5555';
+        notification.style.boxShadow = '0 0 15px rgba(255, 85, 85, 0.5)';
+        notification.style.zIndex = '1000';
+        notification.style.animation = 'fadeInOut 3s forwards';
+        
+        if (level === "medium") {
+          notification.textContent = "Complete Easy level and earn 1500 points to unlock!";
+        } else if (level === "hard") {
+          notification.textContent = "Complete Medium level and earn 3000  points to unlock!";
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+        
+        return;
+      }
+      
+      // Create connection effect before navigating
+      const connectionOverlay = document.createElement('div');
+      connectionOverlay.style.position = 'fixed';
+      connectionOverlay.style.top = '0';
+      connectionOverlay.style.left = '0';
+      connectionOverlay.style.width = '100%';
+      connectionOverlay.style.height = '100%';
+      connectionOverlay.style.background = 'rgba(13, 13, 13, 0.8)';
+      connectionOverlay.style.zIndex = '1000';
+      connectionOverlay.style.display = 'flex';
+      connectionOverlay.style.justifyContent = 'center';
+      connectionOverlay.style.alignItems = 'center';
+      connectionOverlay.style.flexDirection = 'column';
+      
+      const connectionText = document.createElement('div');
+      connectionText.textContent = 'ESTABLISHING CONNECTION...';
+      connectionText.style.color = '#00d4ff';
+      connectionText.style.fontSize = '24px';
+      connectionText.style.fontWeight = 'bold';
+      connectionText.style.marginBottom = '20px';
+      connectionText.style.textShadow = '0 0 10px rgba(0, 212, 255, 0.7)';
+      
+      const progressBar = document.createElement('div');
+      progressBar.style.width = '300px';
+      progressBar.style.height = '4px';
+      progressBar.style.background = 'rgba(0, 212, 255, 0.2)';
+      progressBar.style.borderRadius = '2px';
+      progressBar.style.overflow = 'hidden';
+      progressBar.style.position = 'relative';
+      
+      const progressFill = document.createElement('div');
+      progressFill.style.position = 'absolute';
+      progressFill.style.top = '0';
+      progressFill.style.left = '0';
+      progressFill.style.height = '100%';
+      progressFill.style.width = '0%';
+      progressFill.style.background = 'linear-gradient(90deg, #00d4ff, #39ff14)';
+      progressFill.style.boxShadow = '0 0 10px rgba(57, 255, 20, 0.7)';
+      progressFill.style.animation = 'progressFill 1.5s forwards';
+      
+      progressBar.appendChild(progressFill);
+      connectionOverlay.appendChild(connectionText);
+      connectionOverlay.appendChild(progressBar);
+      document.body.appendChild(connectionOverlay);
+      
+      // Add progress animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes progressFill {
+          0% { width: 0%; }
+          100% { width: 100%; }
+        }
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translate(-50%, 20px); }
+          20% { opacity: 1; transform: translate(-50%, 0); }
+          80% { opacity: 1; transform: translate(-50%, 0); }
+          100% { opacity: 0; transform: translate(-50%, 20px); }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Navigate after connection animation
+      setTimeout(() => {
+        if (level === "easy") window.location.href = `../networking/easy.html`;
+        if (level === "medium") window.location.href = `../networking/medium.html`;
+        if (level === "hard") window.location.href = `../networking/hard.html`;
+      }, 1500);
+    }
+    
+    function goBack() { 
+      // Create a disconnection effect
+      const disconnectionOverlay = document.createElement('div');
+      disconnectionOverlay.style.position = 'fixed';
+      disconnectionOverlay.style.top = '0';
+      disconnectionOverlay.style.left = '0';
+      disconnectionOverlay.style.width = '100%';
+      disconnectionOverlay.style.height = '100%';
+      disconnectionOverlay.style.background = 'rgba(13, 13, 13, 0.8)';
+      disconnectionOverlay.style.zIndex = '1000';
+      disconnectionOverlay.style.display = 'flex';
+      disconnectionOverlay.style.justifyContent = 'center';
+      disconnectionOverlay.style.alignItems = 'center';
+      disconnectionOverlay.style.flexDirection = 'column';
+      
+      const disconnectionText = document.createElement('div');
+      disconnectionText.textContent = 'TERMINATING CONNECTION...';
+      disconnectionText.style.color = '#ff5555';
+      disconnectionText.style.fontSize = '24px';
+      disconnectionText.style.fontWeight = 'bold';
+      disconnectionText.style.marginBottom = '20px';
+      disconnectionText.style.textShadow = '0 0 10px rgba(255, 85, 85, 0.7)';
+      
+      const progressBar = document.createElement('div');
+      progressBar.style.width = '300px';
+      progressBar.style.height = '4px';
+      progressBar.style.background = 'rgba(255, 85, 85, 0.2)';
+      progressBar.style.borderRadius = '2px';
+      progressBar.style.overflow = 'hidden';
+      progressBar.style.position = 'relative';
+      
+      const progressFill = document.createElement('div');
+      progressFill.style.position = 'absolute';
+      progressFill.style.top = '0';
+      progressFill.style.left = '0';
+      progressFill.style.height = '100%';
+      progressFill.style.width = '0%';
+      progressFill.style.background = 'linear-gradient(90deg, #ff5555, #ff0000)';
+      progressFill.style.boxShadow = '0 0 10px rgba(255, 0, 0, 0.7)';
+      progressFill.style.animation = 'progressFill 1s forwards';
+      
+      progressBar.appendChild(progressFill);
+      disconnectionOverlay.appendChild(disconnectionText);
+      disconnectionOverlay.appendChild(progressBar);
+      document.body.appendChild(disconnectionOverlay);
+      
+      // Navigate after disconnection animation
+      setTimeout(() => {
+        window.location.href = "../dashboard.html";
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

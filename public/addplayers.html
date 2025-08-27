@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Player</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #e0f7fa;
+      overflow: hidden;
+    }
+    
+    /* Digital Rain Background */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    
+    /* Circuit Board Pattern */
+    .circuit-board {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      background: #00e5ff;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    .form-container {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 30, 60, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 40px 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 229, 255, 0.2);
+      animation: fadeInUp 1s ease, pulse 4s infinite alternate;
+      overflow: hidden;
+    }
+    
+    /* Circuit Pattern Overlay */
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.03) 10px,
+        rgba(0, 229, 255, 0.03) 20px
+      );
+      z-index: -1;
+    }
+    
+    h1, h2 {
+      margin-bottom: 20px;
+      font-size: 1.6rem;
+      position: relative;
+      animation: glitch 5s infinite;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+    }
+    
+    h1::before, h1::after,
+    h2::before, h2::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    h1::before, h2::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00e5ff;
+      z-index: -1;
+    }
+    
+    h1::after, h2::after {
+      animation: glitch-2 0.5s infinite;
+      color: #0078d4;
+      z-index: -2;
+    }
+    
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      background: rgba(0, 20, 40, 0.6);
+      color: #e0f7fa;
+      transition: all 0.3s ease;
+      font-family: 'Courier New', monospace;
+    }
+    
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #00e5ff;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+      background: rgba(0, 30, 60, 0.8);
+    }
+    
+    input::placeholder {
+      color: #90caf9;
+    }
+    
+    .btn {
+      padding: 12px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0078d4, #00e5ff);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      margin-top: 10px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
+    
+    /* Button Shine Effect */
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 229, 255, 0.5);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .toggle-link {
+      margin-top: 15px;
+      display: inline-block;
+      cursor: pointer;
+      color: #00e5ff;
+      font-size: 0.95rem;
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+    
+    .toggle-link:hover {
+      color: #90caf9;
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+    }
+    
+    ul li {
+      background: rgba(0, 30, 60, 0.6);
+      margin-bottom: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    ul li:hover {
+      background: rgba(0, 50, 100, 0.6);
+      border-color: rgba(0, 229, 255, 0.5);
+      transform: translateX(5px);
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to   { transform: translateY(0px); opacity: 1; }
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 229, 255, 0.2); }
+      100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 229, 255, 0.4); }
+    }
+    
+    @keyframes glitch {
+      0%, 100% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      20% { text-shadow: -2px 0 #00e5ff, 2px 0 #0078d4; }
+      40% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+      60% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      80% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+    }
+    
+    @keyframes glitch-1 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
+      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
+      60% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
+      80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
+    }
+    
+    @keyframes glitch-2 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
+      40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
+      60% { clip-path: inset(30% 0 40% 0); transform: translate(0); }
+      80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
+    }
+    
+    /* Scrollbar Styling */
+    ul::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ul::-webkit-scrollbar-track {
+      background: rgba(0, 30, 60, 0.3);
+      border-radius: 4px;
+    }
+    
+    ul::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.5);
+      border-radius: 4px;
+    }
+    
+    ul::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 229, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <canvas class="digital-rain" id="digitalRain"></canvas>
+  <div class="circuit-board"></div>
+  <div class="particles" id="particles"></div>
+  
+  <div class="form-container">
+    <!-- Create Player Form -->
+    <div id="createSection">
+      <h1 data-text="Create a Player">Create a Player</h1>
+      <form id="playerForm">
+        <input type="text" name="username" placeholder="Enter Username" required />
+        <input type="password" name="password" placeholder="Enter Password" required />
+        <button class="btn" type="submit">➕ Add Player</button>
+      </form>
+      <span class="toggle-link" onclick="toggleForms()">Do you have an existing name?</span>
+    </div>
+    
+    <!-- Existing Player Form (Hidden by default) -->
+    <div id="loginSection" class="hidden">
+      <h2 data-text="Existing Player">Existing Player</h2>
+      <form id="loginForm">
+        <input type="text" name="username" placeholder="Enter Existing Username" required />
+        <input type="password" name="password" placeholder="Enter Password" required />
+        <button class="btn" type="submit">🔑 Login</button>
+      </form>
+      <h3 style="margin-top:20px;">Or click a username below:</h3>
+      <ul id="playersList"></ul>
+      <span class="toggle-link" onclick="toggleForms()">⬅ Back to Create Player</span>
+    </div>
+  </div>
+
+<script>
+  // Digital Rain Effect
+  const rainCanvas = document.getElementById('digitalRain');
+  const rainCtx = rainCanvas.getContext('2d');
+  
+  // Set canvas size
+  rainCanvas.width = window.innerWidth;
+  rainCanvas.height = window.innerHeight;
+  
+  // Characters for the digital rain
+  const characters = '01';
+  const fontSize = 14;
+  const columns = rainCanvas.width / fontSize;
+  const drops = [];
+  
+  // Initialize drops
+  for (let i = 0; i < columns; i++) {
+    drops[i] = Math.random() * rainCanvas.height;
+  }
+  
+  // Draw the digital rain
+  function drawRain() {
+    rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+    rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+    
+    rainCtx.fillStyle = '#00e5ff';
+    rainCtx.font = `${fontSize}px monospace`;
+    
+    for (let i = 0; i < drops.length; i++) {
+      const text = characters.charAt(Math.floor(Math.random() * characters.length));
+      rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+      
+      if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      
+      drops[i]++;
+    }
+  }
+  
+  // Animation loop for digital rain
+  setInterval(drawRain, 33);
+  
+  // Resize canvas when window is resized
+  window.addEventListener('resize', () => {
+    rainCanvas.width = window.innerWidth;
+    rainCanvas.height = window.innerHeight;
+  });
+  
+  // Create floating particles
+  const particlesContainer = document.getElementById('particles');
+  const particleCount = 30;
+  
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    
+    // Random size between 2px and 6px
+    const size = Math.random() * 4 + 2;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    // Random position
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.top = `${Math.random() * 100}%`;
+    
+    // Random animation delay
+    particle.style.animationDelay = `${Math.random() * 15}s`;
+    
+    particlesContainer.appendChild(particle);
+  }
+  
+  // Original functionality
+  const form = document.getElementById("playerForm");
+  const loginForm = document.getElementById("loginForm");
+  const playersList = document.getElementById("playersList");
+  const createSection = document.getElementById("createSection");
+  const loginSection = document.getElementById("loginSection");
+  let players = []; // store existing players
+  
+  // ✅ Toggle between Create and Login forms
+  function toggleForms() {
+    createSection.classList.toggle("hidden");
+    loginSection.classList.toggle("hidden");
+  }
+  
+  // ✅ Handle "Add Player"
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const username = formData.get("username").trim();
+    const password = formData.get("password").trim();
+    if (!username || !password) {
+      alert("Please enter a username and password.");
+      return;
+    }
+    // 🔍 Check for duplicate username
+    const existing = players.map(p => p.username.toLowerCase());
+    if (existing.includes(username.toLowerCase())) {
+      alert("This name is Existing");
+      return;
+    }
+    try {
+      const res = await fetch("/create-player", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      if (!res.ok) throw new Error("Failed to create player");
+      await res.json();
+      localStorage.setItem("loggedInUser", username);
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      console.error("Error creating player:", err);
+      alert("Something went wrong while adding player.");
+    }
+  });
+  
+  // ✅ Unified login function
+  async function loginPlayer(username, password) {
+    try {
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      if (!res.ok) throw new Error("Login failed");
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem("loggedInUser", username); // ✅ only if correct login
+        window.location.href = "dashboard.html";
+      } else {
+        alert("❌ Invalid username or password.");
+      }
+    } catch (err) {
+      console.error("Error logging in:", err);
+      alert("Login failed. Try again.");
+    }
+  }
+  
+  // ✅ Handle "Login" form
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(loginForm);
+    const username = formData.get("username").trim();
+    const password = formData.get("password").trim();
+    loginPlayer(username, password);
+  });
+  
+  // Add click event to player list items
+  playersList.addEventListener('click', (e) => {
+    if (e.target.tagName === 'LI') {
+      const username = e.target.textContent.trim();
+      // Prompt for password when clicking on a username
+      const password = prompt(`Enter password for ${username}:`);
+      if (password) {
+        loginPlayer(username, password);
+      }
+    }
+  });
+</script>
+</body>
+</html>

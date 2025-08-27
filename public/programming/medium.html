@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programming Medium Level - CSS Only</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    color: #f5f5f5;
+  }
+  
+  /* Matrix Rain Effect */
+  .matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+  
+  /* Terminal Glow Effect */
+  .terminal-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(ellipse at center, rgba(0,255,136,0.05) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+  }
+  
+  /* Floating Code Particles */
+  .code-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  .code-particle {
+    position: absolute;
+    color: #00ff88;
+    font-family: 'Fira Code', monospace;
+    opacity: 0.3;
+    animation: floatCode 15s infinite linear;
+  }
+  
+  @keyframes floatCode {
+    0% {
+      transform: translateY(100vh) translateX(0);
+      opacity: 0;
+    }
+    10%, 90% {
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(100px);
+      opacity: 0;
+    }
+  }
+  
+  .app-container, .instructions-container {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(18,18,18,0.9);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0,255,136,0.2);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,255,136,0.3);
+    animation: terminalEntry 0.8s ease forwards;
+    position: relative;
+    margin: 20px 0;
+  }
+  
+  .app-container::before, .instructions-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(0deg, 
+      rgba(0,255,136,0.03) 0px, 
+      rgba(0,255,136,0.03) 1px, 
+      transparent 1px, 
+      transparent 2px);
+    z-index: -1;
+    border-radius: 5px;
+  }
+  
+  .app-container::after, .instructions-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,255,136,0.7), transparent);
+    animation: scanLine 4s linear infinite;
+    z-index: 1;
+  }
+  
+  @keyframes scanLine {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+  
+  @keyframes terminalEntry {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0,0,0,0.7);
+    color: #f5f5f5;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0,255,136,0.3);
+  }
+  
+  .header-title {
+    font-size: 18px;
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bold;
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0,255,136,0.5);
+    animation: terminalGlow 2s infinite alternate;
+    position: relative;
+    font-family: 'Fira Code', monospace;
+  }
+  
+  .header-title::before, .header-title::after {
+    content: "💻 TERMINAL - CSS HACKING MISSION";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .header-title::before {
+    animation: glitch-1 0.5s infinite;
+    color: #00ff88;
+    z-index: -1;
+  }
+  
+  .header-title::after {
+    animation: glitch-2 0.5s infinite;
+    color: #00cc66;
+    z-index: -2;
+  }
+  
+  @keyframes terminalGlow {
+    from { text-shadow: 0 0 5px rgba(0,255,136,0.5); }
+    to { text-shadow: 0 0 15px rgba(0,255,136,0.8); }
+  }
+  
+  @keyframes glitch-1 {
+    0%,100% { clip-path: inset(0 0 0 0); }
+    20% { clip-path: inset(20% 0 30% 0); }
+    40% { clip-path: inset(50% 0 20% 0); }
+  }
+  
+  @keyframes glitch-2 {
+    0%,100% { clip-path: inset(0 0 0 0); }
+    20% { clip-path: inset(60% 0 10% 0); }
+    40% { clip-path: inset(20% 0 50% 0); }
+  }
+  
+  .back-button {
+    cursor: pointer;
+    font-size: 18px;
+    color: #00ff88;
+    transition: transform 0.2s ease, color 0.3s ease;
+  }
+  
+  .back-button:hover {
+    transform: scale(1.2) rotate(-30deg);
+    color: #00cc66;
+  }
+  
+  .placeholder { width: 30px; }
+  
+  /* Instructions Styles */
+  .instructions-content {
+    padding: 20px;
+    font-family: 'Fira Code', monospace;
+  }
+  
+  .instructions-content h2 {
+    color: #00ff88;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-shadow: 0 0 10px rgba(0,255,136,0.5);
+  }
+  
+  .terminal-prompt {
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    color: #00ff88;
+    margin-bottom: 15px;
+  }
+  
+  .prompt-symbol {
+    margin-right: 10px;
+    color: #00ff88;
+  }
+  
+  .prompt-text {
+    color: #f5f5f5;
+  }
+  
+  .instructions-text {
+    background: rgba(0,0,0,0.5);
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid rgba(0,255,136,0.3);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  
+  .instructions-text p {
+    margin: 10px 0;
+  }
+  
+  .instructions-text ul {
+    padding-left: 20px;
+  }
+  
+  .instructions-text li {
+    margin: 8px 0;
+  }
+  
+  .challenge {
+    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0,255,136,0.3);
+    font-family: 'Fira Code', monospace;
+  }
+  
+  #progress {
+    font-weight: bold;
+    color: #00ff88;
+    margin-top: 5px;
+    display: inline-block;
+    padding: 3px 10px;
+    background: rgba(0,255,136,0.1);
+    border-radius: 3px;
+    border: 1px solid rgba(0,255,136,0.3);
+  }
+  
+  /* Hacking task progress bar */
+  .progress-container {
+    width: 90%;
+    max-width: 700px;
+    height: 8px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 4px;
+    margin: 10px auto;
+    border: 1px solid rgba(0,255,136,0.3);
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff88, #00cc66);
+    width: 20%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(0,255,136,0.7);
+  }
+  
+  textarea {
+    width: 90%;
+    max-width: 700px;
+    margin: 15px auto;
+    height: 140px;
+    padding: 15px;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    border: 1px solid #00ff88;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.7);
+    color: #00ff88;
+    display: block;
+    box-shadow: 0 0 10px rgba(0,255,136,0.2) inset;
+    transition: all 0.3s ease;
+  }
+  
+  textarea:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(0,255,136,0.4) inset;
+  }
+  
+  button {
+    margin: 15px auto;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #121212;
+    background: linear-gradient(45deg, #00ff88, #00cc66);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 90%;
+    max-width: 700px;
+    font-family: 'Fira Code', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    display: block;
+  }
+  
+  button:hover {
+    background: linear-gradient(45deg, #00cc66, #009944);
+    box-shadow: 0 0 15px rgba(0,255,136,0.5);
+  }
+  
+  #startGameBtn {
+    margin-top: 30px;
+  }
+  
+  #nextBtn {
+    background: linear-gradient(45deg, #00ff88, #00cc66);
+    display: none;
+    margin-top: 30px;
+    width: 85%;
+  }
+  
+  .result {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #00ff88;
+    min-height: 24px;
+    font-family: 'Fira Code', monospace;
+  }
+  
+  iframe {
+    border: 1px solid #00ff88;
+    width: 100%;
+    min-height: 250px;
+    background: rgba(0,0,0,0.7);
+    margin-top: 15px;
+    box-shadow: 0 0 15px rgba(0,255,136,0.2);
+  }
+  
+  /* Hide game container initially */
+  #gameContainer {
+    display: none;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    .app-container, .instructions-container { 
+      border-radius: 0;
+      min-height: 100vh;
+      height: auto;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+    
+    .header-title { 
+      font-size: 16px; 
+    }
+    
+    button { 
+      font-size: 14px; 
+    }
+    
+    .matrix-rain {
+      display: none; /* Hide matrix rain on mobile for better performance */
+    }
+    
+    .code-particles {
+      display: none; /* Hide particles on mobile for better performance */
+    }
+    
+    body {
+      padding: 0;
+    }
+  }
+</style>
+</head>
+<body>
+  <canvas class="matrix-rain" id="matrixRain"></canvas>
+  <div class="terminal-glow"></div>
+  <div class="code-particles" id="codeParticles"></div>
+  
+  <!-- Instructions Container -->
+  <div class="instructions-container" id="instructionsContainer">
+    <header>
+      <div class="back-button" onclick="confirmQuit()">⤺</div>
+      <div class="header-title">💻 TERMINAL - CSS HACKING MISSION</div>
+      <div class="placeholder"></div>
+    </header>
+    
+    <div class="instructions-content">
+      <h2>CLASSIFIED: OPERATION STYLING</h2>
+      
+      <div class="terminal-prompt">
+        <span class="prompt-symbol">root@terminal:~$</span>
+        <span class="prompt-text">cat mission_briefing.txt</span>
+      </div>
+      
+      <div class="instructions-text">
+        <p>Agent, your mission is to infiltrate the system by completing a series of CSS styling challenges to manipulate the visual interface.</p>
+        
+        <h3 style="color: #00ff88; margin-top: 20px;">OBJECTIVE:</h3>
+        <p>Successfully complete all 5 phases of CSS challenges to gain access to the system's styling controls.</p>
+        
+        <h3 style="color: #00ff88; margin-top: 20px;">MISSION PARAMETERS:</h3>
+        <ul>
+          <li>Each phase requires writing CSS code to style HTML elements</li>
+          <li>Your code will be applied to a test environment for evaluation</li>
+          <li>Both syntax and visual output will be evaluated</li>
+          <li>Knowledge of CSS selectors, properties, and values is required</li>
+          <li>Complete all phases to unlock the system</li>
+        </ul>
+        
+        <h3 style="color: #00ff88; margin-top: 20px;">REWARD:</h3>
+        <p>Upon successful completion, you will be awarded 9,120 points and 7,620 coins.</p>
+        
+        <h3 style="color: #00ff88; margin-top: 20px;">SECURITY WARNING:</h3>
+        <p>The system has advanced CSS parsing mechanisms. Precision in syntax is required.</p>
+      </div>
+      
+      <div class="terminal-prompt">
+        <span class="prompt-symbol">root@terminal:~$</span>
+        <span class="prompt-text">./launch_styling_protocol.sh</span>
+      </div>
+      
+      <button id="startGameBtn" onclick="startGame()">▶ LAUNCH PROTOCOL</button>
+    </div>
+  </div>
+  
+  <!-- Game Container -->
+  <div class="app-container" id="gameContainer">
+    <header>
+      <div class="back-button" onclick="confirmQuit()">⤺</div>
+      <div class="header-title">💻 TERMINAL - CSS HACKING MISSION</div>
+      <div class="placeholder"></div>
+    </header>
+    <div class="challenge">
+      <div id="instruction">Phase 1: Make all &lt;h1&gt; elements have green text color.</div>
+      <div id="progress">1 / 5</div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+    
+    <div class="terminal-prompt">
+      <span class="prompt-symbol">root@terminal:~$</span>
+      <span class="prompt-text">Write your CSS code below:</span>
+    </div>
+    
+    <textarea id="userCSS" placeholder="/* Enter your CSS code here */"></textarea>
+    
+    <button id="runBtn" onclick="runAndCheck()">▶ EXECUTE CODE</button>
+    
+    <div class="result" id="resultMsg"></div>
+    
+    <button id="nextBtn" onclick="goToNextPhase()">➡ NEXT PHASE</button>
+    
+    <iframe id="output"></iframe>
+  </div>
+
+<script>
+  // Matrix Rain Effect
+  const matrixCanvas = document.getElementById('matrixRain');
+  const matrixCtx = matrixCanvas.getContext('2d');
+  matrixCanvas.width = window.innerWidth;
+  matrixCanvas.height = window.innerHeight;
+  
+  // Matrix characters (Katakana, Latin, Numbers)
+  const matrixChars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const fontSize = 14;
+  const columns = matrixCanvas.width / fontSize;
+  const drops = [];
+  
+  // Initialize drops
+  for (let i = 0; i < columns; i++) {
+    drops[i] = Math.random() * matrixCanvas.height;
+  }
+  
+  // Draw the matrix rain
+  function drawMatrix() {
+    matrixCtx.fillStyle = 'rgba(18, 18, 18, 0.05)';
+    matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+    
+    matrixCtx.fillStyle = '#00ff88';
+    matrixCtx.font = `${fontSize}px monospace`;
+    
+    for (let i = 0; i < drops.length; i++) {
+      const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+      matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+      
+      if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975)
+        drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  
+  setInterval(drawMatrix, 33);
+  
+  // Resize canvas when window is resized
+  window.addEventListener('resize', () => {
+    matrixCanvas.width = window.innerWidth;
+    matrixCanvas.height = window.innerHeight;
+  });
+  
+  // Code Particles
+  const particlesContainer = document.getElementById('codeParticles');
+  const codeSnippets = ["color:", "font-size:", "background:", "border:", "margin:", "padding:", "display:", "position:", ".class", "#id"];
+  
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'code-particle';
+    p.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.top = `${Math.random() * 100}%`;
+    p.style.animationDelay = `${Math.random() * 15}s`;
+    p.style.fontSize = `${Math.random() * 10 + 10}px`;
+    particlesContainer.appendChild(p);
+  }
+  
+  // Game Logic
+  const phases = [
+    { instruction: 'Phase 1: Make all <h1> elements have green text color.', testHTML: '<h1>Hello World</h1>', expectedCSS: 'h1{color:green;}' },
+    { instruction: 'Phase 2: Set all <p> elements to have a font size of 18px.', testHTML: '<p>Sample paragraph</p>', expectedCSS: 'p{font-size:18px;}' },
+    { instruction: 'Phase 3: Create a CSS class .highlight that sets background color to lightblue.', testHTML: '<div class="highlight">Highlighted text</div>', expectedCSS: '.highlight{background:lightblue;}' },
+    { instruction: 'Phase 4: Add a 3px dashed red border to all <img> elements.', testHTML: '<img src="cat.jpg" alt="Cat Image">', expectedCSS: 'img{border:3px dashed red;}' },
+    { instruction: 'Phase 5: Center all text inside the <body> element.', testHTML: '<p>Centered text</p>', expectedCSS: 'body{text-align:center;}' }
+  ];
+  
+  let currentPhase = 0;
+  
+  function startGame() {
+    document.getElementById('instructionsContainer').style.display = 'none';
+    document.getElementById('gameContainer').style.display = 'flex';
+    updateInstruction();
+  }
+  
+  function updateInstruction() {
+    const phase = phases[currentPhase];
+    document.getElementById('instruction').innerHTML = phase.instruction;
+    document.getElementById('progress').innerText = `${currentPhase + 1} / ${phases.length}`;
+    document.getElementById('userCSS').value = '';
+    document.getElementById('resultMsg').innerText = '';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('output').srcdoc = '';
+    
+    // Update progress bar
+    const progressPercent = ((currentPhase+1) / phases.length) * 100;
+    document.getElementById('progressBar').style.width = `${progressPercent}%`;
+  }
+  
+  function runAndCheck() {
+    const userCSS = document.getElementById('userCSS').value.trim().replace(/\s+/g,'').toLowerCase();
+    const expectedCSS = phases[currentPhase].expectedCSS.replace(/\s+/g,'').toLowerCase();
+    const outputFrame = document.getElementById('output');
+    const resultMsg = document.getElementById('resultMsg');
+    outputFrame.srcdoc = `<style>${document.getElementById('userCSS').value}</style>${phases[currentPhase].testHTML}`;
+    
+    if(userCSS === expectedCSS){
+      if(currentPhase < phases.length - 1){
+        resultMsg.innerText = "✅ ACCESS GRANTED. Proceed to next phase.";
+        resultMsg.style.color = "#00ff88";
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        resultMsg.innerText = "🎉 ALL PHASES COMPLETE. SYSTEM STYLED!";
+        rewardPlayer();
+      }
+    } else {
+      resultMsg.innerText = "❌ ACCESS DENIED. Check your syntax or logic.";
+      resultMsg.style.color = "#ff5555";
+    }
+  }
+  
+  function goToNextPhase() {
+    currentPhase++;
+    if(currentPhase < phases.length) updateInstruction();
+  }
+  
+  function rewardPlayer() {
+    const username = localStorage.getItem("loggedInUser") || "Guest";
+    const points = 9120; 
+    const coins = 7620; 
+    
+    fetch("/api/reward", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, points, coins })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const resultMsg = document.getElementById('resultMsg');
+      if(data.success){
+        resultMsg.innerText += ` 🎉 REWARD ACQUIRED: ${points} points and ${coins} coins!`;
+        resultMsg.style.color = "#00ff88";
+      } else {
+        resultMsg.innerText += " ⚠️ Reward system error.";
+        resultMsg.style.color = "#ff5555";
+      }
+      
+      // Redirect after a short delay so player can see the success message
+      setTimeout(() => {
+        window.location.href = "../levels/programminglevel.html";
+      }, 2500);
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error applying reward. Redirecting anyway...");
+      window.location.href = "../levels/programminglevel.html";
+    });
+  }
+  
+  function confirmQuit() {
+    if(confirm("Terminate session? All progress will be lost.")) 
+      window.location.href = "programminglevel.html";
+  }
+  // === 🎵 PROGRAMMING GAME MUSIC (Auto Start) ===
+  let progAudioCtx, progMasterGain, progIntervals = [];
+
+  window.addEventListener("load", () => {
+    // Create audio context on load
+    progAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    progMasterGain = progAudioCtx.createGain();
+    progMasterGain.gain.value = 0.5; // 🔊 softer cyber vibe
+    progMasterGain.connect(progAudioCtx.destination);
+
+    // Start loops
+    startProgrammingMusic();
+  });
+
+  function startProgrammingMusic() {
+    if (!progAudioCtx) return;
+
+    // 🔹 Low synth pad (ambient background hum)
+    progIntervals.push(setInterval(() => {
+      playToneProg(220, "sawtooth", 1.2, 0.15); // low hum
+    }, 1500));
+
+    // 🔹 Random "data blips"
+    progIntervals.push(setInterval(() => {
+      let freqs = [440, 554, 659, 880, 988]; // coding beeps
+      let f = freqs[Math.floor(Math.random() * freqs.length)];
+      playToneProg(f, "square", 0.1, 0.25);
+    }, 500));
+
+    // 🔹 Hi-hat / typing clicks
+    progIntervals.push(setInterval(() => {
+      playNoiseProg(0.02, 0.15);
+    }, 250));
+
+    // 🔹 Deep pulse (like system heartbeat)
+    progIntervals.push(setInterval(() => {
+      playKickProg();
+    }, 2000));
+  }
+
+  function stopProgrammingMusic() {
+    progIntervals.forEach(id => clearInterval(id));
+    progIntervals = [];
+    if (progAudioCtx) {
+      progAudioCtx.close();
+      progAudioCtx = null;
+    }
+  }
+
+  // === SOUND GENERATORS ===
+  function playToneProg(freq, type, duration, volume) {
+    const osc = progAudioCtx.createOscillator();
+    const gain = progAudioCtx.createGain();
+    gain.gain.value = volume;
+    osc.type = type;
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(progMasterGain);
+
+    osc.start();
+    osc.stop(progAudioCtx.currentTime + duration);
+  }
+
+  function playNoiseProg(duration, volume) {
+    const bufferSize = progAudioCtx.sampleRate * duration;
+    const buffer = progAudioCtx.createBuffer(1, bufferSize, progAudioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1; // white noise
+    }
+
+    const noise = progAudioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    const gain = progAudioCtx.createGain();
+    gain.gain.value = volume;
+
+    noise.connect(gain);
+    gain.connect(progMasterGain);
+
+    noise.start();
+    noise.stop(progAudioCtx.currentTime + duration);
+  }
+
+  function playKickProg() {
+    const osc = progAudioCtx.createOscillator();
+    const gain = progAudioCtx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(100, progAudioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(40, progAudioCtx.currentTime + 0.6);
+
+    gain.gain.setValueAtTime(0.4, progAudioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, progAudioCtx.currentTime + 0.6);
+
+    osc.connect(gain);
+    gain.connect(progMasterGain);
+
+    osc.start(progAudioCtx.currentTime);
+    osc.stop(progAudioCtx.currentTime + 0.6);
+  }
+</script>
+</body>
+</html>

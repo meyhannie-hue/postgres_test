@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Levels - Cyberpunk Neon Theme</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      background: #0a0e27;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #f5f5f5;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Neon Grid Background */
+    .neon-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: 
+        linear-gradient(rgba(0, 245, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 245, 255, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+    
+    /* Neon Glow Effect */
+    .neon-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at center, rgba(255, 0, 110, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+    }
+    
+    /* Floating Neon Shapes */
+    .neon-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .neon-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out;
+    }
+    
+    .neon-shape.pink {
+      background: #ff006e;
+      width: 200px;
+      height: 200px;
+    }
+    
+    .neon-shape.blue {
+      background: #00f5ff;
+      width: 150px;
+      height: 150px;
+    }
+    
+    .neon-shape.green {
+      background: #39ff14;
+      width: 180px;
+      height: 180px;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+    
+    /* Main Container */
+    .cyber-container {
+      max-width: 420px;
+      width: 100%;
+      min-height: 90vh;
+      background: rgba(10, 14, 39, 0.7);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 
+        0 0 30px rgba(255, 0, 110, 0.3),
+        0 0 60px rgba(0, 245, 255, 0.2);
+      position: relative;
+      border: 2px solid rgba(0, 245, 255, 0.3);
+      backdrop-filter: blur(10px);
+      animation: containerEntry 0.8s ease forwards;
+    }
+    
+    /* Holographic Effect */
+    .cyber-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(0, 245, 255, 0.1) 50%,
+        transparent 70%
+      );
+      background-size: 200% 200%;
+      animation: holographic 6s ease infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    @keyframes holographic {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+    
+    @keyframes containerEntry {
+      from { 
+        opacity: 0; 
+        transform: scale(0.9) translateY(20px) rotateX(10deg);
+      }
+      to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0) rotateX(0);
+      }
+    }
+    
+    /* Header */
+    .cyber-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(0, 245, 255, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .back-btn {
+      cursor: pointer;
+      font-size: 20px;
+      color: #00f5ff;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
+    }
+    
+    .back-btn:hover {
+      transform: scale(1.2) rotate(-15deg);
+      color: #ff006e;
+      text-shadow: 0 0 15px rgba(255, 0, 110, 0.7);
+    }
+    
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      color: #ff006e;
+      flex-grow: 1;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 
+        0 0 10px rgba(255, 0, 110, 0.7),
+        0 0 20px rgba(255, 0, 110, 0.5);
+      animation: neonPulse 2s infinite alternate;
+    }
+    
+    @keyframes neonPulse {
+      from { 
+        text-shadow: 
+          0 0 10px rgba(255, 0, 110, 0.7),
+          0 0 20px rgba(255, 0, 110, 0.5);
+      }
+      to { 
+        text-shadow: 
+          0 0 15px rgba(255, 0, 110, 0.9),
+          0 0 25px rgba(255, 0, 110, 0.7);
+      }
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 14px;
+    }
+    
+    .username {
+      color: #00f5ff;
+      font-weight: 500;
+      text-shadow: 0 0 5px rgba(0, 245, 255, 0.7);
+    }
+    
+    .points {
+      color: #39ff14;
+      font-weight: 600;
+      text-shadow: 0 0 5px rgba(57, 255, 20, 0.7);
+      animation: pointsGlow 2s infinite alternate;
+    }
+    
+    @keyframes pointsGlow {
+      from { text-shadow: 0 0 5px rgba(57, 255, 20, 0.7); }
+      to { text-shadow: 0 0 15px rgba(57, 255, 20, 0.9); }
+    }
+    
+    /* Content Title */
+    .content-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 30px 0;
+      color: #00f5ff;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .content-title::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #ff006e, transparent);
+    }
+    
+    .content-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #39ff14, transparent);
+    }
+    
+    /* Level Cards */
+    .level-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      padding: 0 20px 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .level-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(0, 245, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+    
+    /* Neon Border Effect */
+    .level-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #00f5ff, #ff006e, #39ff14, #00f5ff);
+      border-radius: 15px;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.4s ease;
+      filter: blur(5px);
+      animation: neonBorder 3s linear infinite;
+      background-size: 400% 400%;
+    }
+    
+    @keyframes neonBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .level-card:hover::before {
+      opacity: 1;
+    }
+    
+    .level-card:hover {
+      transform: translateY(-8px) rotateX(5deg);
+      box-shadow: 
+        0 10px 30px rgba(0, 245, 255, 0.3),
+        0 0 60px rgba(255, 0, 110, 0.2);
+    }
+    
+    .level-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: rgba(100, 100, 100, 0.3);
+    }
+    
+    .level-card.locked::before {
+      display: none;
+    }
+    
+    /* Level Header */
+    .level-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .level-name {
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .level-name .emoji {
+      font-size: 24px;
+    }
+    
+    .level-status {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .level-status.unlocked {
+      background: rgba(57, 255, 20, 0.2);
+      color: #39ff14;
+      border: 1px solid rgba(57, 255, 20, 0.5);
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+    }
+    
+    .level-status.locked {
+      background: rgba(100, 100, 100, 0.2);
+      color: #aaaaaa;
+      border: 1px solid rgba(100, 100, 100, 0.3);
+    }
+    
+    /* Level Description */
+    .level-description {
+      color: #cccccc;
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+      transition: width 0.8s ease;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+    
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .progress-bar.easy {
+      background: linear-gradient(90deg, #39ff14, #7aff7a);
+    }
+    
+    .progress-bar.medium {
+      background: linear-gradient(90deg, #00f5ff, #7affff);
+    }
+    
+    .progress-bar.hard {
+      background: linear-gradient(90deg, #ff006e, #ff5eaa);
+    }
+    
+    /* Cyber Badge */
+    .cyber-badge {
+      display: inline-block;
+      background: rgba(255, 0, 110, 0.2);
+      color: #ff006e;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 0, 110, 0.3);
+      box-shadow: 0 0 10px rgba(255, 0, 110, 0.2);
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #ff006e;
+      padding: 15px 25px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 0, 110, 0.5);
+      box-shadow: 
+        0 0 20px rgba(255, 0, 110, 0.4),
+        0 0 40px rgba(255, 0, 110, 0.2);
+      z-index: 1000;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      opacity: 0;
+      animation: notificationFade 3s forwards;
+    }
+    
+    @keyframes notificationFade {
+      0% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px);
+      }
+      20% { 
+        opacity: 1; 
+        transform: translate(-50%, 0);
+      }
+      80% { 
+        opacity: 1; 
+        transform: translate(-50%, 0);
+      }
+      100% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px);
+      }
+    }
+    
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .loading-content {
+      text-align: center;
+    }
+    
+    .loading-text {
+      color: #00f5ff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
+    }
+    
+    .loading-circles {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    
+    .loading-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      animation: loadingPulse 1.5s infinite ease-in-out;
+    }
+    
+    .loading-circle:nth-child(1) {
+      background: #ff006e;
+      animation-delay: 0s;
+    }
+    
+    .loading-circle:nth-child(2) {
+      background: #00f5ff;
+      animation-delay: 0.3s;
+    }
+    
+    .loading-circle:nth-child(3) {
+      background: #39ff14;
+      animation-delay: 0.6s;
+    }
+    
+    @keyframes loadingPulse {
+      0%, 100% { 
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% { 
+        transform: scale(1.3);
+        opacity: 1;
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      .cyber-container {
+        min-height: 95vh;
+        border-radius: 0;
+      }
+      
+      .content-title {
+        font-size: 24px;
+      }
+      
+      .level-card {
+        padding: 15px;
+      }
+      
+      .level-name {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="neon-grid"></div>
+  <div class="neon-glow"></div>
+  <div class="neon-shapes" id="neonShapes"></div>
+  
+  <div class="cyber-container">
+    <div class="cyber-header">
+      <div class="back-btn" onclick="goBack()">←</div>
+      <div class="title">Techy Me</div>
+      <div class="user-info">
+        <div class="username" id="usernameDisplay">User</div>
+        <div class="points" id="points">💰 0</div>
+      </div>
+    </div>
+    
+    <div class="content-title">Programming</div>
+    
+    <div class="level-cards">
+      <div class="level-card" onclick="startLevel('easy')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🟢</span>
+            <span>Easy</span>
+          </div>
+          <div class="level-status unlocked">Unlocked</div>
+        </div>
+        <div class="level-description">Beginner coding challenges to build your programming foundation</div>
+        <div class="progress-container">
+          <div class="progress-bar easy" id="easyProgress"></div>
+        </div>
+      </div>
+      
+      <div class="level-card locked" id="mediumLevel" onclick="startLevel('medium')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🟡</span>
+            <span>Medium</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Intermediate coding tasks to enhance your skills</div>
+        <div class="progress-container">
+          <div class="progress-bar medium" id="mediumProgress"></div>
+        </div>
+      </div>
+      
+      <div class="level-card locked" id="hardLevel" onclick="startLevel('hard')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🔴</span>
+            <span>Hard</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Advanced programming problems for elite coders</div>
+        <div class="progress-container">
+          <div class="progress-bar hard" id="hardProgress"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-text" id="loadingText">Initializing...</div>
+      <div class="loading-circles">
+        <div class="loading-circle"></div>
+        <div class="loading-circle"></div>
+        <div class="loading-circle"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Create floating neon shapes
+    const neonShapes = document.getElementById('neonShapes');
+    const shapes = [
+      { class: 'pink', left: '10%', top: '20%', delay: '0s' },
+      { class: 'blue', left: '80%', top: '60%', delay: '5s' },
+      { class: 'green', left: '40%', top: '80%', delay: '10s' },
+      { class: 'pink', left: '70%', top: '10%', delay: '15s' },
+      { class: 'blue', left: '20%', top: '70%', delay: '20s' }
+    ];
+    
+    shapes.forEach(shape => {
+      const div = document.createElement('div');
+      div.className = `neon-shape ${shape.class}`;
+      div.style.left = shape.left;
+      div.style.top = shape.top;
+      div.style.animationDelay = shape.delay;
+      neonShapes.appendChild(div);
+    });
+    
+    // User info
+    const loggedInUser = localStorage.getItem("loggedInUser") || "User";
+    const points = localStorage.getItem("points") || 0;
+    document.getElementById("usernameDisplay").innerText = loggedInUser;
+    document.getElementById("points").innerText = `💰 ${points}`;
+    
+    // Level unlocking logic
+    const userPoints = parseInt(points) || 0;
+    if (userPoints >= 6000) {
+      document.getElementById("mediumLevel").classList.remove("locked");
+      document.querySelector("#mediumLevel .level-status").classList.remove("locked");
+      document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
+      document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
+    }
+    if (userPoints >= 7500) {
+      document.getElementById("hardLevel").classList.remove("locked");
+      document.querySelector("#hardLevel .level-status").classList.remove("locked");
+      document.querySelector("#hardLevel .level-status").classList.add("unlocked");
+      document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
+    }
+    
+    // Simulate progress bars
+    setTimeout(() => {
+      document.getElementById("easyProgress").style.width = "100%";
+      if (userPoints >= 6000) {
+        document.getElementById("mediumProgress").style.width = "65%";
+      }
+      if (userPoints >= 7500) {
+        document.getElementById("hardProgress").style.width = "30%";
+      }
+    }, 500);
+    
+    function startLevel(level) {
+      const levelElement = document.getElementById(level + "Level");
+      if (levelElement.classList.contains("locked")) {
+        // Create notification
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        
+        if (level === "medium") {
+          notification.textContent = "ACCESS DENIED: Complete Easy level and earn 6000 points to unlock";
+        } else if (level === "hard") {
+          notification.textContent = "ACCESS DENIED: Complete Medium level and earn 7500 points to unlock";
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+        
+        return;
+      }
+      
+      // Show loading overlay
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      
+      loadingOverlay.classList.add('active');
+      
+      if (level === "easy") {
+        loadingText.textContent = "Initializing Cyber Interface...";
+      } else if (level === "medium") {
+        loadingText.textContent = "Compiling Neural Network...";
+      } else if (level === "hard") {
+        loadingText.textContent = "Breaching Quantum Firewall...";
+      }
+      
+      // Navigate after loading animation
+      setTimeout(() => {
+        if (level === "easy") window.location.href = `../programming/easy.html`;
+        if (level === "medium") window.location.href = `../programming/medium.html`;
+        if (level === "hard") window.location.href = `../programming/hard.html`;
+      }, 2000);
+    }
+    
+    function goBack() {
+      // Show loading overlay
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      
+      loadingOverlay.classList.add('active');
+      loadingText.textContent = "Disconnecting from Matrix...";
+      
+      // Navigate after loading animation
+      setTimeout(() => {
+        window.location.href = "../dashboard.html";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assemble the Computer</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #212121;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    color: #f5f5f5;
+  }
+  
+  /* Blueprint Grid Background */
+  .blueprint-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background-image: 
+      linear-gradient(rgba(255, 145, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 145, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(rgba(207, 216, 220, 0.03) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(207, 216, 220, 0.03) 2px, transparent 2px);
+    background-size: 20px 20px, 20px 20px, 40px 40px, 40px 40px;
+  }
+  
+  /* Circuit Pattern Overlay */
+  .circuit-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.1;
+    pointer-events: none;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(255, 145, 0, 0.1) 0%, transparent 20%),
+      radial-gradient(circle at 80% 80%, rgba(255, 145, 0, 0.1) 0%, transparent 20%),
+      radial-gradient(circle at 40% 40%, rgba(207, 216, 220, 0.05) 0%, transparent 15%);
+  }
+  
+  .app-container, .instructions-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    background: rgba(33, 33, 33, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 40px;
+    margin: 20px 0;
+    border: 1px solid rgba(207, 216, 220, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Blueprint corners */
+  .app-container::before, .instructions-container::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid rgba(255, 145, 0, 0.3);
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Blueprint corner decorations */
+  .blueprint-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: #ff9100;
+    border-style: solid;
+    border-width: 0;
+    z-index: 2;
+  }
+  
+  .blueprint-corner.tl {
+    top: 10px;
+    left: 10px;
+    border-top-width: 2px;
+    border-left-width: 2px;
+  }
+  
+  .blueprint-corner.tr {
+    top: 10px;
+    right: 10px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+  }
+  
+  .blueprint-corner.bl {
+    bottom: 10px;
+    left: 10px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+  }
+  
+  .blueprint-corner.br {
+    bottom: 10px;
+    right: 10px;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(33, 33, 33, 0.8);
+    color: #f5f5f5;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(207, 216, 220, 0.2);
+    position: relative;
+    z-index: 2;
+  }
+  
+  .header-title {
+    font-size: 20px;
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bold;
+    color: #cfd8dc;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .back-button { 
+    cursor: pointer; 
+    font-size: 20px; 
+    color: #ff9100;
+    transition: transform 0.2s ease, color 0.3s ease;
+  }
+  
+  .back-button:hover { 
+    transform: scale(1.2) rotate(-30deg); 
+    color: #ffb74d;
+  }
+  
+  .placeholder { width: 30px; }
+  
+  /* Instructions Styles */
+  .instructions-content {
+    padding: 30px;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .instructions-content h2 {
+    color: #ff9100;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .instructions-text {
+    background: rgba(33, 33, 33, 0.7);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(207, 216, 220, 0.2);
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  
+  .instructions-text p {
+    margin: 15px 0;
+  }
+  
+  .instructions-text ul {
+    padding-left: 20px;
+  }
+  
+  .instructions-text li {
+    margin: 10px 0;
+  }
+  
+  .component-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+  }
+  
+  .component-item {
+    display: flex;
+    align-items: center;
+    background: rgba(33, 33, 33, 0.7);
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(207, 216, 220, 0.2);
+  }
+  
+  .component-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 145, 0, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: #ff9100;
+    font-weight: bold;
+  }
+  
+  .component-name {
+    font-weight: 600;
+    color: #cfd8dc;
+  }
+  
+  .start-button {
+    display: block;
+    margin: 30px auto;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff9100, #ff5722);
+    color: #f5f5f5;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 145, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .start-button:hover {
+    background: linear-gradient(45deg, #ffb74d, #ff7043);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 145, 0, 0.4);
+  }
+  
+  h1, p { 
+    text-align: center; 
+    margin-top: 20px; 
+    color: #cfd8dc;
+    position: relative;
+    z-index: 2;
+  }
+  
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ff9100;
+  }
+  
+  .container {
+    position: relative;
+    display: inline-block;
+    border: 3px solid #cfd8dc;
+    border-radius: 10px;
+    margin: 0 auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    max-width: 100%;
+    width: 1000px;
+    background: rgba(33, 33, 33, 0.5);
+    position: relative;
+    z-index: 2;
+  }
+  
+  .container img.main {
+    width: 100%;
+    height: auto;
+    border-radius: 7px;
+    display: block;
+  }
+  
+  .label {
+    position: absolute;
+    background-color: rgb(89, 55, 28);
+    border-radius: 8px;
+    font-size: 13px;
+    border: 2px dashed #cfd8dc;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .label:hover {
+    border-color: #ff9100;
+    box-shadow: 0 0 15px rgba(255, 145, 0, 0.5);
+  }
+  
+  .label img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    transition: transform 0.3s ease;
+  }
+  
+  .dropped {
+    background-color: rgba(255, 145, 0, 0.2) !important;
+    border: 2px solid #ff9100 !important;
+    animation: magneticSnap 0.5s ease;
+  }
+  
+  @keyframes magneticSnap {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .powersupply { top: 23.5%; left: 26.9%; width: 19%; height: 15%; }
+  .ram         { top: 40%; left: 15%; width: 24%; height: 18%; }
+  .motherboard { top: 39.5%; left: 39.6%; width: 14%; height: 35%; }
+  .cd-dvd      { top: 15.5%; right: 10.5%; width: 30%; height: 30%; }
+  .harddrive   { top: 57.5%; right: 8%; width: 29.5%; height: 20%; }
+  
+  .choices {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .choice img {
+    width: 130px;
+    border-radius: 12px;
+    border: 3px solid #cfd8dc;
+    cursor: grab;
+    padding: 8px;
+    background-color: rgba(33, 33, 33, 0.7);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .choice img:hover { 
+    background-color: rgba(255, 145, 0, 0.2);
+    border-color: #ff9100;
+    transform: scale(1.08);
+    box-shadow: 0 0 15px rgba(255, 145, 0, 0.5);
+  }
+  
+  .choice img:active { cursor: grabbing; }
+  .disabled { pointer-events: none; opacity: 0.5; }
+  
+  .controls { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    margin-top: 30px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .controls button {
+    padding: 12px 25px;
+    font-size: 16px;
+    background: linear-gradient(45deg, #cfd8dc, #90a4ae);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #212121;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .controls button:hover { 
+    background: linear-gradient(45deg, #ff9100, #ff5722);
+    color: #f5f5f5;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(255, 145, 0, 0.4);
+  }
+  
+  #resultMessage { 
+    margin-top: 20px; 
+    font-weight: bold; 
+    font-size: 18px; 
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Hide game container initially */
+  #gameContainer {
+    display: none;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    .app-container, .instructions-container { 
+      border-radius: 0;
+      min-height: 100vh;
+      height: auto;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+    
+    .header-title { 
+      font-size: 16px; 
+    }
+    
+    .container { 
+      width: 100%; 
+      border-width: 2px; 
+    }
+    
+    .label { 
+      font-size: 12px; 
+
+    }
+    
+    .choice img { 
+      width: 80px; 
+    }
+    
+    .controls button {
+      padding: 10px 15px;
+      font-size: 14px;
+    }
+    
+    .instructions-content {
+      padding: 20px;
+    }
+    
+    .instructions-content h2 {
+      font-size: 22px;
+    }
+    
+    .component-item {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .component-icon {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="blueprint-bg"></div>
+  <div class="circuit-pattern"></div>
+  
+  <!-- Instructions Container -->
+  <div class="instructions-container" id="instructionsContainer">
+    <div class="blueprint-corner tl"></div>
+    <div class="blueprint-corner tr"></div>
+    <div class="blueprint-corner bl"></div>
+    <div class="blueprint-corner br"></div>
+    
+    <header>
+      <div class="back-button" onclick="confirmBack()">⤺</div>
+      <div class="header-title">🖥 System Unit Assembly</div>
+      <div class="placeholder"></div>
+    </header>
+    
+    <div class="instructions-content">
+      <h2>Hardware Assembly Blueprint</h2>
+      
+      <div class="instructions-text">
+        <p>Welcome to the Tech Lab! Your mission is to assemble a computer by correctly placing each component in its designated position within the system unit.</p>
+        
+        <h3 style="color: #ff9100; margin-top: 20px;">Mission Briefing:</h3>
+        <p>This interactive simulation will test your knowledge of computer hardware components and their proper placement within a system unit.</p>
+        
+        <h3 style="color: #ff9100; margin-top: 20px;">Components to Assemble:</h3>
+        <div class="component-list">
+          <div class="component-item">
+            <div class="component-icon">PS</div>
+            <div class="component-name">Power Supply</div>
+          </div>
+          <div class="component-item">
+            <div class="component-icon">RAM</div>
+            <div class="component-name">Memory Module</div>
+          </div>
+          <div class="component-item">
+            <div class="component-icon">MB</div>
+            <div class="component-name">Motherboard</div>
+          </div>
+          <div class="component-item">
+            <div class="component-icon">CD</div>
+            <div class="component-name">Optical Drive</div>
+          </div>
+          <div class="component-item">
+            <div class="component-icon">HD</div>
+            <div class="component-name">Hard Drive</div>
+          </div>
+        </div>
+        
+        <h3 style="color: #ff9100; margin-top: 20px;">Instructions:</h3>
+        <ul>
+          <li>Drag each component from the selection area to its correct position in the system unit</li>
+          <li>Components will snap into place with a magnetic animation when correctly positioned</li>
+          <li>Use the Undo button to remove the last placed component</li>
+          <li>Click Submit when you believe all components are correctly placed</li>
+          <li>Earn points based on the number of correctly placed components</li>
+        </ul>
+        
+        <h3 style="color: #ff9100; margin-top: 20px;">Rewards:</h3>
+        <p>Successfully placing all components will earn you maximum points. Each correctly placed component contributes to your total score.</p>
+      </div>
+      
+      <button class="start-button" onclick="startGame()">🚀 Start Assembly</button>
+    </div>
+  </div>
+  
+  <!-- Game Container -->
+  <div class="app-container" id="gameContainer">
+    <div class="blueprint-corner tl"></div>
+    <div class="blueprint-corner tr"></div>
+    <div class="blueprint-corner bl"></div>
+    <div class="blueprint-corner br"></div>
+    
+    <header>
+      <div class="back-button" onclick="confirmBack()">⤺</div>
+      <div class="header-title">🖥 System Unit Assembly</div>
+      <div class="placeholder"></div>
+    </header>
+    
+    <h1>Assemble the Computer</h1>
+    <p>Drag each component to its correct position inside the computer.</p>
+    
+    <div class="container">
+      <img src="images/unit.png" alt="System Unit" class="main">
+      <div class="label powersupply" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="powersupply"></div>
+      <div class="label ram" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="ram"></div>
+      <div class="label motherboard" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="motherboard"></div>
+      <div class="label cd-dvd" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="cddvddrive"></div>
+      <div class="label harddrive" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="harddrive"></div>
+    </div>
+    
+    <div class="choices" id="choices">
+      <div class="choice"><img src="images/ram.png" id="ram" draggable="true" ondragstart="drag(event)"></div>
+      <div class="choice"><img src="images/harddisk.png" id="harddrive" draggable="true" ondragstart="drag(event)"></div>
+      <div class="choice"><img src="images/motherboard.png" id="motherboard" draggable="true" ondragstart="drag(event)"></div>
+      <div class="choice"><img src="images/power.png" id="powersupply" draggable="true" ondragstart="drag(event)"></div>
+      <div class="choice"><img src="images/dvd.png" id="cddvddrive" draggable="true" ondragstart="drag(event)"></div>
+    </div>
+    
+    <div class="controls">
+      <button onclick="submitActivity()">✅ Submit</button>
+      <button onclick="undoLast()">↩ Undo</button>
+    </div>
+    
+    <div id="resultMessage"></div>
+  </div>
+
+<script>
+  let lastAction = null;
+  let dragged = null;
+  let dragClone = null;
+  
+  function allowDrop(ev) { 
+    ev.preventDefault(); 
+  }
+  
+  function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+    dragged = ev.target;
+  }
+  
+  function drop(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    const draggedEl = document.getElementById(data);
+    handleDrop(draggedEl, ev.target.closest(".label"));
+  }
+  
+  // ✅ Shared drop logic (desktop + mobile)
+  function handleDrop(draggedEl, target) {
+    if (!draggedEl || !target || target.querySelector("img")) return;
+    
+    const clone = draggedEl.cloneNode(true);
+    clone.style.position = "absolute";
+    clone.style.inset = 0;
+    clone.style.width = "100%";
+    clone.style.height = "100%";
+    clone.style.objectFit = "cover";
+    clone.draggable = false;
+    clone.id = draggedEl.id;
+    
+    const originalParent = draggedEl.parentElement;
+    target.innerHTML = '';
+    target.appendChild(clone);
+    target.classList.add("dropped");
+    draggedEl.classList.add("disabled");
+    draggedEl.draggable = false;
+    
+    lastAction = { element: draggedEl, label: target, originalParent };
+  }
+  
+  function undoLast() {
+    if (!lastAction) return;
+    
+    const { element, label, originalParent } = lastAction;
+    label.innerHTML = '';
+    label.classList.remove("dropped");
+    element.classList.remove("disabled");
+    element.draggable = true;
+    
+    if (!originalParent.contains(element)) 
+      originalParent.appendChild(element);
+    
+    lastAction = null;
+  }
+  
+  function confirmBack() {
+    if (confirm("Are you sure you want to quit? Progress will be lost.")) {
+      window.location.href = "../levels/systemunitlevel.html";
+    }
+  }
+  
+  function startGame() {
+    document.getElementById('instructionsContainer').style.display = 'none';
+    document.getElementById('gameContainer').style.display = 'flex';
+  }
+  
+  // ✅ Touch support for mobile
+  document.querySelectorAll('.choice img').forEach(img => {
+    img.addEventListener("touchstart", e => {
+      dragged = e.target;
+      dragClone = dragged.cloneNode(true);
+      dragClone.style.position = "fixed";
+      dragClone.style.pointerEvents = "none";
+      dragClone.style.width = dragged.offsetWidth + "px";
+      dragClone.style.height = dragged.offsetHeight + "px";
+      dragClone.style.opacity = "0.7";
+      dragClone.style.zIndex = "1000";
+      document.body.appendChild(dragClone);
+      moveAt(e.touches[0].clientX, e.touches[0].clientY);
+    });
+    
+    img.addEventListener("touchmove", e => {
+      if (!dragClone) return;
+      moveAt(e.touches[0].clientX, e.touches[0].clientY);
+      e.preventDefault();
+    });
+    
+    img.addEventListener("touchend", e => {
+      if (!dragClone) return;
+      
+      const touch = e.changedTouches[0];
+      const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY)?.closest(".label");
+      
+      if (dropTarget) {
+        handleDrop(dragged, dropTarget);
+      }
+      
+      dragClone.remove();
+      dragClone = null;
+      dragged = null;
+    });
+    
+    function moveAt(x, y) {
+      dragClone.style.left = x - dragClone.offsetWidth / 2 + "px";
+      dragClone.style.top = y - dragClone.offsetHeight / 2 + "px";
+    }
+  });
+  
+  // ✅ Submit function unchanged (but ensure loggedInUser is defined somewhere global)
+  async function submitActivity() {
+    const labels = document.querySelectorAll('.label');
+    let correct = 0;
+    
+    labels.forEach(label => {
+      const img = label.querySelector('img');
+      if (img && label.dataset.correct === img.id) 
+        correct++;
+    });
+    
+    const points = correct * 300;
+    const coins = correct;
+    const isPerfect = correct === 5;
+    const message = document.getElementById('resultMessage');
+    
+    message.innerHTML = isPerfect
+      ? `🎉 Perfect Assembly! 5/5 components correctly placed. Score: ${points}`
+      : `⚠️ Assembly Incomplete. ${correct}/5 components correctly placed. Score: ${points}`;
+    
+    message.style.color = isPerfect ? '#4caf50' : '#ff9100';
+    
+    try {
+      await fetch("/api/reward", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          username: localStorage.getItem("loggedInUser") || "Guest", 
+          points, 
+          coins,
+          reason: "System Unit Assembly"
+        })
+      });
+    } catch (e) {
+      console.error("Failed to send reward:", e);
+    }
+    
+    const prevPoints = parseInt(localStorage.getItem("points") || "0", 10);
+    localStorage.setItem("points", prevPoints + points);
+    
+    if (document.getElementById("points")) {
+      document.getElementById("points").innerText = `💰 ${prevPoints + points}`;
+    }
+  }
+                
+  // === 🎵 SYSTEM UNIT LAB AMBIENCE ===
+let sysAudioCtx, sysMasterGain, sysIntervals = [];
+
+function startSystemUnitMusic() {
+  if (sysAudioCtx) return; // already playing
+
+  sysAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  sysMasterGain = sysAudioCtx.createGain();
+  sysMasterGain.gain.value = 0.6; // 🎚 lower ambient volume
+  sysMasterGain.connect(sysAudioCtx.destination);
+
+  // 🔹 Ambient low hum (feels like PC fans or lab machines running)
+  sysIntervals.push(setInterval(() => {
+    playToneSys(80, "sawtooth", 2, 0.15);
+  }, 2000));
+
+  // 🔹 Random digital beeps (assembly scanner sounds)
+  sysIntervals.push(setInterval(() => {
+    let freqs = [523, 659, 784, 988]; // high-tech tones
+    let freq = freqs[Math.floor(Math.random() * freqs.length)];
+    playToneSys(freq, "triangle", 0.2, 0.25);
+  }, 1200));
+
+  // 🔹 Metallic click / clank (like snapping PC parts in)
+  sysIntervals.push(setInterval(() => {
+    playClickSys();
+  }, 2500));
+}
+
+// === SOUND HELPERS ===
+function playToneSys(freq, type, duration, volume) {
+  const osc = sysAudioCtx.createOscillator();
+  const gain = sysAudioCtx.createGain();
+  gain.gain.value = volume;
+  osc.type = type;
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  gain.connect(sysMasterGain);
+
+  osc.start();
+  osc.stop(sysAudioCtx.currentTime + duration);
+}
+
+function playClickSys() {
+  const bufferSize = sysAudioCtx.sampleRate * 0.05;
+  const buffer = sysAudioCtx.createBuffer(1, bufferSize, sysAudioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1; // noise
+  }
+
+  const noise = sysAudioCtx.createBufferSource();
+  noise.buffer = buffer;
+
+  const gain = sysAudioCtx.createGain();
+  gain.gain.value = 0.2;
+  noise.connect(gain);
+  gain.connect(sysMasterGain);
+
+  noise.start();
+  noise.stop(sysAudioCtx.currentTime + 0.05);
+}
+
+// === STOP ===
+function stopSystemUnitMusic() {
+  sysIntervals.forEach(id => clearInterval(id));
+  sysIntervals = [];
+  if (sysAudioCtx) {
+    sysAudioCtx.close();
+    sysAudioCtx = null;
+  }
+}
+
+// === AUTO START ===
+window.addEventListener("load", () => {
+  // Some browsers require a user interaction — this ensures auto-start after first click
+  document.body.addEventListener("click", () => {
+    if (!sysAudioCtx) startSystemUnitMusic();
+  }, { once: true });
+
+  // If autoplay is allowed, try directly
+  startSystemUnitMusic();
+});
+</script>
+</body>
+</html>
