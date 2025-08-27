@@ -201,12 +201,21 @@
       font-weight: 500;
     }
     
-    .points {
-      color: #ff9100;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    /* Updated Coins Display to match dashboard */
+    .coins-display {
+      position: absolute;
+      left: 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #00e5ff;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
     }
     
     /* Content Title */
@@ -658,60 +667,58 @@
     <div class="tech-header">
       <div class="back-btn" onclick="goBack()">←</div>
       <div class="title">Techy Me</div>
-      <div class="user-info">
-        <div class="username" id="usernameDisplay">User</div>
-        <div class="points" id="points"><span>💰</span> <span>0</span></div>
-      </div>
+      <!-- Updated coins display to match dashboard -->
+      <div id="coins" class="coins-display">💰 0</div>
     </div>
     
     <div class="content-title">System Unit</div>
     
     <div class="level-cards">
-  <div class="level-card" id="easyLevel" onclick="startLevel('easy')">
-    <div class="tech-badge">Hardware Lab</div>
-    <div class="level-header">
-      <div class="level-name">
-        <span class="icon">🖥️</span>
-        <span>Basic</span>
+      <div class="level-card" id="easyLevel" onclick="startLevel('easy')">
+        <div class="tech-badge">Hardware Lab</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="icon">🖥️</span>
+            <span>Basic</span>
+          </div>
+          <div class="level-status unlocked">Unlocked</div>
+        </div>
+        <div class="level-description">Identify basic PC components and their functions</div>
+        <div class="progress-container">
+          <div class="progress-bar easy" id="easyProgress"></div>
+        </div>
       </div>
-      <div class="level-status unlocked">Unlocked</div>
-    </div>
-    <div class="level-description">Identify basic PC components and their functions</div>
-    <div class="progress-container">
-      <div class="progress-bar easy" id="easyProgress"></div>
-    </div>
-  </div>
-  
-  <div class="level-card locked" id="mediumLevel" onclick="startLevel('medium')">
-    <div class="tech-badge">Hardware Lab</div>
-    <div class="level-header">
-      <div class="level-name">
-        <span class="icon">🔧</span>
-        <span>Intermediate</span>
+      
+      <div class="level-card locked" id="mediumLevel" onclick="startLevel('medium')">
+        <div class="tech-badge">Hardware Lab</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="icon">🔧</span>
+            <span>Intermediate</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Assembly procedures and compatibility checks</div>
+        <div class="progress-container">
+          <div class="progress-bar medium" id="mediumProgress"></div>
+        </div>
       </div>
-      <div class="level-status locked">Locked</div>
-    </div>
-    <div class="level-description">Assembly procedures and compatibility checks</div>
-    <div class="progress-container">
-      <div class="progress-bar medium" id="mediumProgress"></div>
-    </div>
-  </div>
-  
-  <div class="level-card locked" id="hardLevel" onclick="startLevel('hard')">
-    <div class="tech-badge">Hardware Lab</div>
-    <div class="level-header">
-      <div class="level-name">
-        <span class="icon">⚡</span>
-        <span>Advanced</span>
+      
+      <div class="level-card locked" id="hardLevel" onclick="startLevel('hard')">
+        <div class="tech-badge">Hardware Lab</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="icon">⚡</span>
+            <span>Advanced</span>
+          </div>
+          <div class="level-status locked">Locked</div>
+        </div>
+        <div class="level-description">Troubleshooting and optimization techniques</div>
+        <div class="progress-container">
+          <div class="progress-bar hard" id="hardProgress"></div>
+        </div>
       </div>
-      <div class="level-status locked">Locked</div>
     </div>
-    <div class="level-description">Troubleshooting and optimization techniques</div>
-    <div class="progress-container">
-      <div class="progress-bar hard" id="hardProgress"></div>
-    </div>
-  </div>
-</div>
   </div>
   
   <!-- PC Parts for Drag and Drop -->
@@ -757,35 +764,70 @@
     
     // User info
     const loggedInUser = localStorage.getItem("loggedInUser") || "User";
-    const points = localStorage.getItem("points") || 0;
-    document.getElementById("usernameDisplay").innerText = loggedInUser;
-    document.querySelector("#points span:last-child").innerText = points;
     
-    // Level unlocking logic
-    const userPoints = parseInt(points) || 0;
-    if (userPoints >= 9000) {
-      document.getElementById("mediumLevel").classList.remove("locked");
-      document.querySelector("#mediumLevel .level-status").classList.remove("locked");
-      document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
-      document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
-    }
-    if (userPoints >= 10200) {
-      document.getElementById("hardLevel").classList.remove("locked");
-      document.querySelector("#hardLevel .level-status").classList.remove("locked");
-      document.querySelector("#hardLevel .level-status").classList.add("unlocked");
-      document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
+    // Load coins from API like in dashboard
+    async function loadCoins() {
+      try {
+        const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
+        const players = await res.json();
+        const loggedInPlayer = players.find(p => p.username === loggedInUser);
+        const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
+        document.getElementById("coins").textContent = `💰 ${coins}`;
+        window.playerCoins = coins;
+        
+        // Update level unlocking based on coins
+        updateLevelUnlocking(coins);
+        
+        // Update progress bars
+        updateProgressBars(coins);
+      } catch (err) {
+        console.error("Error loading coins:", err);
+        // Fallback to localStorage if API fails
+        const coins = localStorage.getItem("coins") || 0;
+        document.getElementById("coins").textContent = `💰 ${coins}`;
+        window.playerCoins = parseInt(coins);
+        updateLevelUnlocking(coins);
+        updateProgressBars(coins);
+      }
     }
     
-    // Simulate progress bars
-    setTimeout(() => {
-      document.getElementById("easyProgress").style.width = "100%";
-      if (userPoints >= 9000) {
-        document.getElementById("mediumProgress").style.width = "65%";
+    // Update level unlocking based on coins
+    function updateLevelUnlocking(coins) {
+      // Medium level requires 4560 coins (like programming in dashboard)
+      if (coins >= 4560) {
+        document.getElementById("mediumLevel").classList.remove("locked");
+        document.querySelector("#mediumLevel .level-status").classList.remove("locked");
+        document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
+        document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
       }
-      if (userPoints >= 10200) {
-        document.getElementById("hardProgress").style.width = "30%";
+      
+      // Hard level requires 9480 coins (like system unit in dashboard)
+      if (coins >= 9480) {
+        document.getElementById("hardLevel").classList.remove("locked");
+        document.querySelector("#hardLevel .level-status").classList.remove("locked");
+        document.querySelector("#hardLevel .level-status").classList.add("unlocked");
+        document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
       }
-    }, 500);
+    }
+    
+    // Update progress bars based on coins
+    function updateProgressBars(coins) {
+      // Easy level is always 100% since it's unlocked by default
+      setTimeout(() => {
+        document.getElementById("easyProgress").style.width = "100%";
+        
+        // Medium level progress (4560 coins required)
+        const mediumProgress = Math.min(100, (coins / 4560) * 100);
+        document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
+        
+        // Hard level progress (9480 coins required)
+        const hardProgress = Math.min(100, (coins / 9480) * 100);
+        document.getElementById("hardProgress").style.width = `${hardProgress}%`;
+      }, 500);
+    }
+    
+    // Initialize coins on page load
+    document.addEventListener("DOMContentLoaded", loadCoins);
     
     function startLevel(level) {
       const levelElement = document.getElementById(level + "Level");
@@ -795,9 +837,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "ACCESS DENIED: Complete Basic level and earn 9000 points to unlock";
+          notification.textContent = "ACCESS DENIED: Earn 4560 coins to unlock Intermediate level";
         } else if (level === "hard") {
-          notification.textContent = "ACCESS DENIED: Complete Intermediate level and earn 10200 points to unlock";
+          notification.textContent = "ACCESS DENIED: Earn 9480 coins to unlock Advanced level";
         }
         
         document.body.appendChild(notification);
@@ -937,6 +979,65 @@
     function handleDragLeave(e) {
       this.classList.remove('hover');
     }
+    
+    // Audio functionality from dashboard
+    let dashCtx;
+    
+    // === INIT AUDIO ===
+    function initAudio() {
+      if (!dashCtx) {
+        dashCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+    
+    // === PLAY SOUND ===
+    function playSound(freq, type = "sine", duration = 0.2, volume = 0.3) {
+      initAudio();
+      const osc = dashCtx.createOscillator();
+      const gain = dashCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.value = volume;
+      osc.connect(gain);
+      gain.connect(dashCtx.destination);
+      osc.start();
+      osc.stop(dashCtx.currentTime + duration);
+    }
+    
+    // === SPECIAL EFFECTS ===
+    // Hover = soft blip
+    function hoverSound() {
+      playSound(440, "sine", 0.15, 0.15);
+    }
+    
+    // Click = deeper tech beep
+    function clickSound() {
+      playSound(220, "square", 0.2, 0.25);
+      setTimeout(() => playSound(660, "sine", 0.1, 0.15), 100);
+    }
+    
+    // Navigation success = rising "confirmation" tone
+    function navSuccessSound() {
+      playSound(400, "triangle", 0.15, 0.2);
+      setTimeout(() => playSound(600, "triangle", 0.15, 0.2), 150);
+      setTimeout(() => playSound(800, "triangle", 0.25, 0.25), 300);
+    }
+    
+    // === ATTACH TO DASHBOARD ELEMENTS ===
+    window.addEventListener("load", () => {
+      initAudio();
+      
+      // Add sound effects to interactive elements
+      document.querySelectorAll(".back-btn, .level-card, .pc-part").forEach(el => {
+        el.addEventListener("mouseenter", hoverSound);
+        el.addEventListener("click", clickSound);
+      });
+      
+      // Add navigation success sound to level cards
+      document.querySelectorAll(".level-card:not(.locked)").forEach(el => {
+        el.addEventListener("click", navSuccessSound);
+      });
+    });
   </script>
 </body>
 </html>

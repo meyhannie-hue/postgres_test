@@ -217,6 +217,15 @@
       transform: translateY(0);
     }
     
+    .btn.logout {
+      background: linear-gradient(135deg, #f44336, #ff5252);
+      margin-top: 15px;
+    }
+    
+    .btn.logout:hover {
+      box-shadow: 0 10px 25px rgba(244, 67, 54, 0.5);
+    }
+    
     .toggle-link {
       margin-top: 15px;
       display: inline-block;
@@ -341,6 +350,22 @@
       80% { opacity: 1; transform: translate(-50%, 0); }
       100% { opacity: 0; transform: translate(-50%, 20px); }
     }
+    
+    /* Already logged in message */
+    .logged-in-message {
+      background: rgba(244, 67, 54, 0.2);
+      border: 1px solid rgba(244, 67, 54, 0.5);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      color: #ff8a80;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .logged-in-message.show {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -349,6 +374,12 @@
   <div class="particles" id="particles"></div>
   
   <div class="form-container">
+    <!-- Already logged in message -->
+    <div id="loggedInMessage" class="logged-in-message">
+      You are already logged in as <span id="loggedInUsername"></span>. 
+      Please logout to create a new account.
+    </div>
+    
     <!-- Create Player Form -->
     <div id="createSection">
       <h1 data-text="Create a Player">Create a Player</h1>
@@ -372,6 +403,9 @@
       <ul id="playersList"></ul>
       <span class="toggle-link" onclick="toggleForms()">⬅ Back to Create Player</span>
     </div>
+    
+    <!-- Logout Button (Hidden by default) -->
+    <button id="logoutBtn" class="btn logout hidden">Logout Current Session</button>
   </div>
   
   <script>
@@ -452,6 +486,9 @@
     const playersList = document.getElementById("playersList");
     const createSection = document.getElementById("createSection");
     const loginSection = document.getElementById("loginSection");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loggedInMessage = document.getElementById("loggedInMessage");
+    const loggedInUsername = document.getElementById("loggedInUsername");
     let players = []; // store existing players
     
     // Function to show notifications
@@ -605,12 +642,28 @@
       }
     });
     
+    // Logout function
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem("loggedInUser");
+      window.location.reload();
+    });
+    
     // Load players when the page loads
     document.addEventListener('DOMContentLoaded', () => {
       // Check if user is already logged in
       const loggedInUser = localStorage.getItem("loggedInUser");
       if (loggedInUser) {
-        window.location.href = "dashboard.html";
+        // Show logged in message and logout button
+        loggedInUsername.textContent = loggedInUser;
+        loggedInMessage.classList.add("show");
+        logoutBtn.classList.remove("hidden");
+        
+        // Hide the forms
+        createSection.classList.add("hidden");
+        loginSection.classList.add("hidden");
+      } else {
+        // Load players for validation
+        loadPlayers();
       }
     });
   </script>
