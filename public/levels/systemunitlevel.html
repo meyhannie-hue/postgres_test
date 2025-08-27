@@ -765,6 +765,12 @@
     // User info
     const loggedInUser = localStorage.getItem("loggedInUser") || "User";
     
+    // Define coin thresholds for level unlocking
+    const COIN_THRESHOLDS = {
+      MEDIUM: 4560,  // Coins needed to unlock Medium level
+      HARD: 9480     // Coins needed to unlock Hard level
+    };
+    
     // Load coins from API like in dashboard
     async function loadCoins() {
       try {
@@ -797,7 +803,7 @@
     // Update level unlocking based on coins
     function updateLevelUnlocking(coins) {
       // Medium level requires 4560 coins (like programming in dashboard)
-      if (coins >= 4560) {
+      if (coins >= COIN_THRESHOLDS.MEDIUM) {
         document.getElementById("mediumLevel").classList.remove("locked");
         document.querySelector("#mediumLevel .level-status").classList.remove("locked");
         document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
@@ -805,7 +811,7 @@
       }
       
       // Hard level requires 9480 coins (like system unit in dashboard)
-      if (coins >= 9480) {
+      if (coins >= COIN_THRESHOLDS.HARD) {
         document.getElementById("hardLevel").classList.remove("locked");
         document.querySelector("#hardLevel .level-status").classList.remove("locked");
         document.querySelector("#hardLevel .level-status").classList.add("unlocked");
@@ -820,11 +826,11 @@
         document.getElementById("easyProgress").style.width = "100%";
         
         // Medium level progress (4560 coins required)
-        const mediumProgress = Math.min(100, (coins / 9000) * 100);
+        const mediumProgress = Math.min(100, (coins / COIN_THRESHOLDS.MEDIUM) * 100);
         document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
         
         // Hard level progress (9480 coins required)
-        const hardProgress = Math.min(100, (coins / 10200) * 100);
+        const hardProgress = Math.min(100, (coins / COIN_THRESHOLDS.HARD) * 100);
         document.getElementById("hardProgress").style.width = `${hardProgress}%`;
       }, 500);
     }
@@ -840,9 +846,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "ACCESS DENIED: Earn 9000 coins to unlock Intermediate level";
+          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.MEDIUM} coins to unlock Intermediate level`;
         } else if (level === "hard") {
-          notification.textContent = "ACCESS DENIED: Earn 10200 coins to unlock Advanced level";
+          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.HARD} coins to unlock Advanced level`;
         }
         
         document.body.appendChild(notification);

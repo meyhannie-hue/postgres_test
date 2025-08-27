@@ -670,6 +670,12 @@
     const loggedInUser = localStorage.getItem("loggedInUser") || "User";
     document.getElementById("usernameDisplay").innerText = loggedInUser;
     
+    // Define coin thresholds for level unlocking
+    const COIN_THRESHOLDS = {
+      MEDIUM: 4560,  // Coins needed to unlock Medium level
+      HARD: 9480     // Coins needed to unlock Hard level
+    };
+    
     // Load user data from database
     async function loadUserData() {
       try {
@@ -684,32 +690,11 @@
         // Update localStorage with the latest coins from database
         localStorage.setItem("coins", coins.toString());
         
-        // Level unlocking logic - updated to match dashboard thresholds
-        if (coins >= 4560) {
-          document.getElementById("mediumLevel").classList.remove("locked");
-          document.querySelector("#mediumLevel .level-status").classList.remove("locked");
-          document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
-          document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
-        }
-        if (coins >= 9480) {
-          document.getElementById("hardLevel").classList.remove("locked");
-          document.querySelector("#hardLevel .level-status").classList.remove("locked");
-          document.querySelector("#hardLevel .level-status").classList.add("unlocked");
-          document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
-        }
+        // Level unlocking logic based on coins
+        updateLevelUnlocking(coins);
         
-        // Simulate progress bars based on coin progress
-        setTimeout(() => {
-          document.getElementById("easyProgress").style.width = "100%";
-          if (coins >= 4560) {
-            const mediumProgress = Math.min(100, (coins / 4560) * 100);
-            document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
-          }
-          if (coins >= 9480) {
-            const hardProgress = Math.min(100, (coins / 9480) * 100);
-            document.getElementById("hardProgress").style.width = `${hardProgress}%`;
-          }
-        }, 500);
+        // Update progress bars based on coins
+        updateProgressBars(coins);
       } catch (err) {
         console.error("Error loading user data:", err);
         // Fallback to localStorage if database fetch fails
@@ -718,32 +703,44 @@
         window.playerCoins = parseInt(fallbackCoins);
         
         // Apply unlock logic with fallback coins
-        if (window.playerCoins >= 4560) {
-          document.getElementById("mediumLevel").classList.remove("locked");
-          document.querySelector("#mediumLevel .level-status").classList.remove("locked");
-          document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
-          document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
-        }
-        if (window.playerCoins >= 9480) {
-          document.getElementById("hardLevel").classList.remove("locked");
-          document.querySelector("#hardLevel .level-status").classList.remove("locked");
-          document.querySelector("#hardLevel .level-status").classList.add("unlocked");
-          document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
-        }
-        
-        // Simulate progress bars with fallback coins
-        setTimeout(() => {
-          document.getElementById("easyProgress").style.width = "100%";
-          if (window.playerCoins >= 4560) {
-            const mediumProgress = Math.min(100, (window.playerCoins / 4560) * 100);
-            document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
-          }
-          if (window.playerCoins >= 9480) {
-            const hardProgress = Math.min(100, (window.playerCoins / 9480) * 100);
-            document.getElementById("hardProgress").style.width = `${hardProgress}%`;
-          }
-        }, 500);
+        updateLevelUnlocking(window.playerCoins);
+        updateProgressBars(window.playerCoins);
       }
+    }
+    
+    // Update level unlocking based on coins
+    function updateLevelUnlocking(coins) {
+      // Check if player has enough coins to unlock Medium level
+      if (coins >= COIN_THRESHOLDS.MEDIUM) {
+        document.getElementById("mediumLevel").classList.remove("locked");
+        document.querySelector("#mediumLevel .level-status").classList.remove("locked");
+        document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
+        document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
+      }
+      
+      // Check if player has enough coins to unlock Hard level
+      if (coins >= COIN_THRESHOLDS.HARD) {
+        document.getElementById("hardLevel").classList.remove("locked");
+        document.querySelector("#hardLevel .level-status").classList.remove("locked");
+        document.querySelector("#hardLevel .level-status").classList.add("unlocked");
+        document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
+      }
+    }
+    
+    // Update progress bars based on coins
+    function updateProgressBars(coins) {
+      setTimeout(() => {
+        // Easy level is always 100% since it's unlocked by default
+        document.getElementById("easyProgress").style.width = "100%";
+        
+        // Medium level progress (based on coins)
+        const mediumProgress = Math.min(100, (coins / COIN_THRESHOLDS.MEDIUM) * 100);
+        document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
+        
+        // Hard level progress (based on coins)
+        const hardProgress = Math.min(100, (coins / COIN_THRESHOLDS.HARD) * 100);
+        document.getElementById("hardProgress").style.width = `${hardProgress}%`;
+      }, 500);
     }
     
     function startLevel(level) {
@@ -754,9 +751,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "ACCESS DENIED: Earn 4560 coins to unlock Medium level";
+          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.MEDIUM} coins to unlock Medium level`;
         } else if (level === "hard") {
-          notification.textContent = "ACCESS DENIED: Earn 9480 coins to unlock Hard level";
+          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.HARD} coins to unlock Hard level`;
         }
         
         document.body.appendChild(notification);
