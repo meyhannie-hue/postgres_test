@@ -468,7 +468,7 @@
   // ✅ Unified login function
   async function loginPlayer(username, password) {
     try {
-      const res = await fetch("/login", {
+      const res = await fetch("https://postgres-test-p05s.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
