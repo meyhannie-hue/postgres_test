@@ -11,12 +11,12 @@ app.use(express.json());
 
 // ✅ Use pool config instead of DB_URL
 const sequelize = new Sequelize(
-  process.env.DB_NAME || "techyme_db",          // DB_NAME
-  process.env.DB_USER || "root",           // DB_USER
-  process.env.DB_PASS || "l4bTZ8E9ekA93JNDx7BD36oon8E95CN7", // DB_PASS
+  process.env.DB_NAME,      // database name
+  process.env.DB_USER,      // username
+  process.env.DB_PASS,      // password
   {
-    host: process.env.DB_HOST || "dpg-d2glmfogjchc73b9icig-a",
-    port: process.env.DB_PORT || 5432,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: "postgres",
     logging: false,
     dialectOptions: {
@@ -26,14 +26,13 @@ const sequelize = new Sequelize(
       }
     },
     pool: {
-      max: 10,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
+      max: 10,     // max number of connections
+      min: 0,      // min number of connections
+      acquire: 30000, // max time (ms) to get a connection before throwing error
+      idle: 10000     // max time (ms) a connection can be idle
     }
   }
 );
-
 
 sequelize
   .sync()
