@@ -713,7 +713,7 @@
     message.style.color = isPerfect ? '#4caf50' : '#ff9100';
     
     try {
-      await fetch("/api/reward", {
+      await fetch("https://postgres-test-p05s.onrender.com/api/reward", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

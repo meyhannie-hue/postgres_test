@@ -612,7 +612,7 @@
     const username = localStorage.getItem("loggedInUser") || "Guest";
     const points = 10000;
     const coins = 9120;
-    fetch("/api/reward", {
+    fetch("https://postgres-test-p05s.onrender.com/api/reward", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, points, coins })

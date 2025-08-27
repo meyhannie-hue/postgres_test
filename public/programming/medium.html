@@ -621,7 +621,7 @@
     const points = 9120; 
     const coins = 7620; 
     
-    fetch("/api/reward", {
+    fetch("https://postgres-test-p05s.onrender.com/api/reward", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, points, coins })

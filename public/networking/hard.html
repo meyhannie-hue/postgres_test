@@ -1082,7 +1082,7 @@
           // === Reward API call after completing both phases ===
           const username = localStorage.getItem("loggedInUser");
           if (username) {
-            fetch("/api/reward", {
+            fetch("https://postgres-test-p05s.onrender.com/api/reward", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

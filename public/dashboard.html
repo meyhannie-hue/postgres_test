@@ -637,7 +637,7 @@
     
     async function loadDashboard() {
       try {
-        const res = await fetch("/get-players");
+        const res = await fetch("https://postgres-test-p05s.onrender.com//get-players");
         const players = await res.json();
         const loggedInPlayer = players.find(p => p.username === playerName);
         const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
