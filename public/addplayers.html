@@ -450,7 +450,7 @@
       return;
     }
     try {
-      const res = await fetch("https://postgres-test-p05s.onrender.com//create-player", {
+      const res = await fetch("https://postgres-test-p05s.onrender.com/create-player", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
