@@ -548,6 +548,96 @@
       }
     }
     
+    /* Purchase Confirmation Modal */
+    .purchase-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .purchase-modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-content {
+      background: rgba(10, 14, 39, 0.9);
+      border: 2px solid rgba(0, 245, 255, 0.5);
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 350px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+    }
+    
+    .modal-title {
+      color: #ff006e;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .modal-text {
+      color: #f5f5f5;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    
+    .btn-confirm {
+      background: rgba(57, 255, 20, 0.2);
+      color: #39ff14;
+      border: 1px solid rgba(57, 255, 20, 0.5);
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+    }
+    
+    .btn-confirm:hover {
+      background: rgba(57, 255, 20, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    .btn-cancel {
+      background: rgba(255, 0, 110, 0.2);
+      color: #ff006e;
+      border: 1px solid rgba(255, 0, 110, 0.5);
+      box-shadow: 0 0 10px rgba(255, 0, 110, 0.3);
+    }
+    
+    .btn-cancel:hover {
+      background: rgba(255, 0, 110, 0.3);
+      transform: translateY(-3px);
+    }
+    
     /* Responsive */
     @media (max-width: 480px) {
       .cyber-container {
@@ -610,7 +700,7 @@
             <span class="emoji">🟡</span>
             <span>Medium</span>
           </div>
-          <div class="level-status locked">Locked</div>
+          <div class="level-status locked">6000 coins</div>
         </div>
         <div class="level-description">Intermediate coding tasks to enhance your skills</div>
         <div class="progress-container">
@@ -625,7 +715,7 @@
             <span class="emoji">🔴</span>
             <span>Hard</span>
           </div>
-          <div class="level-status locked">Locked</div>
+          <div class="level-status locked">7500 coins</div>
         </div>
         <div class="level-description">Advanced programming problems for elite coders</div>
         <div class="progress-container">
@@ -642,6 +732,18 @@
         <div class="loading-circle"></div>
         <div class="loading-circle"></div>
         <div class="loading-circle"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Purchase Confirmation Modal -->
+  <div class="purchase-modal" id="purchaseModal">
+    <div class="modal-content">
+      <div class="modal-title" id="modalTitle">Confirm Purchase</div>
+      <div class="modal-text" id="modalText">Are you sure you want to unlock this level?</div>
+      <div class="modal-buttons">
+        <button class="modal-btn btn-confirm" id="confirmBtn">Confirm</button>
+        <button class="modal-btn btn-cancel" id="cancelBtn">Cancel</button>
       </div>
     </div>
   </div>
@@ -670,10 +772,10 @@
     const loggedInUser = localStorage.getItem("loggedInUser") || "User";
     document.getElementById("usernameDisplay").innerText = loggedInUser;
     
-    // Define coin thresholds for level unlocking
-    const COIN_THRESHOLDS = {
-      MEDIUM: 4560,  // Coins needed to unlock Medium level
-      HARD: 9480     // Coins needed to unlock Hard level
+    // Define purchase costs for level unlocking
+    const PURCHASE_COSTS = {
+      MEDIUM: 6000,  // Coins needed to unlock Medium level
+      HARD: 7500     // Coins needed to unlock Hard level
     };
     
     // Load user data from database
@@ -690,8 +792,8 @@
         // Update localStorage with the latest coins from database
         localStorage.setItem("coins", coins.toString());
         
-        // Level unlocking logic based on coins
-        updateLevelUnlocking(coins);
+        // Check unlocked levels from localStorage
+        checkUnlockedLevels();
         
         // Update progress bars based on coins
         updateProgressBars(coins);
@@ -702,24 +804,28 @@
         document.getElementById("coins").innerText = `💰 ${fallbackCoins}`;
         window.playerCoins = parseInt(fallbackCoins);
         
-        // Apply unlock logic with fallback coins
-        updateLevelUnlocking(window.playerCoins);
+        // Check unlocked levels from localStorage
+        checkUnlockedLevels();
+        
+        // Apply progress bars with fallback coins
         updateProgressBars(window.playerCoins);
       }
     }
     
-    // Update level unlocking based on coins
-    function updateLevelUnlocking(coins) {
-      // Check if player has enough coins to unlock Medium level
-      if (coins >= COIN_THRESHOLDS.MEDIUM) {
+    // Check which levels are unlocked from localStorage
+    function checkUnlockedLevels() {
+      // Get unlocked levels from localStorage
+      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
+      
+      // Update UI based on unlocked status
+      if (unlockedLevels.medium) {
         document.getElementById("mediumLevel").classList.remove("locked");
         document.querySelector("#mediumLevel .level-status").classList.remove("locked");
         document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
         document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
       }
       
-      // Check if player has enough coins to unlock Hard level
-      if (coins >= COIN_THRESHOLDS.HARD) {
+      if (unlockedLevels.hard) {
         document.getElementById("hardLevel").classList.remove("locked");
         document.querySelector("#hardLevel .level-status").classList.remove("locked");
         document.querySelector("#hardLevel .level-status").classList.add("unlocked");
@@ -734,35 +840,41 @@
         document.getElementById("easyProgress").style.width = "100%";
         
         // Medium level progress (based on coins)
-        const mediumProgress = Math.min(100, (coins / COIN_THRESHOLDS.MEDIUM) * 100);
+        const mediumProgress = Math.min(100, (coins / PURCHASE_COSTS.MEDIUM) * 100);
         document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
         
         // Hard level progress (based on coins)
-        const hardProgress = Math.min(100, (coins / COIN_THRESHOLDS.HARD) * 100);
+        const hardProgress = Math.min(100, (coins / PURCHASE_COSTS.HARD) * 100);
         document.getElementById("hardProgress").style.width = `${hardProgress}%`;
       }, 500);
     }
     
     function startLevel(level) {
       const levelElement = document.getElementById(level + "Level");
+      
+      // Check if level is locked
       if (levelElement.classList.contains("locked")) {
-        // Create notification
-        const notification = document.createElement('div');
-        notification.className = 'notification';
+        // Get purchase cost
+        const cost = level === "medium" ? PURCHASE_COSTS.MEDIUM : PURCHASE_COSTS.HARD;
         
-        if (level === "medium") {
-          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.MEDIUM} coins to unlock Medium level`;
-        } else if (level === "hard") {
-          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.HARD} coins to unlock Hard level`;
+        // Check if player has enough coins
+        if (window.playerCoins < cost) {
+          // Create notification
+          const notification = document.createElement('div');
+          notification.className = 'notification';
+          notification.textContent = `INSUFFICIENT COINS: You need ${cost} coins to unlock ${level} level. You have ${window.playerCoins} coins.`;
+          document.body.appendChild(notification);
+          
+          // Remove notification after animation
+          setTimeout(() => {
+            notification.remove();
+          }, 3000);
+          
+          return;
         }
         
-        document.body.appendChild(notification);
-        
-        // Remove notification after animation
-        setTimeout(() => {
-          notification.remove();
-        }, 3000);
-        
+        // Show purchase confirmation modal
+        showPurchaseModal(level, cost);
         return;
       }
       
@@ -786,6 +898,92 @@
         if (level === "medium") window.location.href = `../programming/medium.html`;
         if (level === "hard") window.location.href = `../programming/hard.html`;
       }, 2000);
+    }
+    
+    // Show purchase confirmation modal
+    function showPurchaseModal(level, cost) {
+      const modal = document.getElementById('purchaseModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalText = document.getElementById('modalText');
+      const confirmBtn = document.getElementById('confirmBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      
+      // Set modal content
+      modalTitle.textContent = `Unlock ${level.charAt(0).toUpperCase() + level.slice(1)} Level`;
+      modalText.textContent = `Are you sure you want to spend ${cost} coins to unlock the ${level} level?`;
+      
+      // Set up event listeners
+      confirmBtn.onclick = () => {
+        purchaseLevel(level, cost);
+        modal.classList.remove('active');
+      };
+      
+      cancelBtn.onclick = () => {
+        modal.classList.remove('active');
+      };
+      
+      // Show modal
+      modal.classList.add('active');
+    }
+    
+    // Purchase level function
+    async function purchaseLevel(level, cost) {
+      // Deduct coins
+      const newCoins = window.playerCoins - cost;
+      
+      // Update localStorage for coins
+      localStorage.setItem("coins", newCoins.toString());
+      
+      // Update unlocked levels in localStorage
+      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
+      unlockedLevels[level] = true;
+      localStorage.setItem("unlockedLevels", JSON.stringify(unlockedLevels));
+      
+      // Try to update the database
+      try {
+        const response = await fetch("https://postgres-test-p05s.onrender.com/update-coins", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username: loggedInUser, coins: newCoins })
+        });
+        
+        if (response.ok) {
+          console.log("Coins updated in database successfully");
+        } else {
+          console.error("Failed to update coins in database");
+        }
+      } catch (err) {
+        console.error("Error updating coins in database:", err);
+      }
+      
+      // Update the UI for the level card
+      const levelElement = document.getElementById(level + "Level");
+      levelElement.classList.remove("locked");
+      const statusElement = levelElement.querySelector(".level-status");
+      statusElement.classList.remove("locked");
+      statusElement.classList.add("unlocked");
+      statusElement.textContent = "Unlocked";
+      
+      // Update progress bar to 100%
+      const progressBar = document.getElementById(level + "Progress");
+      progressBar.style.width = "100%";
+      
+      // Update coins display
+      window.playerCoins = newCoins;
+      document.getElementById("coins").innerText = `💰 ${newCoins}`;
+      
+      // Show success notification
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = `${level.charAt(0).toUpperCase() + level.slice(1)} level unlocked successfully!`;
+      document.body.appendChild(notification);
+      
+      // Remove notification after animation
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
     }
     
     function goBack() {

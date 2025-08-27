@@ -542,6 +542,12 @@
     const loggedInUser = localStorage.getItem("loggedInUser") || "Guest";
     document.getElementById("usernameDisplay").innerText = loggedInUser;
     
+    // Define coin thresholds for level unlocking
+    const COIN_THRESHOLDS = {
+      MEDIUM: 1500,  // Coins needed to unlock Medium level
+      HARD: 3000     // Coins needed to unlock Hard level
+    };
+    
     // Load user data from database
     async function loadUserData() {
       try {
@@ -556,11 +562,11 @@
         // Update localStorage with the latest coins from database
         localStorage.setItem("coins", coins.toString());
         
-        // Level unlocking logic based on coins (matching dashboard thresholds)
-        if (coins >= 4560) {
+        // Level unlocking logic based on coins
+        if (coins >= COIN_THRESHOLDS.MEDIUM) {
           document.getElementById("mediumLevel").classList.remove("locked");
         }
-        if (coins >= 9480) {
+        if (coins >= COIN_THRESHOLDS.HARD) {
           document.getElementById("hardLevel").classList.remove("locked");
         }
       } catch (err) {
@@ -571,10 +577,10 @@
         window.playerCoins = parseInt(fallbackCoins);
         
         // Apply unlock logic with fallback coins
-        if (window.playerCoins >= 4560) {
+        if (window.playerCoins >= COIN_THRESHOLDS.MEDIUM) {
           document.getElementById("mediumLevel").classList.remove("locked");
         }
-        if (window.playerCoins >= 9480) {
+        if (window.playerCoins >= COIN_THRESHOLDS.HARD) {
           document.getElementById("hardLevel").classList.remove("locked");
         }
       }
@@ -592,9 +598,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "ACCESS DENIED: Earn 4560 coins to unlock Medium level";
+          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.MEDIUM} coins to unlock Medium level`;
         } else if (level === "hard") {
-          notification.textContent = "ACCESS DENIED: Earn 9480 coins to unlock Hard level";
+          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.HARD} coins to unlock Hard level`;
         }
         
         document.body.appendChild(notification);
