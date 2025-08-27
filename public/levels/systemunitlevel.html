@@ -820,11 +820,11 @@
         document.getElementById("easyProgress").style.width = "100%";
         
         // Medium level progress (4560 coins required)
-        const mediumProgress = Math.min(100, (coins / 4560) * 100);
+        const mediumProgress = Math.min(100, (coins / 9000) * 100);
         document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
         
         // Hard level progress (9480 coins required)
-        const hardProgress = Math.min(100, (coins / 9480) * 100);
+        const hardProgress = Math.min(100, (coins / 10200) * 100);
         document.getElementById("hardProgress").style.width = `${hardProgress}%`;
       }, 500);
     }
@@ -840,9 +840,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "ACCESS DENIED: Earn 4560 coins to unlock Intermediate level";
+          notification.textContent = "ACCESS DENIED: Earn 9000 coins to unlock Intermediate level";
         } else if (level === "hard") {
-          notification.textContent = "ACCESS DENIED: Earn 9480 coins to unlock Advanced level";
+          notification.textContent = "ACCESS DENIED: Earn 10200 coins to unlock Advanced level";
         }
         
         document.body.appendChild(notification);

@@ -557,10 +557,10 @@
         localStorage.setItem("coins", coins.toString());
         
         // Level unlocking logic based on coins (matching dashboard thresholds)
-        if (coins >= 4560) {
+        if (coins >= 1500) {
           document.getElementById("mediumLevel").classList.remove("locked");
         }
-        if (coins >= 9480) {
+        if (coins >= 3000) {
           document.getElementById("hardLevel").classList.remove("locked");
         }
       } catch (err) {
@@ -571,10 +571,10 @@
         window.playerCoins = parseInt(fallbackCoins);
         
         // Apply unlock logic with fallback coins
-        if (window.playerCoins >= 4560) {
+        if (window.playerCoins >= 1500) {
           document.getElementById("mediumLevel").classList.remove("locked");
         }
-        if (window.playerCoins >= 9480) {
+        if (window.playerCoins >= 3000) {
           document.getElementById("hardLevel").classList.remove("locked");
         }
       }
@@ -592,9 +592,9 @@
         notification.className = 'notification';
         
         if (level === "medium") {
-          notification.textContent = "Earn 4560 coins to unlock Medium level!";
+          notification.textContent = "Earn 1500 coins to unlock Medium level!";
         } else if (level === "hard") {
-          notification.textContent = "Earn 9480 coins to unlock Hard level!";
+          notification.textContent = "Earn 3000 coins to unlock Hard level!";
         }
         
         document.body.appendChild(notification);
