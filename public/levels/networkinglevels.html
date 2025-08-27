@@ -539,197 +539,132 @@
     }, 2000);
     
     // User info
-    const loggedInUser = localStorage.getItem("loggedInUser") || "Guest";
-    document.getElementById("usernameDisplay").innerText = loggedInUser;
     
-    // Define coin thresholds for level unlocking
-    const COIN_THRESHOLDS = {
-      MEDIUM: 1500,  // Coins needed to unlock Medium level
-      HARD: 3000     // Coins needed to unlock Hard level
-    };
-    
-    // Load user data from database
-    async function loadUserData() {
-      try {
-        const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
-        if (!res.ok) throw new Error("Failed to fetch players");
-        const players = await res.json();
-        const loggedInPlayer = players.find(p => p.username === loggedInUser);
-        const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
-        document.getElementById("coins").textContent = `💰 ${coins}`;
-        window.playerCoins = coins;
-        
-        // Update localStorage with the latest coins from database
-        localStorage.setItem("coins", coins.toString());
-        
-        // Level unlocking logic based on coins
-        if (coins >= COIN_THRESHOLDS.MEDIUM) {
-          document.getElementById("mediumLevel").classList.remove("locked");
-        }
-        if (coins >= COIN_THRESHOLDS.HARD) {
-          document.getElementById("hardLevel").classList.remove("locked");
-        }
-      } catch (err) {
-        console.error("Error loading user data:", err);
-        // Fallback to localStorage if database fetch fails
-        const fallbackCoins = localStorage.getItem("coins") || 0;
-        document.getElementById("coins").textContent = `💰 ${fallbackCoins}`;
-        window.playerCoins = parseInt(fallbackCoins);
-        
-        // Apply unlock logic with fallback coins
-        if (window.playerCoins >= COIN_THRESHOLDS.MEDIUM) {
-          document.getElementById("mediumLevel").classList.remove("locked");
-        }
-        if (window.playerCoins >= COIN_THRESHOLDS.HARD) {
-          document.getElementById("hardLevel").classList.remove("locked");
-        }
-      }
+  const loggedInUser = localStorage.getItem("loggedInUser") || "Guest";
+
+  // Coin costs for buying levels
+  const LEVEL_COSTS = {
+    medium: 1500,
+    hard: 3000
+  };
+
+  // Keep track of unlocked levels in localStorage
+  let unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels")) || { easy: true };
+
+  // Load user data from DB
+  async function loadUserData() {
+    try {
+      const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
+      if (!res.ok) throw new Error("Failed to fetch players");
+      const players = await res.json();
+      const loggedInPlayer = players.find(p => p.username === loggedInUser);
+      const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
+      document.getElementById("coins").textContent = `💰 ${coins}`;
+      window.playerCoins = coins;
+
+      localStorage.setItem("coins", coins.toString());
+      updateLevelLocks();
+    } catch (err) {
+      console.error("Error loading user data:", err);
+      const fallbackCoins = parseInt(localStorage.getItem("coins")) || 0;
+      document.getElementById("coins").textContent = `💰 ${fallbackCoins}`;
+      window.playerCoins = fallbackCoins;
+      updateLevelLocks();
     }
-    
-    function startLevel(level) {
-      const levelElement = document.getElementById(level + "Level");
-      if (!levelElement) {
-        console.error(`Element with id="${level}Level" not found.`);
-        return;
-      }
-      if (levelElement.classList.contains("locked")) {
-        // Create a notification instead of alert
+  }
+
+  // Apply locked/unlocked states based on saved unlocks
+  function updateLevelLocks() {
+    if (unlockedLevels.medium) {
+      document.getElementById("mediumLevel").classList.remove("locked");
+    }
+    if (unlockedLevels.hard) {
+      document.getElementById("hardLevel").classList.remove("locked");
+    }
+  }
+
+  function startLevel(level) {
+    const levelElement = document.getElementById(level + "Level");
+    if (!levelElement) return;
+
+    // ✅ If locked, offer to buy with coins
+    if (levelElement.classList.contains("locked")) {
+      const cost = LEVEL_COSTS[level];
+      if (window.playerCoins >= cost) {
+        if (confirm(`Do you want to unlock the ${level.toUpperCase()} level for ${cost} coins?`)) {
+          window.playerCoins -= cost;
+          localStorage.setItem("coins", window.playerCoins.toString());
+          document.getElementById("coins").textContent = `💰 ${window.playerCoins}`;
+
+          unlockedLevels[level] = true;
+          localStorage.setItem("unlockedLevels", JSON.stringify(unlockedLevels));
+
+          // Remove lock visually
+          levelElement.classList.remove("locked");
+
+          // TODO: 🔗 send update to your backend so DB reflects coins spent + unlock
+          fetch("https://.../update-coins", { method: "POST", body: JSON.stringify({ username: loggedInUser, coins: window.playerCoins }) })
+
+          return;
+        }
+      } else {
+        // Not enough coins → show notification
         const notification = document.createElement('div');
         notification.className = 'notification';
-        
-        if (level === "medium") {
-          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.MEDIUM} coins to unlock Medium level`;
-        } else if (level === "hard") {
-          notification.textContent = `ACCESS DENIED: Earn ${COIN_THRESHOLDS.HARD} coins to unlock Hard level`;
-        }
-        
+        notification.textContent = `ACCESS DENIED: Need ${cost} coins to unlock ${level.toUpperCase()} level`;
         document.body.appendChild(notification);
-        
-        // Remove notification after animation
-        setTimeout(() => {
-          notification.remove();
-        }, 3000);
-        
-        return;
+        setTimeout(() => notification.remove(), 3000);
       }
-      
-      // Create connection effect before navigating
-      const connectionOverlay = document.createElement('div');
-      connectionOverlay.style.position = 'fixed';
-      connectionOverlay.style.top = '0';
-      connectionOverlay.style.left = '0';
-      connectionOverlay.style.width = '100%';
-      connectionOverlay.style.height = '100%';
-      connectionOverlay.style.background = 'rgba(13, 13, 13, 0.8)';
-      connectionOverlay.style.zIndex = '1000';
-      connectionOverlay.style.display = 'flex';
-      connectionOverlay.style.justifyContent = 'center';
-      connectionOverlay.style.alignItems = 'center';
-      connectionOverlay.style.flexDirection = 'column';
-      
-      const connectionText = document.createElement('div');
-      connectionText.textContent = 'ESTABLISHING CONNECTION...';
-      connectionText.style.color = '#00d4ff';
-      connectionText.style.fontSize = '24px';
-      connectionText.style.fontWeight = 'bold';
-      connectionText.style.marginBottom = '20px';
-      connectionText.style.textShadow = '0 0 10px rgba(0, 212, 255, 0.7)';
-      
-      const progressBar = document.createElement('div');
-      progressBar.style.width = '300px';
-      progressBar.style.height = '4px';
-      progressBar.style.background = 'rgba(0, 212, 255, 0.2)';
-      progressBar.style.borderRadius = '2px';
-      progressBar.style.overflow = 'hidden';
-      progressBar.style.position = 'relative';
-      
-      const progressFill = document.createElement('div');
-      progressFill.style.position = 'absolute';
-      progressFill.style.top = '0';
-      progressFill.style.left = '0';
-      progressFill.style.height = '100%';
-      progressFill.style.width = '0%';
-      progressFill.style.background = 'linear-gradient(90deg, #00d4ff, #39ff14)';
-      progressFill.style.boxShadow = '0 0 10px rgba(57, 255, 20, 0.7)';
-      progressFill.style.animation = 'progressFill 1.5s forwards';
-      
-      progressBar.appendChild(progressFill);
-      connectionOverlay.appendChild(connectionText);
-      connectionOverlay.appendChild(progressBar);
-      document.body.appendChild(connectionOverlay);
-      
-      // Add progress animation
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes progressFill {
-          0% { width: 0%; }
-          100% { width: 100%; }
-        }
-      `;
-      document.head.appendChild(style);
-      
-      // Navigate after connection animation
-      setTimeout(() => {
-        if (level === "easy") window.location.href = `../networking/easy.html`;
-        if (level === "medium") window.location.href = `../networking/medium.html`;
-        if (level === "hard") window.location.href = `../networking/hard.html`;
-      }, 1500);
+      return;
     }
-    
-    function goBack() { 
-      // Create a disconnection effect
-      const disconnectionOverlay = document.createElement('div');
-      disconnectionOverlay.style.position = 'fixed';
-      disconnectionOverlay.style.top = '0';
-      disconnectionOverlay.style.left = '0';
-      disconnectionOverlay.style.width = '100%';
-      disconnectionOverlay.style.height = '100%';
-      disconnectionOverlay.style.background = 'rgba(13, 13, 13, 0.8)';
-      disconnectionOverlay.style.zIndex = '1000';
-      disconnectionOverlay.style.display = 'flex';
-      disconnectionOverlay.style.justifyContent = 'center';
-      disconnectionOverlay.style.alignItems = 'center';
-      disconnectionOverlay.style.flexDirection = 'column';
-      
-      const disconnectionText = document.createElement('div');
-      disconnectionText.textContent = 'TERMINATING CONNECTION...';
-      disconnectionText.style.color = '#ff5555';
-      disconnectionText.style.fontSize = '24px';
-      disconnectionText.style.fontWeight = 'bold';
-      disconnectionText.style.marginBottom = '20px';
-      disconnectionText.style.textShadow = '0 0 10px rgba(255, 85, 85, 0.7)';
-      
-      const progressBar = document.createElement('div');
-      progressBar.style.width = '300px';
-      progressBar.style.height = '4px';
-      progressBar.style.background = 'rgba(255, 85, 85, 0.2)';
-      progressBar.style.borderRadius = '2px';
-      progressBar.style.overflow = 'hidden';
-      progressBar.style.position = 'relative';
-      
-      const progressFill = document.createElement('div');
-      progressFill.style.position = 'absolute';
-      progressFill.style.top = '0';
-      progressFill.style.left = '0';
-      progressFill.style.height = '100%';
-      progressFill.style.width = '0%';
-      progressFill.style.background = 'linear-gradient(90deg, #ff5555, #ff0000)';
-      progressFill.style.boxShadow = '0 0 10px rgba(255, 0, 0, 0.7)';
-      progressFill.style.animation = 'progressFill 1s forwards';
-      
-      progressBar.appendChild(progressFill);
-      disconnectionOverlay.appendChild(disconnectionText);
-      disconnectionOverlay.appendChild(progressBar);
-      document.body.appendChild(disconnectionOverlay);
-      
-      // Navigate after disconnection animation
-      setTimeout(() => {
-        window.location.href = "../dashboard.html";
-      }, 1000);
-    }
-    
-    // Load user data when the page loads
-    document.addEventListener("DOMContentLoaded", loadUserData);
-  </script>
+
+    // If already unlocked → start level
+    const connectionOverlay = document.createElement('div');
+    connectionOverlay.style.position = 'fixed';
+    connectionOverlay.style.top = '0';
+    connectionOverlay.style.left = '0';
+    connectionOverlay.style.width = '100%';
+    connectionOverlay.style.height = '100%';
+    connectionOverlay.style.background = 'rgba(13, 13, 13, 0.8)';
+    connectionOverlay.style.zIndex = '1000';
+    connectionOverlay.style.display = 'flex';
+    connectionOverlay.style.justifyContent = 'center';
+    connectionOverlay.style.alignItems = 'center';
+    connectionOverlay.style.flexDirection = 'column';
+
+    const connectionText = document.createElement('div');
+    connectionText.textContent = 'ESTABLISHING CONNECTION...';
+    connectionText.style.color = '#00d4ff';
+    connectionText.style.fontSize = '24px';
+    connectionText.style.fontWeight = 'bold';
+    connectionText.style.marginBottom = '20px';
+    connectionOverlay.appendChild(connectionText);
+
+    const progressBar = document.createElement('div');
+    progressBar.style.width = '300px';
+    progressBar.style.height = '4px';
+    progressBar.style.background = 'rgba(0, 212, 255, 0.2)';
+    progressBar.style.borderRadius = '2px';
+    progressBar.style.overflow = 'hidden';
+
+    const progressFill = document.createElement('div');
+    progressFill.style.height = '100%';
+    progressFill.style.width = '0%';
+    progressFill.style.background = 'linear-gradient(90deg, #00d4ff, #39ff14)';
+    progressFill.style.animation = 'progressFill 1.5s forwards';
+    progressBar.appendChild(progressFill);
+
+    connectionOverlay.appendChild(progressBar);
+    document.body.appendChild(connectionOverlay);
+
+    setTimeout(() => {
+      if (level === "easy") window.location.href = `../networking/easy.html`;
+      if (level === "medium") window.location.href = `../networking/medium.html`;
+      if (level === "hard") window.location.href = `../networking/hard.html`;
+    }, 1500);
+  }
+
+  document.addEventListener("DOMContentLoaded", loadUserData);
+</script>
 </body>
 </html>
