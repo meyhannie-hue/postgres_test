@@ -469,33 +469,6 @@
         font-size: 30px;
       }
     }
-    
-    /* Notification styling */
-    .notification {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 30, 60, 0.9);
-      color: #e0f7fa;
-      padding: 15px 25px;
-      border-radius: 8px;
-      border: 1px solid rgba(0, 229, 255, 0.5);
-      box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-      z-index: 1000;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      max-width: 80%;
-      text-align: center;
-      animation: notificationFade 3s forwards;
-    }
-    
-    @keyframes notificationFade {
-      0% { opacity: 0; transform: translate(-50%, 20px); }
-      20% { opacity: 1; transform: translate(-50%, 0); }
-      80% { opacity: 1; transform: translate(-50%, 0); }
-      100% { opacity: 0; transform: translate(-50%, 20px); }
-    }
   </style>
 </head>
 <body>
@@ -662,67 +635,25 @@
       window.location.href = "index.html";
     }
     
-    // Function to show notifications
-    function showNotification(message, duration = 3000) {
-      const notification = document.createElement('div');
-      notification.className = 'notification';
-      notification.textContent = message;
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.remove();
-      }, duration);
-    }
-    
     async function loadDashboard() {
       try {
-        // Get the logged-in user's data from the database
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
-        if (!res.ok) throw new Error("Failed to fetch players");
-        
         const players = await res.json();
         const loggedInPlayer = players.find(p => p.username === playerName);
-        
-        if (!loggedInPlayer) {
-          throw new Error("Player not found in database");
-        }
-        
-        // Get coins from database
-        const coins = loggedInPlayer.coins || 0;
-        
-        // Update coins display
+        const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
         document.getElementById("coins").textContent = `💰 ${coins}`;
+        window.playerCoins= coins;
         
-        // Store coins globally for later use
-        window.playerCoins = coins;
-        
-        // Update localStorage with the latest coins from database
-        localStorage.setItem("points", coins.toString());
-        
-        // Unlock logic using coins from database
+        // Unlock logic using coins
         if (coins < 4560) {
           document.getElementById("programmingFeature").classList.add("locked");
         }
         if (coins < 9480) {
           document.getElementById("systemUnitFeature").classList.add("locked");
         }
-        
       } catch (err) {
         console.error("Error loading dashboard:", err);
-        showNotification("Failed to load player data. Using local data.");
-        
-        // Fallback to localStorage if database fetch fails
-        const fallbackCoins = localStorage.getItem("points") || 0;
-        document.getElementById("coins").textContent = `💰 ${fallbackCoins}`;
-        window.playerCoins = parseInt(fallbackCoins);
-        
-        // Apply unlock logic with fallback coins
-        if (window.playerCoins < 4560) {
-          document.getElementById("programmingFeature").classList.add("locked");
-        }
-        if (window.playerCoins < 9480) {
-          document.getElementById("systemUnitFeature").classList.add("locked");
-        }
+        alert("❌ Failed to load dashboard.");
       }
     }
     
@@ -732,7 +663,7 @@
     
     function handleProgrammingClick() {
       if (window.playerCoins < 4560) {
-        showNotification("Not enough coins to unlock Programming. Need 4560 coins.");
+        alert("❌ Not enough coins to unlock Programming.");
         return;
       }
       window.location.href = "levels/programminglevel.html";
@@ -740,7 +671,7 @@
     
     function handleSystemUnitClick() {
       if (window.playerCoins < 9480) {
-        showNotification("Not enough coins to unlock System Unit. Need 9480 coins.");
+        alert("❌ Not enough coins to unlock System Unit.");
         return;
       }
       window.location.href = "levels/systemunitlevel.html";
@@ -768,58 +699,70 @@
     }
     
     document.addEventListener("DOMContentLoaded", loadDashboard);
-    
     let dashCtx;
-    // === INIT AUDIO ===
-    function initAudio() {
-      if (!dashCtx) {
-        dashCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-    }
-    // === PLAY SOUND ===
-    function playSound(freq, type = "sine", duration = 0.2, volume = 0.3) {
-      initAudio();
-      const osc = dashCtx.createOscillator();
-      const gain = dashCtx.createGain();
-      osc.type = type;
-      osc.frequency.value = freq;
-      gain.gain.value = volume;
-      osc.connect(gain);
-      gain.connect(dashCtx.destination);
-      osc.start();
-      osc.stop(dashCtx.currentTime + duration);
-    }
-    // === SPECIAL EFFECTS ===
-    // Hover = soft blip
-    function hoverSound() {
-      playSound(440, "sine", 0.15, 0.15);
-    }
-    // Click = deeper tech beep
-    function clickSound() {
-      playSound(220, "square", 0.2, 0.25);
-      setTimeout(() => playSound(660, "sine", 0.1, 0.15), 100);
-    }
-    // Navigation success = rising "confirmation" tone
-    function navSuccessSound() {
-      playSound(400, "triangle", 0.15, 0.2);
-      setTimeout(() => playSound(600, "triangle", 0.15, 0.2), 150);
-      setTimeout(() => playSound(800, "triangle", 0.25, 0.25), 300);
-    }
-    // === ATTACH TO DASHBOARD ELEMENTS ===
-    window.addEventListener("load", () => {
-      initAudio();
-      // Example: all buttons get sounds
-      document.querySelectorAll("button, .btn, .menu-item").forEach(el => {
-        el.addEventListener("mouseenter", hoverSound);
-        el.addEventListener("click", clickSound);
-      });
-      // Example: simulate "navigation success" when a page link is clicked
-      document.querySelectorAll("a").forEach(el => {
-        el.addEventListener("click", (e) => {
-          navSuccessSound();
-        });
-      });
+
+// === INIT AUDIO ===
+function initAudio() {
+  if (!dashCtx) {
+    dashCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+// === PLAY SOUND ===
+function playSound(freq, type = "sine", duration = 0.2, volume = 0.3) {
+  initAudio();
+  const osc = dashCtx.createOscillator();
+  const gain = dashCtx.createGain();
+
+  osc.type = type;
+  osc.frequency.value = freq;
+
+  gain.gain.value = volume;
+
+  osc.connect(gain);
+  gain.connect(dashCtx.destination);
+
+  osc.start();
+  osc.stop(dashCtx.currentTime + duration);
+}
+
+// === SPECIAL EFFECTS ===
+
+// Hover = soft blip
+function hoverSound() {
+  playSound(440, "sine", 0.15, 0.15);
+}
+
+// Click = deeper tech beep
+function clickSound() {
+  playSound(220, "square", 0.2, 0.25);
+  setTimeout(() => playSound(660, "sine", 0.1, 0.15), 100);
+}
+
+// Navigation success = rising "confirmation" tone
+function navSuccessSound() {
+  playSound(400, "triangle", 0.15, 0.2);
+  setTimeout(() => playSound(600, "triangle", 0.15, 0.2), 150);
+  setTimeout(() => playSound(800, "triangle", 0.25, 0.25), 300);
+}
+
+// === ATTACH TO DASHBOARD ELEMENTS ===
+window.addEventListener("load", () => {
+  initAudio();
+
+  // Example: all buttons get sounds
+  document.querySelectorAll("button, .btn, .menu-item").forEach(el => {
+    el.addEventListener("mouseenter", hoverSound);
+    el.addEventListener("click", clickSound);
+  });
+
+  // Example: simulate "navigation success" when a page link is clicked
+  document.querySelectorAll("a").forEach(el => {
+    el.addEventListener("click", (e) => {
+      navSuccessSound();
     });
+  });
+});
   </script>
 </body>
 </html>
