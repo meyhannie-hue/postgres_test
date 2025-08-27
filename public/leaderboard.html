@@ -539,7 +539,7 @@
     const playerName = localStorage.getItem("loggedInUser");
     async function loadDashboard() {
       try {
-        const res = await fetch("https://postgres-test-p05s.onrender.com//get-players");
+        const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         const players = await res.json();
         // Find logged in player
         const loggedInPlayer = players.find(p => p.username === playerName);
