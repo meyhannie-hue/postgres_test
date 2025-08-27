@@ -12,7 +12,7 @@ app.use(express.json());
 // ✅ Use pool config instead of DB_URL
 const sequelize = new Sequelize(
   process.env.DB_NAME || "techyme_db",          // DB_NAME
-  process.env.DB_USER || "avnadmin",           // DB_USER
+  process.env.DB_USER || "root",           // DB_USER
   process.env.DB_PASS || "l4bTZ8E9ekA93JNDx7BD36oon8E95CN7", // DB_PASS
   {
     host: process.env.DB_HOST || "dpg-d2glmfogjchc73b9icig-a",
