@@ -1,762 +1,1028 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Programming Easy Level</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
-<style>
-  * { box-sizing: border-box; }
-  body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: #121212;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;  /* 🔧 so content stacks top-down */
-  min-height: 100vh;
-  overflow-y: auto;         /* ✅ allow vertical scrolling */
-  overflow-x: hidden;       /* keep horizontal scroll disabled */
-  position: relative;
-  color: #f5f5f5;
-}
-
-  
-  /* Matrix Rain Effect */
-  .matrix-rain { 
-    position: fixed; 
-    top:0; 
-    left:0; 
-    width:100%; 
-    height:100%; 
-    z-index:-1; 
-    opacity:0.2; 
-    pointer-events:none; 
-  }
-  
-  /* Terminal Glow Effect */
-  .terminal-glow {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background: radial-gradient(ellipse at center, rgba(0,255,136,0.05) 0%, rgba(0,0,0,0) 70%);
-    pointer-events: none;
-  }
-  
-  /* Floating Code Particles */
-  .code-particles { 
-    position:fixed; 
-    top:0; 
-    left:0; 
-    width:100%; 
-    height:100%; 
-    z-index:-1; 
-    pointer-events:none; 
-  }
-  
-  .code-particle { 
-    position:absolute; 
-    color:#00ff88; 
-    font-family: 'Fira Code', monospace;
-    opacity:0.3; 
-    animation:floatCode 15s infinite linear; 
-  }
-  
-  @keyframes floatCode {
-    0% { 
-      transform: translateY(100vh) translateX(0); 
-      opacity:0; 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Levels - Cyberpunk Neon Theme</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      background: #0a0e27;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #f5f5f5;
+      overflow: hidden;
+      position: relative;
     }
-    10%,90% { 
-      opacity:0.3; 
+    
+    /* Neon Grid Background */
+    .neon-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: 
+        linear-gradient(rgba(0, 245, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 245, 255, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
     }
-    100% { 
-      transform: translateY(-100vh) translateX(100px); 
-      opacity:0; 
+    
+    /* Neon Glow Effect */
+    .neon-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at center, rgba(255, 0, 110, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
     }
-  }
-  
-  .app-container, .instructions-container { 
-    width:100%; 
-    max-width:600px; 
-    background:rgba(18,18,18,0.9); 
-    border-radius:5px; 
-    overflow:hidden;
-    box-shadow:0 0 30px rgba(0,255,136,0.2); 
-    display:flex; 
-    flex-direction:column; 
-    padding-bottom:20px; 
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(0,255,136,0.3); 
-    animation:terminalEntry 0.8s ease forwards; 
-    position:relative; 
-  }
-  
-  .app-container::before, .instructions-container::before { 
-    content:''; 
-    position:absolute; 
-    top:0; 
-    left:0; 
-    width:100%; 
-    height:100%;
-    background:repeating-linear-gradient(0deg, 
-      rgba(0,255,136,0.03) 0px, 
-      rgba(0,255,136,0.03) 1px, 
-      transparent 1px, 
-      transparent 2px);
-    z-index:-1; 
-    border-radius:5px; 
-  }
-  
-  .app-container::after, .instructions-container::after { 
-    content:''; 
-    position:absolute; 
-    top:0; 
-    left:0; 
-    width:100%; 
-    height:2px;
-    background:linear-gradient(90deg, transparent, rgba(0,255,136,0.7), transparent); 
-    animation:scanLine 4s linear infinite; 
-    z-index:1; 
-  }
-  
-  @keyframes scanLine { 
-    0%{top:0;} 
-    100%{top:100%;} 
-  }
-  
-  @keyframes terminalEntry { 
-    from{opacity:0; transform:scale(0.9) translateY(20px);} 
-    to{opacity:1; transform:scale(1) translateY(0);} 
-  }
-  
-  header { 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    background-color:rgba(0,0,0,0.7); 
-    color:#f5f5f5; 
-    padding:15px 20px;
-    border-bottom: 1px solid rgba(0,255,136,0.3);
-  }
-  
-  .header-title { 
-    font-size:18px; 
-    flex-grow:1; 
-    text-align:center; 
-    font-weight:bold; 
-    color:#00ff88; 
-    text-shadow:0 0 10px rgba(0,255,136,0.5);
-    animation:terminalGlow 2s infinite alternate; 
-    position:relative; 
-    font-family: 'Fira Code', monospace;
-  }
-  
-  .header-title::before, .header-title::after { 
-    content:"💻 TERMINAL - HTML CODING MISSION"; 
-    position:absolute; 
-    top:0; 
-    left:0; 
-    width:100%; 
-    height:100%; 
-  }
-  
-  .header-title::before { 
-    animation:glitch-1 0.5s infinite; 
-    color:#00ff88; 
-    z-index:-1; 
-  }
-  
-  .header-title::after { 
-    animation:glitch-2 0.5s infinite; 
-    color:#00cc66; 
-    z-index:-2; 
-  }
-  
-  @keyframes terminalGlow { 
-    from{text-shadow:0 0 5px rgba(0,255,136,0.5);} 
-    to{text-shadow:0 0 15px rgba(0,255,136,0.8);} 
-  }
-  
-  @keyframes glitch-1 { 
-    0%,100%{clip-path:inset(0 0 0 0);} 
-    20%{clip-path:inset(20% 0 30% 0);} 
-    40%{clip-path:inset(50% 0 20% 0);} 
-  }
-  
-  @keyframes glitch-2 { 
-    0%,100%{clip-path:inset(0 0 0 0);} 
-    20%{clip-path:inset(60% 0 10% 0);} 
-    40%{clip-path:inset(20% 0 50% 0);} 
-  }
-  
-  .back-button { 
-    cursor:pointer; 
-    font-size:18px; 
-    color:#00ff88; 
-    transition:transform 0.2s ease,color 0.3s ease; 
-  }
-  
-  .back-button:hover { 
-    transform:scale(1.2) rotate(-30deg); 
-    color:#00cc66; 
-  }
-  
-  .placeholder{width:30px;}
-  
-  .instructions-content {
-    padding: 20px;
-    font-family: 'Fira Code', monospace;
-  }
-  
-  .instructions-content h2 {
-    color: #00ff88;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 24px;
-    text-shadow: 0 0 10px rgba(0,255,136,0.5);
-  }
-  
-  .terminal-prompt {
-    display: flex;
-    align-items: center;
-    padding: 5px 15px;
-    font-family: 'Fira Code', monospace;
-    font-size: 14px;
-    color: #00ff88;
-    margin-bottom: 15px;
-  }
-  
-  .prompt-symbol {
-    margin-right: 10px;
-    color: #00ff88;
-  }
-  
-  .prompt-text {
-    color: #f5f5f5;
-  }
-  
-  .instructions-text {
-    background: rgba(0,0,0,0.5);
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid rgba(0,255,136,0.3);
-    margin-bottom: 20px;
-    line-height: 1.6;
-  }
-  
-  .instructions-text p {
-    margin: 10px 0;
-  }
-  
-  .instructions-text ul {
-    padding-left: 20px;
-  }
-  
-  .instructions-text li {
-    margin: 8px 0;
-  }
-  
-  .challenge{ 
-    background:rgba(0,0,0,0.5); 
-    padding:20px; 
-    font-size:16px; 
-    text-align:center; 
-    border-bottom:1px solid rgba(0,255,136,0.3);
-    font-family: 'Fira Code', monospace;
-  }
-  
-  #progress { 
-    font-weight:bold; 
-    color:#00ff88; 
-    margin-top:5px;
-    display: inline-block;
-    padding: 3px 10px;
-    background: rgba(0,255,136,0.1);
-    border-radius: 3px;
-    border: 1px solid rgba(0,255,136,0.3);
-  }
-  
-  textarea{ 
-    width:90%; 
-    max-width:700px; 
-    margin:15px auto; 
-    height:140px; 
-    padding:15px; 
-    font-family:'Fira Code', monospace; 
-    font-size:14px;
-    border:1px solid #00ff88; 
-    border-radius:3px; 
-    resize:none; 
-    display:block; 
-    background:rgba(0,0,0,0.7); 
-    color:#00ff88;
-    box-shadow: 0 0 10px rgba(0,255,136,0.2) inset;
-  }
-  
-  textarea:focus {
-    outline: none;
-    box-shadow: 0 0 15px rgba(0,255,136,0.4) inset;
-  }
-  
-  button{ 
-    margin:15px auto; 
-    padding:12px 25px; 
-    font-size:16px; 
-    font-weight:bold; 
-    color:#121212;
-    background:linear-gradient(45deg,#00ff88,#00cc66); 
-    border:none; 
-    border-radius:3px; 
-    cursor:pointer; 
-    width:90%; 
-    max-width:700px;
-    font-family: 'Fira Code', monospace;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    display: block;
-  }
-  
-  button:hover {
-    background:linear-gradient(45deg,#00cc66,#009944);
-    box-shadow: 0 0 15px rgba(0,255,136,0.5);
-  }
-  
-  #startGameBtn {
-    margin-top: 30px;
-  }
-  
-  #nextBtn{ 
-    background:linear-gradient(45deg,#00ff88,#00cc66); 
-    display:none; 
-    margin-top:30px; 
-    width:85%; 
-  }
-  
-  .result{ 
-    text-align:center; 
-    font-size:18px; 
-    font-weight:bold; 
-    margin-top:10px; 
-    color:#00ff88; 
-    min-height:24px;
-    font-family: 'Fira Code', monospace;
-  }
-  
-  iframe{ 
-    border:1px solid #00ff88; 
-    width:100%; 
-    min-height:250px; 
-    background:rgba(0,0,0,0.7); 
-    margin-top:15px;
-    box-shadow: 0 0 15px rgba(0,255,136,0.2);
-  }
-  
-  /* Hacking task progress bar */
-  .progress-container {
-    width: 90%;
-    max-width: 700px;
-    height: 8px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 4px;
-    margin: 10px auto;
-    border: 1px solid rgba(0,255,136,0.3);
-    overflow: hidden;
-  }
-  
-  .progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #00ff88, #00cc66);
-    width: 20%;
-    transition: width 0.5s ease;
-    box-shadow: 0 0 10px rgba(0,255,136,0.7);
-  }
-  
-  /* Terminal prompt styling */
-  .terminal-prompt {
-    display: flex;
-    align-items: center;
-    padding: 5px 15px;
-    font-family: 'Fira Code', monospace;
-    font-size: 14px;
-    color: #00ff88;
-  }
-  
-  .prompt-symbol {
-    margin-right: 10px;
-    color: #00ff88;
-  }
-  
-  .prompt-text {
-    color: #f5f5f5;
-  }
-  
-  /* Hide game container initially */
-  #gameContainer {
-    display: none;
-  }
-</style>
+    
+    /* Floating Neon Shapes */
+    .neon-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .neon-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out;
+    }
+    
+    .neon-shape.pink {
+      background: #ff006e;
+      width: 200px;
+      height: 200px;
+    }
+    
+    .neon-shape.blue {
+      background: #00f5ff;
+      width: 150px;
+      height: 150px;
+    }
+    
+    .neon-shape.green {
+      background: #39ff14;
+      width: 180px;
+      height: 180px;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+    
+    /* Main Container */
+    .cyber-container {
+      max-width: 420px;
+      width: 100%;
+      min-height: 90vh;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 
+        0 0 30px rgba(255, 0, 110, 0.3),
+        0 0 60px rgba(0, 245, 255, 0.2);
+      position: relative;
+      border: 2px solid rgba(0, 245, 255, 0.3);
+      backdrop-filter: blur(10px);
+      animation: containerEntry 0.8s ease forwards;
+    }
+    
+    /* Holographic Effect */
+    .cyber-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: 200% 200%;
+      animation: holographic 6s ease infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    @keyframes holographic {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+    
+    @keyframes containerEntry {
+      from { 
+        opacity: 0; 
+        transform: scale(0.9) translateY(20px) rotateX(10deg);
+      }
+      to { 
+        opacity: 1; 
+        transform: scale(1) translateY(0) rotateX(0);
+      }
+    }
+    
+    /* Header */
+    .cyber-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(0, 245, 255, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .back-btn {
+      cursor: pointer;
+      font-size: 20px;
+      color: #00f5ff;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
+    }
+    
+    .back-btn:hover {
+      transform: scale(1.2) rotate(-15deg);
+      color: #ff006e;
+      text-shadow: 0 0 15px rgba(255, 0, 110, 0.7);
+    }
+    
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      color: #ff006e;
+      flex-grow: 1;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 
+        0 0 10px rgba(255, 0, 110, 0.7),
+        0 0 20px rgba(255, 0, 110, 0.5);
+      animation: neonPulse 2s infinite alternate;
+    }
+    
+    @keyframes neonPulse {
+      from { 
+        text-shadow: 
+          0 0 10px rgba(255, 0, 110, 0.7),
+          0 0 20px rgba(255, 0, 110, 0.5);
+      }
+      to { 
+        text-shadow: 
+          0 0 15px rgba(255, 0, 110, 0.9),
+          0 0 25px rgba(255, 0, 110, 0.7);
+      }
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 14px;
+    }
+    
+    .username {
+      color: #00f5ff;
+      font-weight: 500;
+      text-shadow: 0 0 5px rgba(0, 245, 255, 0.7);
+    }
+    
+    /* Updated coins display to match dashboard */
+    .coins-display {
+      color: #00e5ff;
+      font-weight: 600;
+      text-shadow: 0 0 5px rgba(0, 229, 255, 0.7);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+      50% { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
+      100% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
+    }
+    
+    /* Content Title */
+    .content-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 30px 0;
+      color: #00f5ff;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .content-title::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #ff006e, transparent);
+    }
+    
+    .content-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #39ff14, transparent);
+    }
+    
+    /* Level Cards */
+    .level-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      padding: 0 20px 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .level-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(0, 245, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+    
+    /* Neon Border Effect */
+    .level-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #00f5ff, #ff006e, #39ff14, #00f5ff);
+      border-radius: 15px;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.4s ease;
+      animation: neonBorder 3s linear infinite;
+      background-size: 400% 400%;
+    }
+    
+    @keyframes neonBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .level-card:hover::before {
+      opacity: 1;
+    }
+    
+    .level-card:hover {
+      transform: translateY(-8px) rotateX(5deg);
+      box-shadow: 
+        0 10px 30px rgba(0, 245, 255, 0.3),
+        0 0 60px rgba(255, 0, 110, 0.2);
+    }
+    
+    .level-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: rgba(100, 100, 100, 0.3);
+    }
+    
+    .level-card.locked::before {
+      display: none;
+    }
+    
+    /* Level Header */
+    .level-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .level-name {
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .level-name .emoji {
+      font-size: 24px;
+    }
+    
+    .level-status {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .level-status.unlocked {
+      background: rgba(57, 255, 20, 0.2);
+      color: #39ff14;
+      border: 1px solid rgba(57, 255, 20, 0.5);
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+    }
+    
+    .level-status.locked {
+      background: rgba(100, 100, 100, 0.2);
+      color: #aaaaaa;
+      border: 1px solid rgba(100, 100, 100, 0.3);
+    }
+    
+    /* Level Description */
+    .level-description {
+      color: #cccccc;
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+      transition: width 0.8s ease;
+    }
+    
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+    
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .progress-bar.easy {
+      background: linear-gradient(90deg, #39ff14, #7aff7a);
+    }
+    
+    .progress-bar.medium {
+      background: linear-gradient(90deg, #00f5ff, #7affff);
+    }
+    
+    .progress-bar.hard {
+      background: linear-gradient(90deg, #ff006e, #ff5eaa);
+    }
+    
+    /* Cyber Badge */
+    .cyber-badge {
+      display: inline-block;
+      background: rgba(255, 0, 110, 0.2);
+      color: #ff006e;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 0, 110, 0.3);
+      box-shadow: 0 0 10px rgba(255, 0, 110, 0.2);
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #ff006e;
+      padding: 15px 25px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 0, 110, 0.5);
+      box-shadow: 
+        0 0 20px rgba(255, 0, 110, 0.4),
+        0 0 40px rgba(255, 0, 110, 0.2);
+      z-index: 1000;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      opacity: 0;
+      animation: notificationFade 3s forwards;
+    }
+    
+    @keyframes notificationFade {
+      0% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px);
+      }
+      20% { 
+        opacity: 1; 
+        transform: translate(-50%, 0);
+      }
+      80% { 
+        opacity: 1; 
+        transform: translate(-50%, 0);
+      }
+      100% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px);
+      }
+    }
+    
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .loading-content {
+      text-align: center;
+    }
+    
+    .loading-text {
+      color: #00f5ff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
+    }
+    
+    .loading-circles {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    
+    .loading-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      animation: loadingPulse 1.5s infinite ease-in-out;
+    }
+    
+    .loading-circle:nth-child(1) {
+      background: #ff006e;
+      animation-delay: 0s;
+    }
+    
+    .loading-circle:nth-child(2) {
+      background: #00f5ff;
+      animation-delay: 0.3s;
+    }
+    
+    .loading-circle:nth-child(3) {
+      background: #39ff14;
+      animation-delay: 0.6s;
+    }
+    
+    @keyframes loadingPulse {
+      0%, 100% { 
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% { 
+        transform: scale(1.3);
+        opacity: 1;
+      }
+    }
+    
+    /* Purchase Confirmation Modal */
+    .purchase-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .purchase-modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-content {
+      background: rgba(10, 14, 39, 0.9);
+      border: 2px solid rgba(0, 245, 255, 0.5);
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 350px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+    }
+    
+    .modal-title {
+      color: #ff006e;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .modal-text {
+      color: #f5f5f5;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    
+    .btn-confirm {
+      background: rgba(57, 255, 20, 0.2);
+      color: #39ff14;
+      border: 1px solid rgba(57, 255, 20, 0.5);
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+    }
+    
+    .btn-confirm:hover {
+      background: rgba(57, 255, 20, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    .btn-cancel {
+      background: rgba(255, 0, 110, 0.2);
+      color: #ff006e;
+      border: 1px solid rgba(255, 0, 110, 0.5);
+      box-shadow: 0 0 10px rgba(255, 0, 110, 0.3);
+    }
+    
+    .btn-cancel:hover {
+      background: rgba(255, 0, 110, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      .cyber-container {
+        min-height: 95vh;
+        border-radius: 0;
+      }
+      
+      .content-title {
+        font-size: 24px;
+      }
+      
+      .level-card {
+        padding: 15px;
+      }
+      
+      .level-name {
+        font-size: 18px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <canvas class="matrix-rain" id="matrixRain"></canvas>
-  <div class="terminal-glow"></div>
-  <div class="code-particles" id="codeParticles"></div>
+  <div class="neon-grid"></div>
+  <div class="neon-glow"></div>
+  <div class="neon-shapes" id="neonShapes"></div>
   
-  <!-- Instructions Container -->
-  <div class="instructions-container" id="instructionsContainer">
-    <header>
-      <div class="back-button" onclick="confirmQuit()">⤺</div>
-      <div class="header-title">💻 TERMINAL - HTML CODING MISSION</div>
-      <div class="placeholder"></div>
-    </header>
+  <div class="cyber-container">
+    <div class="cyber-header">
+      <div class="back-btn" onclick="goBack()">←</div>
+      <div class="title">Techy Me</div>
+      <div class="user-info">
+        <div class="username" id="usernameDisplay">User</div>
+        <!-- Updated coins display to match dashboard -->
+        <div id="coins" class="coins-display">💰 0</div>
+      </div>
+    </div>
     
-    <div class="instructions-content">
-      <h2>MISSION BRIEFING</h2>
-      
-      <div class="terminal-prompt">
-        <span class="prompt-symbol">root@terminal:~$</span>
-        <span class="prompt-text">cat mission_briefing.txt</span>
+    <div class="content-title">Programming</div>
+    
+    <div class="level-cards">
+      <div class="level-card" id="easyLevel" onclick="startLevel('easy')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🟢</span>
+            <span>Easy</span>
+          </div>
+          <div class="level-status unlocked">Unlocked</div>
+        </div>
+        <div class="level-description">Beginner coding challenges to build your programming foundation</div>
+        <div class="progress-container">
+          <div class="progress-bar easy" id="easyProgress"></div>
+        </div>
       </div>
       
-      <div class="instructions-text">
-        <p>Welcome, agent. Your mission is to complete a series of HTML coding challenges to hack into the mainframe.</p>
-        
-        <h3 style="color: #00ff88; margin-top: 20px;">OBJECTIVE:</h3>
-        <p>Successfully complete all 5 phases of HTML coding challenges to gain access to the system.</p>
-        
-        <h3 style="color: #00ff88; margin-top: 20px;">INSTRUCTIONS:</h3>
-        <ul>
-          <li>Each phase will present you with a specific HTML coding task</li>
-          <li>Write the required HTML code in the terminal editor</li>
-          <li>Execute your code to check if it matches the expected output</li>
-          <li>If successful, proceed to the next phase</li>
-          <li>Complete all phases to complete the mission</li>
-        </ul>
-        
-        <h3 style="color: #00ff88; margin-top: 20px;">REWARDS:</h3>
-        <p>Upon successful completion of all phases, you will be rewarded with points and coins.</p>
-        
-        <h3 style="color: #00ff88; margin-top: 20px;">WARNING:</h3>
-        <p>The system security is high-level. Precision is required. Any errors will result in access denial.</p>
+      <div class="level-card locked" id="mediumLevel" onclick="startLevel('medium')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🟡</span>
+            <span>Medium</span>
+          </div>
+          <div class="level-status locked">6000 coins</div>
+        </div>
+        <div class="level-description">Intermediate coding tasks to enhance your skills</div>
+        <div class="progress-container">
+          <div class="progress-bar medium" id="mediumProgress"></div>
+        </div>
       </div>
       
-      <div class="terminal-prompt">
-        <span class="prompt-symbol">root@terminal:~$</span>
-        <span class="prompt-text">./start_mission.sh</span>
+      <div class="level-card locked" id="hardLevel" onclick="startLevel('hard')">
+        <div class="cyber-badge">Cyber Task</div>
+        <div class="level-header">
+          <div class="level-name">
+            <span class="emoji">🔴</span>
+            <span>Hard</span>
+          </div>
+          <div class="level-status locked">7500 coins</div>
+        </div>
+        <div class="level-description">Advanced programming problems for elite coders</div>
+        <div class="progress-container">
+          <div class="progress-bar hard" id="hardProgress"></div>
+        </div>
       </div>
-      
-      <button id="startGameBtn" onclick="startGame()">▶ START MISSION</button>
     </div>
   </div>
   
-  <!-- Game Container -->
-  <div class="app-container" id="gameContainer">
-    <header>
-      <div class="back-button" onclick="confirmQuit()">⤺</div>
-      <div class="header-title">💻 TERMINAL - HTML CODING MISSION</div>
-      <div class="placeholder"></div>
-    </header>
-    
-    <div class="challenge">
-      <div id="instruction">Phase 1: Create a &lt;h1&gt; with "Hello World"</div>
-      <div id="progress">1 / 5</div>
-      <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-text" id="loadingText">Initializing...</div>
+      <div class="loading-circles">
+        <div class="loading-circle"></div>
+        <div class="loading-circle"></div>
+        <div class="loading-circle"></div>
       </div>
     </div>
-    
-    <div class="terminal-prompt">
-      <span class="prompt-symbol">root@terminal:~$</span>
-      <span class="prompt-text">Write your HTML code below:</span>
-    </div>
-    
-    <textarea id="userCode" placeholder="// Enter your HTML code here..."></textarea>
-    
-    <button id="runBtn" onclick="runAndCheck()">▶ EXECUTE CODE</button>
-    
-    <div class="result" id="resultMsg"></div>
-    
-    <button id="nextBtn" onclick="goToNextPhase()">➡ NEXT MISSION</button>
-    
-    <iframe id="output"></iframe>
   </div>
-
-<script>
-  // Matrix Rain Effect
-  const matrixCanvas=document.getElementById('matrixRain'); 
-  const matrixCtx=matrixCanvas.getContext('2d');
-  matrixCanvas.width=window.innerWidth; 
-  matrixCanvas.height=window.innerHeight;
   
-  // Matrix characters (Katakana, Latin, Numbers)
-  const matrixChars="アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const fontSize=14; 
-  const columns=matrixCanvas.width/fontSize; 
-  const drops=[];
+  <!-- Purchase Confirmation Modal -->
+  <div class="purchase-modal" id="purchaseModal">
+    <div class="modal-content">
+      <div class="modal-title" id="modalTitle">Confirm Purchase</div>
+      <div class="modal-text" id="modalText">Are you sure you want to unlock this level?</div>
+      <div class="modal-buttons">
+        <button class="modal-btn btn-confirm" id="confirmBtn">Confirm</button>
+        <button class="modal-btn btn-cancel" id="cancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
   
-  // Initialize drops
-  for(let i=0;i<columns;i++){ 
-    drops[i]=Math.random()*matrixCanvas.height; 
-  }
-  
-  // Draw the matrix rain
-  function drawMatrix(){ 
-    matrixCtx.fillStyle='rgba(18,18,18,0.05)'; 
-    matrixCtx.fillRect(0,0,matrixCanvas.width,matrixCanvas.height);
+  <script>
+    // Create floating neon shapes
+    const neonShapes = document.getElementById('neonShapes');
+    const shapes = [
+      { class: 'pink', left: '10%', top: '20%', delay: '0s' },
+      { class: 'blue', left: '80%', top: '60%', delay: '5s' },
+      { class: 'green', left: '40%', top: '80%', delay: '10s' },
+      { class: 'pink', left: '70%', top: '10%', delay: '15s' },
+      { class: 'blue', left: '20%', top: '70%', delay: '20s' }
+    ];
     
-    matrixCtx.fillStyle='#00ff88'; 
-    matrixCtx.font=`${fontSize}px monospace`;
-    
-    for(let i=0;i<drops.length;i++){ 
-      const text=matrixChars.charAt(Math.floor(Math.random()*matrixChars.length));
-      matrixCtx.fillText(text,i*fontSize,drops[i]*fontSize);
-      
-      if(drops[i]*fontSize>matrixCanvas.height&&Math.random()>0.975) 
-        drops[i]=0; 
-      drops[i]++; 
-    } 
-  }
-  
-  setInterval(drawMatrix,33);
-  
-  // Resize canvas when window is resized
-  window.addEventListener('resize',()=>{ 
-    matrixCanvas.width=window.innerWidth; 
-    matrixCanvas.height=window.innerHeight; 
-  });
-  
-  // Code Particles
-  const particlesContainer=document.getElementById('codeParticles'); 
-  const codeSnippets = ["function()", "if (true)", "{...}", "return;", "const x = 10", "<div>", "</div>", "array.map()", "async/await"];
-  
-  for(let i=0;i<20;i++){
-    const p=document.createElement('div'); 
-    p.className='code-particle';
-    p.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-    p.style.left=`${Math.random()*100}%`; 
-    p.style.top=`${Math.random()*100}%`;
-    p.style.animationDelay=`${Math.random()*15}s`; 
-    p.style.fontSize = `${Math.random() * 10 + 10}px`;
-    particlesContainer.appendChild(p); 
-  }
-  
-  // Game Logic
-  const phases=[
-    {instruction:'Phase 1: Create a <h1> that says "Hello World"',expectedHTML:'<h1>Hello World</h1>',completed:false},
-    {instruction:'Phase 2: Create a paragraph that says "This is a paragraph"',expectedHTML:'<p>This is a paragraph</p>',completed:false},
-    {instruction:'Phase 3: Create an image with src="cat.jpg" and alt="A cat"',expectedHTML:'<img src="cat.jpg" alt="A cat">',completed:false},
-    {instruction:'Phase 4: Create an unordered list with 2 items: "Apple" and "Banana"',expectedHTML:'<ul><li>Apple</li><li>Banana</li></ul>',completed:false},
-    {instruction:'Phase 5: Create a link that says "Click me" and links to "https://example.com"',expectedHTML:'<a href="https://example.com">Click me</a>',completed:false}
-  ];
-  
-  let currentPhase=0;
-  
-  function startGame() {
-    document.getElementById('instructionsContainer').style.display = 'none';
-    document.getElementById('gameContainer').style.display = 'flex';
-    updateInstruction();
-  }
-  
-  function updateInstruction(){ 
-    document.getElementById('instruction').innerHTML=phases[currentPhase].instruction;
-    document.getElementById('progress').innerText=`${currentPhase+1} / ${phases.length}`;
-    document.getElementById('userCode').value=''; 
-    document.getElementById('resultMsg').innerText='';
-    document.getElementById('output').srcdoc=''; 
-    document.getElementById('nextBtn').style.display='none';
-    
-    // Update progress bar
-    const progressPercent = ((currentPhase+1) / phases.length) * 100;
-    document.getElementById('progressBar').style.width = `${progressPercent}%`;
-  }
-  
-  function runAndCheck(){
-    const code=document.getElementById('userCode').value.trim();
-    const outputFrame=document.getElementById('output'); 
-    const resultMsg=document.getElementById('resultMsg');
-    outputFrame.srcdoc=code;
-    
-    setTimeout(()=>{
-      const iframeDoc=outputFrame.contentDocument||outputFrame.contentWindow.document;
-      const bodyHTML=iframeDoc.body.innerHTML.trim();
-      const cleanedUser=bodyHTML.replace(/\s+/g,'').toLowerCase();
-      const cleanedExpected=phases[currentPhase].expectedHTML.replace(/\s+/g,'').toLowerCase();
-      
-      if(cleanedUser===cleanedExpected){
-        resultMsg.innerText="✅ ACCESS GRANTED. Proceed to next mission."; 
-        resultMsg.style.color="#00ff88";
-        phases[currentPhase].completed=true;
-        
-        if(currentPhase<phases.length-1){ 
-          document.getElementById('nextBtn').style.display='block'; 
-        }
-        else { 
-          resultMsg.innerText="🎉 ALL MISSIONS COMPLETE. SYSTEM HACKED!"; 
-          rewardPlayer(); 
-        }
-      } else { 
-        resultMsg.innerText="❌ ACCESS DENIED. Try again."; 
-        resultMsg.style.color="#ff5555"; 
-      }
-    },200);
-  }
-  
-  function goToNextPhase(){ 
-    currentPhase++; 
-    if(currentPhase<phases.length) 
-      updateInstruction(); 
-  }
-  
-  function rewardPlayer() {
-  const username = localStorage.getItem("loggedInUser") || "Guest";
-  const points = 7620;
-  const coins = 6120;
-
-  fetch("https://postgres-test-p05s.onrender.com/api/reward", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, points, coins })
-  })
-    .then(async res => {
-      if (!res.ok) {
-        // ⚠️ If server responds with error status (404, 500, etc.)
-        const text = await res.text();
-        throw new Error(`Server error ${res.status}: ${text}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      const resultMsg = document.getElementById("resultMsg");
-
-      if (data.success) {
-        resultMsg.innerText +=
-          ` 🎉 REWARD ACQUIRED: ${points} points and ${coins} coins!`;
-        resultMsg.style.color = "#00ff88";
-      } else {
-        resultMsg.innerText += " ⚠️ Reward system error.";
-        resultMsg.style.color = "#ff5555";
-      }
-
-      // ✅ Redirect after reward attempt
-      setTimeout(() => {
-        window.location.href = "../levels/programminglevel.html";
-      }, 2000);
-    })
-    .catch(err => {
-      console.error("❌ Reward API error:", err);
-      alert("Error applying reward. Please try again.");
-
-      // Redirect even if error occurs
-      window.location.href = "../levels/programminglevel.html";
+    shapes.forEach(shape => {
+      const div = document.createElement('div');
+      div.className = `neon-shape ${shape.class}`;
+      div.style.left = shape.left;
+      div.style.top = shape.top;
+      div.style.animationDelay = shape.delay;
+      neonShapes.appendChild(div);
     });
-}
-
- // === 🎵 PROGRAMMING GAME MUSIC (Auto Start) ===
-  let progAudioCtx, progMasterGain, progIntervals = [];
-
-  window.addEventListener("load", () => {
-    // Create audio context on load
-    progAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    progMasterGain = progAudioCtx.createGain();
-    progMasterGain.gain.value = 0.5; // 🔊 softer cyber vibe
-    progMasterGain.connect(progAudioCtx.destination);
-
-    // Start loops
-    startProgrammingMusic();
-  });
-
-  function startProgrammingMusic() {
-    if (!progAudioCtx) return;
-
-    // 🔹 Low synth pad (ambient background hum)
-    progIntervals.push(setInterval(() => {
-      playToneProg(220, "sawtooth", 1.2, 0.15); // low hum
-    }, 1500));
-
-    // 🔹 Random "data blips"
-    progIntervals.push(setInterval(() => {
-      let freqs = [440, 554, 659, 880, 988]; // coding beeps
-      let f = freqs[Math.floor(Math.random() * freqs.length)];
-      playToneProg(f, "square", 0.1, 0.25);
-    }, 500));
-
-    // 🔹 Hi-hat / typing clicks
-    progIntervals.push(setInterval(() => {
-      playNoiseProg(0.02, 0.15);
-    }, 250));
-
-    // 🔹 Deep pulse (like system heartbeat)
-    progIntervals.push(setInterval(() => {
-      playKickProg();
-    }, 2000));
-  }
-
-  function stopProgrammingMusic() {
-    progIntervals.forEach(id => clearInterval(id));
-    progIntervals = [];
-    if (progAudioCtx) {
-      progAudioCtx.close();
-      progAudioCtx = null;
+    
+    // User info
+    const loggedInUser = localStorage.getItem("loggedInUser") || "User";
+    document.getElementById("usernameDisplay").innerText = loggedInUser;
+    
+    // Define purchase costs for level unlocking
+    const PURCHASE_COSTS = {
+      MEDIUM: 6000,  // Coins needed to unlock Medium level
+      HARD: 7500     // Coins needed to unlock Hard level
+    };
+    
+    // Load user data from database
+    async function loadUserData() {
+      try {
+        const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
+        if (!res.ok) throw new Error("Failed to fetch players");
+        const players = await res.json();
+        const loggedInPlayer = players.find(p => p.username === loggedInUser);
+        const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
+        document.getElementById("coins").innerText = `💰 ${coins}`;
+        window.playerCoins = coins;
+        
+        // Update localStorage with the latest coins from database
+        localStorage.setItem("coins", coins.toString());
+        
+        // Check if the player has unlocked_levels in the database
+        let unlockedLevels = { easy: true, medium: false, hard: false };
+        if (loggedInPlayer && loggedInPlayer.unlocked_levels) {
+          try {
+            unlockedLevels = JSON.parse(loggedInPlayer.unlocked_levels);
+            // Update localStorage with the database values
+            localStorage.setItem("unlockedLevels", JSON.stringify(unlockedLevels));
+          } catch (e) {
+            console.error("Error parsing unlocked_levels from database:", e);
+            // Fall back to localStorage if parsing fails
+            unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
+          }
+        } else {
+          // If no unlocked_levels in database, use localStorage
+          unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
+        }
+        
+        // Update UI based on unlocked status
+        checkUnlockedLevels();
+        
+        // Update progress bars based on coins
+        updateProgressBars(coins);
+      } catch (err) {
+        console.error("Error loading user data:", err);
+        // Fallback to localStorage if database fetch fails
+        const fallbackCoins = localStorage.getItem("coins") || 0;
+        document.getElementById("coins").innerText = `💰 ${fallbackCoins}`;
+        window.playerCoins = parseInt(fallbackCoins);
+        
+        // Check unlocked levels from localStorage
+        checkUnlockedLevels();
+        
+        // Apply progress bars with fallback coins
+        updateProgressBars(window.playerCoins);
+      }
     }
-  }
-
-  // === SOUND GENERATORS ===
-  function playToneProg(freq, type, duration, volume) {
-    const osc = progAudioCtx.createOscillator();
-    const gain = progAudioCtx.createGain();
-    gain.gain.value = volume;
-    osc.type = type;
-    osc.frequency.value = freq;
-    osc.connect(gain);
-    gain.connect(progMasterGain);
-
-    osc.start();
-    osc.stop(progAudioCtx.currentTime + duration);
-  }
-
-  function playNoiseProg(duration, volume) {
-    const bufferSize = progAudioCtx.sampleRate * duration;
-    const buffer = progAudioCtx.createBuffer(1, bufferSize, progAudioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1; // white noise
+    
+    // Check which levels are unlocked from localStorage
+    function checkUnlockedLevels() {
+      // Get unlocked levels from localStorage
+      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
+      
+      // Update UI based on unlocked status
+      if (unlockedLevels.medium) {
+        document.getElementById("mediumLevel").classList.remove("locked");
+        document.querySelector("#mediumLevel .level-status").classList.remove("locked");
+        document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
+        document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
+      }
+      
+      if (unlockedLevels.hard) {
+        document.getElementById("hardLevel").classList.remove("locked");
+        document.querySelector("#hardLevel .level-status").classList.remove("locked");
+        document.querySelector("#hardLevel .level-status").classList.add("unlocked");
+        document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
+      }
     }
-
-    const noise = progAudioCtx.createBufferSource();
-    noise.buffer = buffer;
-
-    const gain = progAudioCtx.createGain();
-    gain.gain.value = volume;
-
-    noise.connect(gain);
-    gain.connect(progMasterGain);
-
-    noise.start();
-    noise.stop(progAudioCtx.currentTime + duration);
-  }
-
-  function playKickProg() {
-    const osc = progAudioCtx.createOscillator();
-    const gain = progAudioCtx.createGain();
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(100, progAudioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(40, progAudioCtx.currentTime + 0.6);
-
-    gain.gain.setValueAtTime(0.4, progAudioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, progAudioCtx.currentTime + 0.6);
-
-    osc.connect(gain);
-    gain.connect(progMasterGain);
-
-    osc.start(progAudioCtx.currentTime);
-    osc.stop(progAudioCtx.currentTime + 0.6);
-  }
-</script>
+    
+    // Update progress bars based on coins
+    function updateProgressBars(coins) {
+      setTimeout(() => {
+        // Easy level is always 100% since it's unlocked by default
+        document.getElementById("easyProgress").style.width = "100%";
+        
+        // Medium level progress (based on coins)
+        const mediumProgress = Math.min(100, (coins / PURCHASE_COSTS.MEDIUM) * 100);
+        document.getElementById("mediumProgress").style.width = `${mediumProgress}%`;
+        
+        // Hard level progress (based on coins)
+        const hardProgress = Math.min(100, (coins / PURCHASE_COSTS.HARD) * 100);
+        document.getElementById("hardProgress").style.width = `${hardProgress}%`;
+      }, 500);
+    }
+    
+    function startLevel(level) {
+      const levelElement = document.getElementById(level + "Level");
+      
+      // Check if level is locked
+      if (levelElement.classList.contains("locked")) {
+        // Get purchase cost
+        const cost = level === "medium" ? PURCHASE_COSTS.MEDIUM : PURCHASE_COSTS.HARD;
+        
+        // Check if player has enough coins
+        if (window.playerCoins < cost) {
+          // Create notification
+          const notification = document.createElement('div');
+          notification.className = 'notification';
+          notification.textContent = `INSUFFICIENT COINS: You need ${cost} coins to unlock ${level} level. You have ${window.playerCoins} coins.`;
+          document.body.appendChild(notification);
+          
+          // Remove notification after animation
+          setTimeout(() => {
+            notification.remove();
+          }, 3000);
+          
+          return;
+        }
+        
+        // Show purchase confirmation modal
+        showPurchaseModal(level, cost);
+        return;
+      }
+      
+      // Show loading overlay
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      
+      loadingOverlay.classList.add('active');
+      
+      if (level === "easy") {
+        loadingText.textContent = "Initializing Cyber Interface...";
+      } else if (level === "medium") {
+        loadingText.textContent = "Compiling Neural Network...";
+      } else if (level === "hard") {
+        loadingText.textContent = "Breaching Quantum Firewall...";
+      }
+      
+      // Navigate after loading animation
+      setTimeout(() => {
+        if (level === "easy") window.location.href = `../programming/easy.html`;
+        if (level === "medium") window.location.href = `../programming/medium.html`;
+        if (level === "hard") window.location.href = `../programming/hard.html`;
+      }, 2000);
+    }
+    
+    // Show purchase confirmation modal
+    function showPurchaseModal(level, cost) {
+      const modal = document.getElementById('purchaseModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalText = document.getElementById('modalText');
+      const confirmBtn = document.getElementById('confirmBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      
+      // Set modal content
+      modalTitle.textContent = `Unlock ${level.charAt(0).toUpperCase() + level.slice(1)} Level`;
+      modalText.textContent = `Are you sure you want to spend ${cost} coins to unlock the ${level} level?`;
+      
+      // Set up event listeners
+      confirmBtn.onclick = () => {
+        purchaseLevel(level, cost);
+        modal.classList.remove('active');
+      };
+      
+      cancelBtn.onclick = () => {
+        modal.classList.remove('active');
+      };
+      
+      // Show modal
+      modal.classList.add('active');
+    }
+    
+    // Purchase level function
+    async function purchaseLevel(level, cost) {
+      // Deduct coins
+      const newCoins = window.playerCoins - cost;
+      
+      // Update localStorage for coins
+      localStorage.setItem("coins", newCoins.toString());
+      
+      // Update unlocked levels in localStorage
+      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedLevels") || '{"easy":true,"medium":false,"hard":false}');
+      unlockedLevels[level] = true;
+      localStorage.setItem("unlockedLevels", JSON.stringify(unlockedLevels));
+      
+      // Try to update the database
+      try {
+        const response = await fetch("https://postgres-test-p05s.onrender.com/update-coins", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ 
+            username: loggedInUser, 
+            coins: newCoins,
+            unlockedLevels: unlockedLevels
+          })
+        });
+        
+        if (response.ok) {
+          console.log("Coins and unlocked levels updated in database successfully");
+        } else {
+          console.error("Failed to update coins and unlocked levels in database");
+        }
+      } catch (err) {
+        console.error("Error updating coins and unlocked levels in database:", err);
+      }
+      
+      // Update the UI for the level card
+      const levelElement = document.getElementById(level + "Level");
+      levelElement.classList.remove("locked");
+      const statusElement = levelElement.querySelector(".level-status");
+      statusElement.classList.remove("locked");
+      statusElement.classList.add("unlocked");
+      statusElement.textContent = "Unlocked";
+      
+      // Update progress bar to 100%
+      const progressBar = document.getElementById(level + "Progress");
+      progressBar.style.width = "100%";
+      
+      // Update coins display
+      window.playerCoins = newCoins;
+      document.getElementById("coins").innerText = `💰 ${newCoins}`;
+      
+      // Show success notification
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = `${level.charAt(0).toUpperCase() + level.slice(1)} level unlocked successfully!`;
+      document.body.appendChild(notification);
+      
+      // Remove notification after animation
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+    
+    function goBack() {
+      // Show loading overlay
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      
+      loadingOverlay.classList.add('active');
+      loadingText.textContent = "Disconnecting from Matrix...";
+      
+      // Navigate after loading animation
+      setTimeout(() => {
+        window.location.href = "../dashboard.html";
+      }, 1500);
+    }
+    
+    // Load user data when the page loads
+    document.addEventListener("DOMContentLoaded", loadUserData);
+  </script>
 </body>
 </html>
