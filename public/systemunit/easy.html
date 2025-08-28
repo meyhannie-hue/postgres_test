@@ -699,8 +699,8 @@
         correct++;
     });
     
-    const points = correct * 300;
-    const coins = correct;
+    const points = correct * 2300;
+    const coins = correct * 2000;
     const isPerfect = correct === 5;
     const message = document.getElementById('resultMessage');
     
@@ -717,7 +717,7 @@
     }
     
     try {
-      const response = await fetch("/api/reward", {
+      const response = await fetch("https://postgres-test-p05s.onrender.com//api/reward", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
