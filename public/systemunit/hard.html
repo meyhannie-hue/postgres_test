@@ -614,7 +614,6 @@
       <button class="back-btn" onclick="confirmBack()">Back</button>
     </div>
   </div>
-
 <script>
   // Original functionality
   const draggables = document.querySelectorAll('.draggable');
@@ -654,9 +653,11 @@
     });
   });
   
-  function submitAnswers() {
+  // ✅ Updated submit function to match computer assembly game
+  async function submitAnswers() {
     let correct = 0;
     let total = dropZones.length;
+    
     dropZones.forEach(zone => {
       const userAnswer = zone.getAttribute("data-user");
       if (userAnswer === zone.dataset.label) {
@@ -666,47 +667,51 @@
         zone.textContent = `${userAnswer || "Empty"}\n→ ${zone.dataset.label}`;
       }
     });
-    const score = correct * 200;
-    const coins = correct * 20;
     
-    setTimeout(() => {
-      if (correct === total) {
-        alert(`🎉 Perfect! You scored ${score} points and earned ${coins} coins.`);
-        // Send reward to server
-        sendReward(score, coins);
-      } else {
-        alert(`You got ${correct} out of ${total} correct.\nScore: ${score} points and ${coins} coins.`);
-        // Send partial reward to server
-        sendReward(score, coins);
-      }
-    }, 100);
-    submitted = true;
-  }
-  
-  function sendReward(points, coins) {
-    const username = localStorage.getItem("loggedInUser") || "Guest";
+    // Calculate points and coins
+    const points = correct * 3000;
+    const coins = correct * 3000;
+    const isPerfect = correct === total;
     
-    fetch("https://postgres-test-p05s.onrender.com/api/reward", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        username, 
-        points, 
-        coins,
-        reason: "Motherboard Component Identification"
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
+    const username = localStorage.getItem("loggedInUser");
+    if (!username) {
+      alert("⚠️ No username found. Please login first.");
+      return;
+    }
+    
+    try {
+      const response = await fetch("/api/reward", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          username, 
+          points, 
+          coins,
+          reason: "Motherboard Component Identification"
+        })
+      });
+      
+      const data = await response.json();
       if (data.success) {
-        console.log("Reward sent successfully");
+        alert(`🎉 You earned ${points} points and ${coins} coins!`);
+        // Redirect to the levels page
+        window.location.href = "../levels/systemunitlevel.html";
       } else {
-        console.error("Failed to send reward:", data);
+        console.error("Reward API failed:", data);
+        alert("⚠️ Failed to record your score. Please try again.");
       }
-    })
-    .catch(err => {
-      console.error("Error sending reward:", err);
-    });
+    } catch (err) {
+      console.error("Reward API Error:", err);
+      alert("⚠️ Error connecting to server. Please check your connection.");
+    }
+    
+    // Update localStorage as fallback
+    const prevPoints = parseInt(localStorage.getItem("points") || "0", 10);
+    localStorage.setItem("points", prevPoints + points);
+    
+    if (document.getElementById("points")) {
+      document.getElementById("points").innerText = `💰 ${prevPoints + points}`;
+    }
   }
   
   function confirmBack() {
@@ -719,90 +724,76 @@
     document.getElementById('instructionsContainer').style.display = 'none';
     document.getElementById('gameContainer').style.display = 'flex';
   }
+  
   // === 🎵 SYSTEM UNIT LAB AMBIENCE ===
-let sysAudioCtx, sysMasterGain, sysIntervals = [];
-
-function startSystemUnitMusic() {
-  if (sysAudioCtx) return; // already playing
-
-  sysAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  sysMasterGain = sysAudioCtx.createGain();
-  sysMasterGain.gain.value = 0.6; // 🎚 lower ambient volume
-  sysMasterGain.connect(sysAudioCtx.destination);
-
-  // 🔹 Ambient low hum (feels like PC fans or lab machines running)
-  sysIntervals.push(setInterval(() => {
-    playToneSys(80, "sawtooth", 2, 0.15);
-  }, 2000));
-
-  // 🔹 Random digital beeps (assembly scanner sounds)
-  sysIntervals.push(setInterval(() => {
-    let freqs = [523, 659, 784, 988]; // high-tech tones
-    let freq = freqs[Math.floor(Math.random() * freqs.length)];
-    playToneSys(freq, "triangle", 0.2, 0.25);
-  }, 1200));
-
-  // 🔹 Metallic click / clank (like snapping PC parts in)
-  sysIntervals.push(setInterval(() => {
-    playClickSys();
-  }, 2500));
-}
-
-// === SOUND HELPERS ===
-function playToneSys(freq, type, duration, volume) {
-  const osc = sysAudioCtx.createOscillator();
-  const gain = sysAudioCtx.createGain();
-  gain.gain.value = volume;
-  osc.type = type;
-  osc.frequency.value = freq;
-  osc.connect(gain);
-  gain.connect(sysMasterGain);
-
-  osc.start();
-  osc.stop(sysAudioCtx.currentTime + duration);
-}
-
-function playClickSys() {
-  const bufferSize = sysAudioCtx.sampleRate * 0.05;
-  const buffer = sysAudioCtx.createBuffer(1, bufferSize, sysAudioCtx.sampleRate);
-  const data = buffer.getChannelData(0);
-
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = Math.random() * 2 - 1; // noise
+  let sysAudioCtx, sysMasterGain, sysIntervals = [];
+  function startSystemUnitMusic() {
+    if (sysAudioCtx) return; // already playing
+    sysAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    sysMasterGain = sysAudioCtx.createGain();
+    sysMasterGain.gain.value = 0.6; // 🎚 lower ambient volume
+    sysMasterGain.connect(sysAudioCtx.destination);
+    // 🔹 Ambient low hum (feels like PC fans or lab machines running)
+    sysIntervals.push(setInterval(() => {
+      playToneSys(80, "sawtooth", 2, 0.15);
+    }, 2000));
+    // 🔹 Random digital beeps (assembly scanner sounds)
+    sysIntervals.push(setInterval(() => {
+      let freqs = [523, 659, 784, 988]; // high-tech tones
+      let freq = freqs[Math.floor(Math.random() * freqs.length)];
+      playToneSys(freq, "triangle", 0.2, 0.25);
+    }, 1200));
+    // 🔹 Metallic click / clank (like snapping PC parts in)
+    sysIntervals.push(setInterval(() => {
+      playClickSys();
+    }, 2500));
   }
-
-  const noise = sysAudioCtx.createBufferSource();
-  noise.buffer = buffer;
-
-  const gain = sysAudioCtx.createGain();
-  gain.gain.value = 0.2;
-  noise.connect(gain);
-  gain.connect(sysMasterGain);
-
-  noise.start();
-  noise.stop(sysAudioCtx.currentTime + 0.05);
-}
-
-// === STOP ===
-function stopSystemUnitMusic() {
-  sysIntervals.forEach(id => clearInterval(id));
-  sysIntervals = [];
-  if (sysAudioCtx) {
-    sysAudioCtx.close();
-    sysAudioCtx = null;
+  // === SOUND HELPERS ===
+  function playToneSys(freq, type, duration, volume) {
+    const osc = sysAudioCtx.createOscillator();
+    const gain = sysAudioCtx.createGain();
+    gain.gain.value = volume;
+    osc.type = type;
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(sysMasterGain);
+    osc.start();
+    osc.stop(sysAudioCtx.currentTime + duration);
   }
-}
-
-// === AUTO START ===
-window.addEventListener("load", () => {
-  // Some browsers require a user interaction — this ensures auto-start after first click
-  document.body.addEventListener("click", () => {
-    if (!sysAudioCtx) startSystemUnitMusic();
-  }, { once: true });
-
-  // If autoplay is allowed, try directly
-  startSystemUnitMusic();
-});
+  function playClickSys() {
+    const bufferSize = sysAudioCtx.sampleRate * 0.05;
+    const buffer = sysAudioCtx.createBuffer(1, bufferSize, sysAudioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1; // noise
+    }
+    const noise = sysAudioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const gain = sysAudioCtx.createGain();
+    gain.gain.value = 0.2;
+    noise.connect(gain);
+    gain.connect(sysMasterGain);
+    noise.start();
+    noise.stop(sysAudioCtx.currentTime + 0.05);
+  }
+  // === STOP ===
+  function stopSystemUnitMusic() {
+    sysIntervals.forEach(id => clearInterval(id));
+    sysIntervals = [];
+    if (sysAudioCtx) {
+      sysAudioCtx.close();
+      sysAudioCtx = null;
+    }
+  }
+  // === AUTO START ===
+  window.addEventListener("load", () => {
+    // Some browsers require a user interaction — this ensures auto-start after first click
+    document.body.addEventListener("click", () => {
+      if (!sysAudioCtx) startSystemUnitMusic();
+    }, { once: true });
+    // If autoplay is allowed, try directly
+    startSystemUnitMusic();
+  });
 </script>
 </body>
 </html>

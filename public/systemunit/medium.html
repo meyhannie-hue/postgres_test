@@ -697,7 +697,8 @@
       document.getElementById('gameContainer').style.display = 'flex';
     }
     
-    function submitAnswers() {
+    // Updated submit function to match the Assemble the Computer game
+    async function submitAnswers() {
       const zones = document.querySelectorAll(".drop-zone");
       let correctCount = 0;
       zones.forEach(zone => {
@@ -706,75 +707,76 @@
           correctCount++;
         }
       });
-      const total = zones.length;
-      const points = correctCount * 200;
-      const coins = correctCount * 20;
       
-      if (correctCount === total) {
-        alert(`🎯 Perfect! You got all ${total} correct.\n🏆 +${points} points and ${coins} coins`);
-      } else {
-        alert(`✅ You got ${correctCount} out of ${total} correct.\n🎯 +${points} points and ${coins} coins`);
+      const total = zones.length;
+      const points = correctCount * 2857;
+      const coins = correctCount * 1642;
+      const isPerfect = correctCount === total;
+      
+      // Check if user is logged in
+      const username = localStorage.getItem("loggedInUser");
+      if (!username) {
+        alert("⚠️ No username found. Please login first.");
+        return;
       }
       
-      // Send reward to server
-      const username = localStorage.getItem("loggedInUser") || "Guest";
-      
-      fetch("https://postgres-test-p05s.onrender.com/api/reward", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          username, 
-          points, 
-          coins,
-          reason: "Computer Port Identification"
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
+      try {
+        const response = await fetch("/api/reward", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            username, 
+            points, 
+            coins,
+            reason: "Computer Port Identification"
+          })
+        });
+        
+        const data = await response.json();
         if (data.success) {
-          console.log("Reward sent successfully");
+          alert(`🎉 You earned ${points} points and ${coins} coins!`);
+          // Redirect to the levels page
+          window.location.href = "../levels/networkinglevel.html";
         } else {
-          console.error("Failed to send reward:", data);
+          console.error("Reward API failed:", data);
+          alert("⚠️ Failed to record your score. Please try again.");
         }
-      })
-      .catch(err => {
-        console.error("Error sending reward:", err);
-      });
+      } catch (err) {
+        console.error("Reward API Error:", err);
+        alert("⚠️ Error connecting to server. Please check your connection.");
+      }
       
-      // Update local storage
-      let playerPoints = parseInt(localStorage.getItem("player_points") || "0");
-      playerPoints += points;
-      localStorage.setItem("player_points", playerPoints.toString());
+      // Update localStorage as fallback
+      const prevPoints = parseInt(localStorage.getItem("points") || "0", 10);
+      localStorage.setItem("points", prevPoints + points);
+      
+      if (document.getElementById("points")) {
+        document.getElementById("points").innerText = `💰 ${prevPoints + points}`;
+      }
     }
     // === 🎵 SYSTEM UNIT LAB AMBIENCE ===
 let sysAudioCtx, sysMasterGain, sysIntervals = [];
-
 function startSystemUnitMusic() {
   if (sysAudioCtx) return; // already playing
-
   sysAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
   sysMasterGain = sysAudioCtx.createGain();
   sysMasterGain.gain.value = 0.6; // 🎚 lower ambient volume
   sysMasterGain.connect(sysAudioCtx.destination);
-
   // 🔹 Ambient low hum (feels like PC fans or lab machines running)
   sysIntervals.push(setInterval(() => {
     playToneSys(80, "sawtooth", 2, 0.15);
   }, 2000));
-
   // 🔹 Random digital beeps (assembly scanner sounds)
   sysIntervals.push(setInterval(() => {
     let freqs = [523, 659, 784, 988]; // high-tech tones
     let freq = freqs[Math.floor(Math.random() * freqs.length)];
     playToneSys(freq, "triangle", 0.2, 0.25);
   }, 1200));
-
   // 🔹 Metallic click / clank (like snapping PC parts in)
   sysIntervals.push(setInterval(() => {
     playClickSys();
   }, 2500));
 }
-
 // === SOUND HELPERS ===
 function playToneSys(freq, type, duration, volume) {
   const osc = sysAudioCtx.createOscillator();
@@ -784,32 +786,25 @@ function playToneSys(freq, type, duration, volume) {
   osc.frequency.value = freq;
   osc.connect(gain);
   gain.connect(sysMasterGain);
-
   osc.start();
   osc.stop(sysAudioCtx.currentTime + duration);
 }
-
 function playClickSys() {
   const bufferSize = sysAudioCtx.sampleRate * 0.05;
   const buffer = sysAudioCtx.createBuffer(1, bufferSize, sysAudioCtx.sampleRate);
   const data = buffer.getChannelData(0);
-
   for (let i = 0; i < bufferSize; i++) {
     data[i] = Math.random() * 2 - 1; // noise
   }
-
   const noise = sysAudioCtx.createBufferSource();
   noise.buffer = buffer;
-
   const gain = sysAudioCtx.createGain();
   gain.gain.value = 0.2;
   noise.connect(gain);
   gain.connect(sysMasterGain);
-
   noise.start();
   noise.stop(sysAudioCtx.currentTime + 0.05);
 }
-
 // === STOP ===
 function stopSystemUnitMusic() {
   sysIntervals.forEach(id => clearInterval(id));
@@ -819,14 +814,12 @@ function stopSystemUnitMusic() {
     sysAudioCtx = null;
   }
 }
-
 // === AUTO START ===
 window.addEventListener("load", () => {
   // Some browsers require a user interaction — this ensures auto-start after first click
   document.body.addEventListener("click", () => {
     if (!sysAudioCtx) startSystemUnitMusic();
   }, { once: true });
-
   // If autoplay is allowed, try directly
   startSystemUnitMusic();
 });
