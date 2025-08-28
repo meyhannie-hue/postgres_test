@@ -612,44 +612,50 @@
       updateInstruction(); 
   }
   
-  function rewardPlayer(){
-    const username=localStorage.getItem("loggedInUser")||"Guest"; 
-    const points=7620; 
-    const coins=6120;
-    
-    fetch("https://postgres-test-p05s.onrender.com/api/reward",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({username,points,coins})
+  function rewardPlayer() {
+  const username = localStorage.getItem("loggedInUser") || "Guest";
+  const points = 7620;
+  const coins = 6120;
+
+  fetch("https://postgres-test-p05s.onrender.com/api/reward", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, points, coins })
+  })
+    .then(async res => {
+      if (!res.ok) {
+        // ⚠️ If server responds with error status (404, 500, etc.)
+        const text = await res.text();
+        throw new Error(`Server error ${res.status}: ${text}`);
+      }
+      return res.json();
     })
-    .then(res=>res.json()).then(data=>{
-      const resultMsg=document.getElementById('resultMsg');
-      if(data.success){ 
-        resultMsg.innerText+=" 🎉 REWARD ACQUIRED: "+points+" points and "+coins+" coins!"; 
-        resultMsg.style.color="#00ff88"; 
+    .then(data => {
+      const resultMsg = document.getElementById("resultMsg");
+
+      if (data.success) {
+        resultMsg.innerText +=
+          ` 🎉 REWARD ACQUIRED: ${points} points and ${coins} coins!`;
+        resultMsg.style.color = "#00ff88";
+      } else {
+        resultMsg.innerText += " ⚠️ Reward system error.";
+        resultMsg.style.color = "#ff5555";
       }
-      else{ 
-        resultMsg.innerText+=" ⚠️ Reward system error."; 
-        resultMsg.style.color="#ff5555"; 
-      }
-      
+
       // ✅ Redirect after reward attempt
-      setTimeout(()=>{ 
-        window.location.href="../levels/programminglevel.html"; 
-      },2000);
+      setTimeout(() => {
+        window.location.href = "../levels/programminglevel.html";
+      }, 2000);
     })
-    .catch(err=>{ 
-      console.error(err); 
+    .catch(err => {
+      console.error("❌ Reward API error:", err);
       alert("Error applying reward. Please try again.");
+
       // Redirect even if error occurs
-      window.location.href="../levels/programminglevel.html";
+      window.location.href = "../levels/programminglevel.html";
     });
-  }
-  
-  function confirmQuit(){ 
-    if(confirm("Terminate session? All progress will be lost.")) 
-      window.location.href="../levels/programminglevel.html"; 
-  }
+}
+
  // === 🎵 PROGRAMMING GAME MUSIC (Auto Start) ===
   let progAudioCtx, progMasterGain, progIntervals = [];
 
