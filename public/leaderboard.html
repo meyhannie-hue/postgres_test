@@ -562,10 +562,13 @@
             if (player.username === playerName) {
               div.classList.add("current-player");
             }
+            // Use display_name if it exists and is not null, otherwise use username
+            const displayName = player.display_name ? player.display_name.trim() : '';
+            const displayText = displayName || player.username;
             div.innerHTML = `
               <div class="rank">${i + 1}</div>
               <div class="user-info">
-                <div class="username">${player.username}</div>
+                <div class="username">${displayText}</div>
               </div>
               <div class="score">${player.points} pts</div>
             `;
@@ -596,11 +599,9 @@
     function gotoSetting() { 
       window.location.href = "settings.html"; 
     }
-
     function gotoLearning() { 
       window.location.href = "learning.html"; 
     }
-
     document.addEventListener("DOMContentLoaded", loadDashboard);
   </script>
 </body>

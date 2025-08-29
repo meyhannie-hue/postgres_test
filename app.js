@@ -53,13 +53,22 @@ const Player = sequelize.define(
     },
     username: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
+      unique: true
+    },
+    displayName: {   // 👈 added
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    avatar: {   // 👈 added (store base64 or URL)
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     points: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
-    coins: {   // 👈 add this
+    coins: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
@@ -268,7 +277,111 @@ app.post("/update-progress", async (req, res) => {
     res.status(500).json({ error: "Failed to update progress" });
   }
 });
+// ---------- Current User ----------
+app.get("/api/current-user", async (req, res) => {
+  try {
+    // In a real app you'd get username from session/cookie
+    // For now, let's just return the first player (demo only)
+    const player = await Player.findOne();
+    if (!player) return res.status(404).json({ error: "No users found" });
 
+    res.json(player);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch current user" });
+  }
+});
+
+// ---------- Update Profile ----------
+app.post("/api/update-profile", async (req, res) => {
+  try {
+    const { username, displayName, avatar } = req.body;
+    if (!username) return res.status(400).json({ error: "Username required" });
+
+    const player = await Player.findOne({ where: { username } });
+    if (!player) return res.status(404).json({ error: "Player not found" });
+
+    player.displayName = displayName || player.displayName;
+    player.avatar = avatar || player.avatar;
+    await player.save();
+
+    res.json({ success: true, player });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update profile" });
+  }
+});
+
+// ---------- Upload Avatar ----------
+app.post("/api/upload-avatar", async (req, res) => {
+  try {
+    const { username, avatar } = req.body;
+    if (!username || !avatar) {
+      return res.status(400).json({ error: "Username and avatar required" });
+    }
+
+    const player = await Player.findOne({ where: { username } });
+    if (!player) return res.status(404).json({ error: "Player not found" });
+
+    player.avatar = avatar;
+    await player.save();
+
+    res.json({ success: true, message: "Avatar updated", player });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to upload avatar" });
+  }
+});
+
+// ---------- Change Password ----------
+app.post("/api/change-password", async (req, res) => {
+  try {
+    const { username, currentPassword, newPassword } = req.body;
+    if (!username || !currentPassword || !newPassword) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const player = await Player.findOne({ where: { username } });
+    if (!player) return res.status(404).json({ error: "Player not found" });
+
+    const validPassword = await bcrypt.compare(currentPassword, player.password);
+    if (!validPassword) {
+      return res.status(401).json({ error: "Invalid current password" });
+    }
+
+    player.password = await bcrypt.hash(newPassword, 10);
+    await player.save();
+
+    res.json({ success: true, message: "Password updated" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to change password" });
+  }
+});
+
+// ---------- Logout Others (stub) ----------
+app.post("/api/logout-others", (req, res) => {
+  // You don’t have session management yet, so just fake it
+  res.json({ success: true, message: "Other sessions logged out (stub)" });
+});
+
+// ---------- Delete Account ----------
+app.post("/api/delete-account", async (req, res) => {
+  try {
+    const { username } = req.body;
+    if (!username) return res.status(400).json({ error: "Username required" });
+
+    const player = await Player.findOne({ where: { username } });
+    if (!player) return res.status(404).json({ error: "Player not found" });
+
+    await player.destroy();
+
+    res.json({ success: true, message: "Account deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete account" });
+  }
+});
 
 
 
