@@ -718,10 +718,6 @@
                 <input type="text" id="displayName" placeholder="Name shown in leaderboards" />
               </div>
             </div>
-            <div class="actions">
-              <button class="btn" id="btnResetProfile">Reset</button>
-              <button class="btn btn-primary" id="btnSaveProfile">Save Profile</button>
-            </div>
           </div>
         </div>
         
@@ -1105,12 +1101,7 @@
         setState(st);
       }
     })
-    
-    $('#btnResetProfile').addEventListener('click', ()=>{ 
-      setState(defaults()); 
-      loadUI(); 
-      toast('Profile reset'); 
-    })
+
     
     // ---------- Password Strength ----------
     const pw = $('#newPass'), pw2 = $('#newPass2'), fill = $('#pwFill'), hint = $('#pwHint');
