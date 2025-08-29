@@ -168,10 +168,24 @@
       80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
     }
     
-    .points-display {
+    .player-info {
       position: absolute;
       left: 20px;
-      top: 22px;
+      top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .player-name {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #90caf9;
+      text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+      margin-bottom: 5px;
+    }
+    
+    .points-display {
       font-size: 1rem;
       font-weight: bold;
       color: #00e5ff;
@@ -425,6 +439,15 @@
     .leaderboard-box::-webkit-scrollbar-thumb:hover {
       background: rgba(0, 229, 255, 0.7);
     }
+    
+    @media (max-width: 480px) {
+      .player-name {
+        font-size: 0.8rem;
+      }
+      .points-display {
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -434,7 +457,10 @@
   
   <div class="app-container">
     <header>
-      <div id="points" class="points-display">💰 0</div>
+      <div class="player-info">
+        <div id="playerName" class="player-name"></div>
+        <div id="points" class="points-display">💰 0</div>
+      </div>
       Player Dashboard
       <div class="logout-btn" onclick="logout()" title="Logout">⍈</div>
     </header>
@@ -536,46 +562,82 @@
       particlesContainer.appendChild(particle);
     }
     
+    // Helper function to get display name
+    function getDisplayName(player) {
+      // Check for possible display name fields
+      if (player.displayname && player.displayname.trim() !== '') {
+        return player.displayname.trim();
+      }
+      if (player.displayName && player.displayName.trim() !== '') {
+        return player.displayName.trim();
+      }
+      if (player.display_name && player.display_name.trim() !== '') {
+        return player.display_name.trim();
+      }
+      // Fallback to username
+      return player.username;
+    }
+    
     // Original functionality
     const playerName = localStorage.getItem("loggedInUser");
     async function loadDashboard() {
       try {
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         const players = await res.json();
+        
         // Find logged in player
         const loggedInPlayer = players.find(p => p.username === playerName);
-        // Points display
-        document.getElementById("points").textContent = 
-          loggedInPlayer ? `💰 ${loggedInPlayer.points}` : "💰 0";
+        
+        // Display player name in header
+        if (loggedInPlayer) {
+          const displayName = getDisplayName(loggedInPlayer);
+          document.getElementById("playerName").textContent = displayName;
+          
+          // Points display
+          document.getElementById("points").textContent = `💰 ${loggedInPlayer.points || 0}`;
+        } else {
+          document.getElementById("playerName").textContent = playerName;
+          document.getElementById("points").textContent = "💰 0";
+        }
+        
         // Stats
         document.getElementById("totalPlayers").textContent = players.length;
-        const highest = players.length > 0 ? Math.max(...players.map(p => p.points)) : 0;
+        const highest = players.length > 0 ? Math.max(...players.map(p => p.points || 0)) : 0;
         document.getElementById("highestPoints").textContent = highest;
+        
         // Leaderboard
         const leaderboard = document.getElementById("leaderboard");
         leaderboard.innerHTML = "";
+        
         players
-          .sort((a, b) => b.points - a.points)
+          .sort((a, b) => (b.points || 0) - (a.points || 0))
           .forEach((player, i) => {
             const div = document.createElement("div");
             div.className = "leaderboard-entry";
             if (player.username === playerName) {
               div.classList.add("current-player");
             }
-            // Use display_name if it exists and is not null, otherwise use username
-            const displayName = player.display_name ? player.display_name.trim() : '';
-            const displayText = displayName || player.username;
+            
+            // Get display name or fallback to username
+            const displayText = getDisplayName(player);
+            
             div.innerHTML = `
               <div class="rank">${i + 1}</div>
               <div class="user-info">
                 <div class="username">${displayText}</div>
               </div>
-              <div class="score">${player.points} pts</div>
+              <div class="score">${player.points || 0} pts</div>
             `;
             leaderboard.appendChild(div);
           });
       } catch (err) {
         console.error("Error loading dashboard:", err);
+        // Fallback in case of error
+        document.getElementById("playerName").textContent = playerName;
+        document.getElementById("points").textContent = "💰 0";
+        document.getElementById("totalPlayers").textContent = "0";
+        document.getElementById("highestPoints").textContent = "0";
+        document.getElementById("leaderboard").innerHTML = "<div class='leaderboard-entry'><div class='user-info'><div class='username'>Error loading data</div></div></div>";
       }
     }
     
@@ -599,9 +661,11 @@
     function gotoSetting() { 
       window.location.href = "settings.html"; 
     }
+    
     function gotoLearning() { 
       window.location.href = "learning.html"; 
     }
+    
     document.addEventListener("DOMContentLoaded", loadDashboard);
   </script>
 </body>
