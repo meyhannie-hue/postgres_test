@@ -83,8 +83,7 @@
     max-width:600px; 
     background:rgba(18,18,18,0.9); 
     border-radius:5px; 
-    overflow:hidden;
-    box-shadow:0 0 30px rgba(0,255,136,0.2); 
+    overflow:visible; /* Changed from hidden to visible */
     display:flex; 
     flex-direction:column; 
     padding-bottom:20px; 
@@ -369,13 +368,46 @@
     font-family: 'Fira Code', monospace;
   }
   
-  iframe { 
-    border:1px solid #00ff88; 
-    width:100%; 
-    min-height:300px; 
-    background:rgba(0,0,0,0.7); 
-    margin-top:15px;
+  .output-container {
+    width: 90%;
+    max-width: 700px;
+    margin: 15px auto;
+    border: 1px solid #00ff88;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.7);
     box-shadow: 0 0 15px rgba(0,255,136,0.2);
+    overflow: hidden;
+  }
+  
+  .output-header {
+    background: rgba(0,0,0,0.5);
+    padding: 8px 15px;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    color: #00ff88;
+    border-bottom: 1px solid rgba(0,255,136,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .output-title {
+    font-weight: bold;
+  }
+  
+  .output-status {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(0,255,136,0.1);
+  }
+  
+  iframe { 
+    width:100%; 
+    height:300px; 
+    background:rgba(0,0,0,0.7);
+    border: none;
+    display: block;
   }
   
   /* Hide game container initially */
@@ -389,7 +421,6 @@
     min-height: 100vh; /* allow content to extend beyond viewport */
     height: auto;      /* remove the hard lock */
   }
-
     .header-title { 
       font-size:16px; 
     }
@@ -401,6 +432,9 @@
     }
     .code-particles {
       display: none; /* Hide particles on mobile for better performance */
+    }
+    iframe {
+      height: 250px;
     }
   }
 </style>
@@ -485,9 +519,14 @@
     
     <button id="nextBtn" onclick="goToNextPhase()">➡ NEXT PHASE</button>
     
-    <iframe id="output"></iframe>
+    <div class="output-container">
+      <div class="output-header">
+        <div class="output-title">🖥️ OUTPUT CONSOLE</div>
+        <div class="output-status" id="outputStatus">READY</div>
+      </div>
+      <iframe id="output" srcdoc="<html><body style='color:#00ff88;font-family:monospace;padding:10px;'>Output will appear here...</body></html>"></iframe>
+    </div>
   </div>
-
 <script>
   // Matrix Rain Effect
   const matrixCanvas = document.getElementById('matrixRain');
@@ -569,7 +608,9 @@
     document.getElementById('progress').innerText = `${currentPhase+1} / ${phases.length}`;
     document.getElementById('userCode').value = '';
     document.getElementById('resultMsg').innerText = '';
-    document.getElementById('output').srcdoc = '';
+    document.getElementById('output').srcdoc = "<html><body style='color:#00ff88;font-family:monospace;padding:10px;'>Output will appear here...</body></html>";
+    document.getElementById('outputStatus').innerText = 'READY';
+    document.getElementById('outputStatus').style.color = '#00ff88';
     document.getElementById('nextBtn').style.display = 'none';
     
     // Update progress bar
@@ -580,14 +621,30 @@
   function runAndCheck() {
     const userCode = document.getElementById('userCode').value;
     const frame = document.getElementById('output');
+    const outputStatus = document.getElementById('outputStatus');
+    
+    // Update status to running
+    outputStatus.innerText = 'RUNNING...';
+    outputStatus.style.color = '#ffaa00';
+    
+    // Clear previous result
+    document.getElementById('resultMsg').innerText = '';
+    
+    // Set the iframe content
     frame.srcdoc = userCode;
+    
+    // Wait for the iframe to load and then check
     setTimeout(() => {
       const doc = frame.contentDocument || frame.contentWindow.document;
       const keywordCheck = userCode.replace(/\s/g,'').includes(phases[currentPhase].expectedKeyword.replace(/\s/g,''));
       const testPassed = phases[currentPhase].test(doc);
+      
       if(keywordCheck && testPassed){
         document.getElementById('resultMsg').innerText = "✅ ACCESS GRANTED. Proceed to next phase.";
         document.getElementById('resultMsg').style.color = "#00ff88";
+        outputStatus.innerText = 'SUCCESS';
+        outputStatus.style.color = '#00ff88';
+        
         if(currentPhase < phases.length-1) {
           document.getElementById('nextBtn').style.display = 'block';
         } else {
@@ -598,9 +655,11 @@
         }
       } else {
         document.getElementById('resultMsg').innerText = "❌ ACCESS DENIED. Check your syntax or logic.";
-        document.getElementById('resultMsg').style.color = "#00ff88";
+        document.getElementById('resultMsg').style.color = "#ff5555";
+        outputStatus.innerText = 'FAILED';
+        outputStatus.style.color = '#ff5555';
       }
-    }, 300);
+    }, 500); // Increased timeout to ensure iframe loads
   }
   
   function goToNextPhase() {
@@ -643,46 +702,39 @@
     if(confirm("Terminate session? All progress will be lost.")) 
       window.location.href = "../levels/programminglevel.html";
   }
+  
   // === 🎵 PROGRAMMING GAME MUSIC (Auto Start) ===
   let progAudioCtx, progMasterGain, progIntervals = [];
-
   window.addEventListener("load", () => {
     // Create audio context on load
     progAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     progMasterGain = progAudioCtx.createGain();
     progMasterGain.gain.value = 0.5; // 🔊 softer cyber vibe
     progMasterGain.connect(progAudioCtx.destination);
-
     // Start loops
     startProgrammingMusic();
   });
-
   function startProgrammingMusic() {
     if (!progAudioCtx) return;
-
     // 🔹 Low synth pad (ambient background hum)
     progIntervals.push(setInterval(() => {
       playToneProg(220, "sawtooth", 1.2, 0.15); // low hum
     }, 1500));
-
     // 🔹 Random "data blips"
     progIntervals.push(setInterval(() => {
       let freqs = [440, 554, 659, 880, 988]; // coding beeps
       let f = freqs[Math.floor(Math.random() * freqs.length)];
       playToneProg(f, "square", 0.1, 0.25);
     }, 500));
-
     // 🔹 Hi-hat / typing clicks
     progIntervals.push(setInterval(() => {
       playNoiseProg(0.02, 0.15);
     }, 250));
-
     // 🔹 Deep pulse (like system heartbeat)
     progIntervals.push(setInterval(() => {
       playKickProg();
     }, 2000));
   }
-
   function stopProgrammingMusic() {
     progIntervals.forEach(id => clearInterval(id));
     progIntervals = [];
@@ -691,7 +743,6 @@
       progAudioCtx = null;
     }
   }
-
   // === SOUND GENERATORS ===
   function playToneProg(freq, type, duration, volume) {
     const osc = progAudioCtx.createOscillator();
@@ -701,11 +752,9 @@
     osc.frequency.value = freq;
     osc.connect(gain);
     gain.connect(progMasterGain);
-
     osc.start();
     osc.stop(progAudioCtx.currentTime + duration);
   }
-
   function playNoiseProg(duration, volume) {
     const bufferSize = progAudioCtx.sampleRate * duration;
     const buffer = progAudioCtx.createBuffer(1, bufferSize, progAudioCtx.sampleRate);
@@ -713,34 +762,25 @@
     for (let i = 0; i < bufferSize; i++) {
       data[i] = Math.random() * 2 - 1; // white noise
     }
-
     const noise = progAudioCtx.createBufferSource();
     noise.buffer = buffer;
-
     const gain = progAudioCtx.createGain();
     gain.gain.value = volume;
-
     noise.connect(gain);
     gain.connect(progMasterGain);
-
     noise.start();
     noise.stop(progAudioCtx.currentTime + duration);
   }
-
   function playKickProg() {
     const osc = progAudioCtx.createOscillator();
     const gain = progAudioCtx.createGain();
-
     osc.type = "sine";
     osc.frequency.setValueAtTime(100, progAudioCtx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(40, progAudioCtx.currentTime + 0.6);
-
     gain.gain.setValueAtTime(0.4, progAudioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, progAudioCtx.currentTime + 0.6);
-
     osc.connect(gain);
     gain.connect(progMasterGain);
-
     osc.start(progAudioCtx.currentTime);
     osc.stop(progAudioCtx.currentTime + 0.6);
   }

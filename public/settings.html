@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Techy Me — Settings</title>
+  <style>
+    /* Techy Me Design Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
+      color: #e0f7fa;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+    
+    /* Digital Rain Background */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    
+    /* Circuit Board Pattern */
+    .circuit-board {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+    
+    /* Circuit Lines Animation */
+    .circuit-lines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .circuit-line {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
+      height: 1px;
+      transform-origin: left center;
+      animation: circuit-flow 8s linear infinite;
+    }
+    
+    @keyframes circuit-flow {
+      0% {
+        transform: scaleX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: scaleX(1);
+        opacity: 0;
+      }
+    }
+    
+    /* Binary Code Animation */
+    .binary-code {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.03;
+      pointer-events: none;
+      font-family: monospace;
+      font-size: 14px;
+      color: #00e5ff;
+      overflow: hidden;
+    }
+    
+    .binary-char {
+      position: absolute;
+      animation: binary-fall 10s linear infinite;
+    }
+    
+    @keyframes binary-fall {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+    
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      margin: auto;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 30, 60, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Circuit Pattern Overlay */
+    .app-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.03) 10px,
+        rgba(0, 229, 255, 0.03) 20px
+      );
+      z-index: -1;
+    }
+    
+    header {
+      position: relative;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    
+    .title {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #00e5ff;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+      animation: glitch 5s infinite;
+      position: relative;
+    }
+    
+    .title::before, .title::after {
+      content: "SETTINGS";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .title::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00e5ff;
+      z-index: -1;
+    }
+    
+    .title::after {
+      animation: glitch-2 0.5s infinite;
+      color: #0078d4;
+      z-index: -2;
+    }
+    
+    @keyframes glitch {
+      0%, 100% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      20% { text-shadow: -2px 0 #00e5ff, 2px 0 #0078d4; }
+      40% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+      60% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+      80% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
+    }
+    
+    @keyframes glitch-1 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
+      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
+      60% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
+      80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
+    }
+    
+    @keyframes glitch-2 {
+      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
+      40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
+      60% { clip-path: inset(30% 0 40% 0); transform: translate(0); }
+      80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
+    }
+    
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #00e5ff;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    
+    .back-btn:hover {
+      transform: scale(1.2) rotate(90deg);
+      color: #ff5252;
+    }
+    
+    .content {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    
+    .nav-tabs {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+      overflow-x: auto;
+    }
+    
+    .tab-button {
+      background: transparent;
+      border: none;
+      color: #90caf9;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    
+    .tab-button:hover {
+      background: rgba(0, 229, 255, 0.1);
+      color: #00e5ff;
+    }
+    
+    .tab-button.active {
+      background: rgba(0, 229, 255, 0.2);
+      color: #00e5ff;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    }
+    
+    .tab-content {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 15px;
+      scrollbar-width: thin;
+      scrollbar-color: #00e5ff rgba(0, 30, 60, 0.5);
+    }
+    
+    .settings-card {
+      background: rgba(0, 30, 60, 0.6);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .settings-card h3 {
+      color: #00e5ff;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      text-align: center;
+      text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+    }
+    
+    .settings-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+    }
+    
+    .settings-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .settings-label {
+      flex: 1;
+      color: #90caf9;
+      font-size: 0.9rem;
+    }
+    
+    .settings-value {
+      flex: 2;
+    }
+    
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"], 
+    select, 
+    textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      background: rgba(0, 20, 40, 0.5);
+      color: #e0f7fa;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    
+    input:focus, 
+    select:focus, 
+    textarea:focus {
+      outline: none;
+      border-color: #00e5ff;
+      box-shadow: 0 0 5px rgba(0, 229, 255, 0.3);
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 50, 100, 0.5);
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: #e0f7fa;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: rgba(0, 229, 255, 0.5);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      background: rgba(0, 50, 100, 0.3);
+      color: #e0f7fa;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .btn:hover {
+      background: rgba(0, 100, 200, 0.3);
+      border-color: #00e5ff;
+      color: #00e5ff;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.3), rgba(0, 150, 255, 0.3));
+      border-color: rgba(0, 229, 255, 0.5);
+      color: #00e5ff;
+      font-weight: bold;
+    }
+    
+    .btn-danger {
+      background: rgba(255, 50, 50, 0.2);
+      border-color: rgba(255, 50, 50, 0.5);
+      color: #ff6b6b;
+    }
+    
+    .btn-danger:hover {
+      background: rgba(255, 50, 50, 0.3);
+      border-color: #ff5252;
+      color: #ff5252;
+    }
+    
+    .btn-warning {
+      background: rgba(255, 200, 50, 0.2);
+      border-color: rgba(255, 200, 50, 0.5);
+      color: #ffd166;
+    }
+    
+    .btn-warning:hover {
+      background: rgba(255, 200, 50, 0.3);
+      border-color: #ffc857;
+      color: #ffc857;
+    }
+    
+    .avatar-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .avatar-preview {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      object-fit: cover;
+    }
+    
+    .password-strength {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(0, 50, 100, 0.5);
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    
+    .password-strength-fill {
+      height: 100%;
+      width: 0;
+      transition: width 0.3s ease;
+    }
+    
+    .password-strength-weak {
+      background: linear-gradient(90deg, #ff5252, #ff8a80);
+    }
+    
+    .password-strength-medium {
+      background: linear-gradient(90deg, #ffc857, #ffeb3b);
+    }
+    
+    .password-strength-strong {
+      background: linear-gradient(90deg, #00e5ff, #4cc9f0);
+    }
+    
+    .hint {
+      font-size: 0.8rem;
+      color: #64b5f6;
+      margin-top: 5px;
+    }
+    
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    
+    .danger-zone {
+      border: 1px dashed rgba(255, 50, 50, 0.5);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 15px;
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0, 30, 60, 0.8);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #00e5ff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    
+    dialog {
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 15px;
+      background: rgba(0, 30, 60, 0.9);
+      color: #e0f7fa;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      max-width: 90%;
+    }
+    
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.7);
+    }
+    
+    dialog h3 {
+      color: #00e5ff;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: rgba(0, 30, 60, 0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0, 229, 255, 0.3);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      z-index: 10;
+    }
+    
+    .icon {
+      font-size: 30px;
+      color: #90caf9;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.3s ease;
+      position: relative;
+    }
+    
+    .icon:hover {
+      transform: scale(1.2);
+      color: #00e5ff;
+    }
+    
+    .icon.active {
+      background: rgba(0, 229, 255, 0.2);
+      padding: 8px 12px;
+      border-radius: 50%;
+      color: #00e5ff;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+    
+    .icon.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.3);
+      z-index: -1;
+      animation: pulse-icon 2s infinite;
+    }
+    
+    @keyframes pulse-icon {
+      0% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 0.5; }
+    }
+    
+    @media (orientation: landscape) {
+      .app-container {
+        max-width: 680px;
+      }
+      .nav-tabs {
+        justify-content: center;
+      }
+      .tab-button {
+        margin: 0 5px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.4rem;
+      }
+      .settings-card {
+        padding: 12px;
+      }
+      .settings-card h3 {
+        font-size: 1rem;
+      }
+      .settings-label {
+        font-size: 0.8rem;
+      }
+      input[type="text"], 
+      input[type="email"], 
+      input[type="password"], 
+      select, 
+      textarea {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+      }
+      .btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas class="digital-rain" id="digitalRain"></canvas>
+  <div class="circuit-board"></div>
+  <div class="particles" id="particles"></div>
+  <div class="circuit-lines" id="circuitLines"></div>
+  <div class="binary-code" id="binaryCode"></div>
+  
+  <div class="app-container">
+    <header>
+      <div class="back-btn" id="backBtn" title="Back to levels (Networking)">⤺</div>
+      <div class="title">SETTINGS</div>
+    </header>
+    
+    <div class="content">
+      <div class="nav-tabs">
+        <button class="tab-button active" data-tab="profile">👤 Profile</button>
+        <button class="tab-button" data-tab="security">🔒 Security</button>
+      </div>
+      
+      <div class="tab-content">
+        <!-- PROFILE -->
+        <div class="tab-panel" id="profile">
+          <div class="settings-card">
+            <h3>Profile Settings</h3>
+            <div class="settings-row">
+              <div class="settings-label">Avatar</div>
+              <div class="settings-value">
+                <div class="avatar-container">
+                  <img id="avatarPreview" class="avatar-preview" alt="Avatar preview" src="" />
+                  <div>
+                    <input type="file" id="avatarFile" accept="image/*" style="display: none;" />
+                    <button class="btn" onclick="document.getElementById('avatarFile').click()">Choose Image</button>
+                  </div>
+                </div>
+                <div class="hint">PNG/JPG up to 2MB</div>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-label">Username</div>
+              <div class="settings-value">
+                <input type="text" id="username" placeholder="Your username" />
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-label">Email</div>
+              <div class="settings-value">
+                <input type="email" id="email" placeholder="you@example.com" />
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-label">Display Name</div>
+              <div class="settings-value">
+                <input type="text" id="displayName" placeholder="Name shown in leaderboards" />
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-label">Theme</div>
+              <div class="settings-value">
+                <select id="theme">
+                  <option value="system">System</option>
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="btnResetProfile">Reset</button>
+              <button class="btn btn-primary" id="btnSaveProfile">Save Profile</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECURITY -->
+        <div class="tab-panel" id="security" style="display: none;">
+          <div class="settings-card">
+            <h3>Security Settings</h3>
+            <div class="settings-row">
+              <div class="settings-label">Current Password</div>
+              <div class="settings-value">
+                <input type="password" id="curPass" placeholder="••••••••" />
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-label">New Password</div>
+              <div class="settings-value">
+                <input type="password" id="newPass" placeholder="New strong password" />
+                <div class="password-strength">
+                  <div class="password-strength-fill" id="pwFill"></div>
+                </div>
+                <div class="hint" id="pwHint">Strength: n/a</div>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-label">Confirm Password</div>
+              <div class="settings-value">
+                <input type="password" id="newPass2" placeholder="Repeat new password" />
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" id="btnChangePass">Change Password</button>
+            </div>
+            
+            <div class="danger-zone">
+              <h3 style="color: #ff6b6b; margin-top: 0;">Danger Zone</h3>
+              <div class="settings-row">
+                <div class="settings-label">Session</div>
+                <div class="settings-value">
+                  <div class="actions">
+                    <button class="btn btn-warning" id="btnLogoutOthers">Log out other devices</button>
+                    <button class="btn" id="btnShow2FA">Setup 2FA</button>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div class="settings-label">Delete Account</div>
+                <div class="settings-value">
+                  <button class="btn btn-danger" id="btnDelete">Delete my account</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <div class="icon" onclick="gotoAbout()">🧾</div>
+      <div class="icon" onclick="gotoLeaderboard()">📊</div>
+      <div class="icon" onclick="gotoDashboard()">👑</div>
+      <div class="icon" onclick="gotoLearning()">📘</div>
+      <div class="icon active" onclick="gotoSetting()">⚙️</div>
+    </footer>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+  
+  <!-- Confirm Delete Dialog -->
+  <dialog id="confirmDelete">
+    <h3>Delete your account?</h3>
+    <p class="hint">This will permanently remove your progress. Type <b>DELETE</b> to confirm.</p>
+    <input type="text" id="delText" placeholder="DELETE" style="width: 100%; margin: 10px 0;" />
+    <div class="actions">
+      <button class="btn" value="cancel" onclick="document.getElementById('confirmDelete').close()">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn" value="confirm" disabled>Delete</button>
+    </div>
+  </dialog>
+  
+  <!-- 2FA Info Dialog -->
+  <dialog id="twofa">
+    <h3>Two‑Factor Authentication</h3>
+    <p class="hint">Scan the QR in your authenticator app and enter codes when logging in.</p>
+    <div class="actions">
+      <button class="btn" value="close" onclick="document.getElementById('twofa').close()">Close</button>
+    </div>
+  </dialog>
+  
+  <audio id="ping" preload="auto">
+    <source src="data:audio/wav;base64,UklGRkQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAZGF0YQA=" type="audio/wav">
+  </audio>
+  
+  <script>
+    // Digital Rain Effect
+    const rainCanvas = document.getElementById('digitalRain');
+    const rainCtx = rainCanvas.getContext('2d');
+    
+    // Set canvas size
+    rainCanvas.width = window.innerWidth;
+    rainCanvas.height = window.innerHeight;
+    
+    // Characters for the digital rain
+    const characters = '01';
+    const fontSize = 14;
+    const columns = rainCanvas.width / fontSize;
+    const drops = [];
+    
+    // Initialize drops
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * rainCanvas.height;
+    }
+    
+    // Draw the digital rain
+    function drawRain() {
+      rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+      rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+      
+      rainCtx.fillStyle = '#00e5ff';
+      rainCtx.font = `${fontSize}px monospace`;
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        
+        drops[i]++;
+      }
+    }
+    
+    // Animation loop for digital rain
+    setInterval(drawRain, 33);
+    
+    // Resize canvas when window is resized
+    window.addEventListener('resize', () => {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    });
+    
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random size between 2px and 6px
+      const size = Math.random() * 4 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Random color - different shades of blue/cyan
+      const colors = ['#00e5ff', '#0078d4', '#90caf9', '#4fc3f7'];
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay
+      particle.style.animationDelay = `${Math.random() * 15}s`;
+      
+      particlesContainer.appendChild(particle);
+    }
+    
+    // Create circuit lines
+    const circuitLinesContainer = document.getElementById('circuitLines');
+    const lineCount = 8;
+    
+    for (let i = 0; i < lineCount; i++) {
+      const line = document.createElement('div');
+      line.className = 'circuit-line';
+      
+      // Random position
+      line.style.top = `${Math.random() * 100}%`;
+      line.style.left = '0';
+      line.style.width = `${Math.random() * 30 + 20}%`;
+      
+      // Random animation delay and duration
+      const delay = Math.random() * 8;
+      const duration = Math.random() * 4 + 6;
+      line.style.animationDelay = `${delay}s`;
+      line.style.animationDuration = `${duration}s`;
+      
+      circuitLinesContainer.appendChild(line);
+    }
+    
+    // Create binary code animation
+    const binaryCodeContainer = document.getElementById('binaryCode');
+    const binaryCount = 50;
+    
+    for (let i = 0; i < binaryCount; i++) {
+      const char = document.createElement('div');
+      char.className = 'binary-char';
+      char.textContent = Math.random() > 0.5 ? '1' : '0';
+      
+      // Random position
+      char.style.left = `${Math.random() * 100}%`;
+      char.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation delay and duration
+      const delay = Math.random() * 10;
+      const duration = Math.random() * 5 + 8;
+      char.style.animationDelay = `${delay}s`;
+      char.style.animationDuration = `${duration}s`;
+      
+      binaryCodeContainer.appendChild(char);
+    }
+    
+    // ---------- Utility ----------
+    const $ = (s,root=document)=>root.querySelector(s);
+    const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
+    const toast = (msg, ms=1600)=>{ 
+      const t=$('#toast'); 
+      t.textContent=msg; 
+      t.classList.add('show'); 
+      setTimeout(()=>t.classList.remove('show'), ms);
+    }
+    const cap = (s)=>s ? s.charAt(0).toUpperCase()+s.slice(1) : s;
+    
+    // ---------- Routing / Tabs ----------
+    const tabsNav = document.querySelector('.nav-tabs');
+    tabsNav.addEventListener('click', e=>{
+      if(e.target.tagName!=='BUTTON') return;
+      $$('.tab-button').forEach(b=>b.classList.remove('active'));
+      e.target.classList.add('active');
+      const id = e.target.dataset.tab;
+      $$('.tab-panel').forEach(t=>t.style.display = t.id === id ? 'block' : 'none');
+      history.replaceState({}, '', `#${id}`);
+    });
+    
+    // Open tab from hash
+    window.addEventListener('DOMContentLoaded', ()=>{
+      const hash = location.hash.replace('#','');
+      if(hash){ 
+        const btn = $(`.tab-button[data-tab="${hash}"]`); 
+        if(btn) btn.click(); 
+      }
+    });
+    
+    // ---------- State (localStorage + optional backend sync) ----------
+    const KEY = 'techyme.settings.v1';
+    function defaults(){
+      return {
+        profile:{ username:'', email:'', displayName:'', theme:'system', avatar:'' },
+        preferences:{ language:'en', hotkeys:true, public:true },
+        notifications:{ email:true, inapp:true, sound:false }
+      };
+    }
+    function getState(){
+      try{ 
+        return Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY))||{}); 
+      }catch(e){ 
+        return defaults(); 
+      }
+    }
+    function setState(next){ 
+      localStorage.setItem(KEY, JSON.stringify(next)); 
+    }
+    
+    // Try to read initial user injected by backend: window.TECHY_ME_USER
+    const bootstrapUser = window.TECHY_ME_USER || null;
+    
+    // ---------- Populate UI ----------
+    async function loadUI(){
+      try {
+        // Try to get the current user from session
+        // In a real app, you would have authentication middleware
+        const response = await fetch('/api/current-user');
+        
+        if (response.ok) {
+          const userData = await response.json();
+          
+          // Populate form with user data
+          $('#username').value = userData.username || '';
+          $('#email').value = userData.email || '';
+          $('#displayName').value = userData.display_name || '';
+          $('#theme').value = userData.theme || 'system';
+          $('#avatarPreview').src = userData.avatar || 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="100%" height="100%" fill="#1f2937"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#93c5fd" font-family="sans-serif" font-size="28">TM</text></svg>`);
+          
+          // Update localStorage as fallback
+          const st = getState();
+          st.profile.username = userData.username || '';
+          st.profile.email = userData.email || '';
+          st.profile.displayName = userData.display_name || '';
+          st.profile.theme = userData.theme || 'system';
+          st.profile.avatar = userData.avatar || '';
+          setState(st);
+          
+          return;
+        }
+      } catch (e) {
+        console.error('Failed to load user data from backend', e);
+      }
+
+      // Fallback to localStorage if backend fails
+      const st = getState();
+      $('#username').value = bootstrapUser?.username || st.profile.username || '';
+      $('#email').value = bootstrapUser?.email || st.profile.email || '';
+      $('#displayName').value = st.profile.displayName || '';
+      $('#theme').value = st.profile.theme || 'system';
+      $('#avatarPreview').src = st.profile.avatar || 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="100%" height="100%" fill="#1f2937"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#93c5fd" font-family="sans-serif" font-size="28">TM</text></svg>`);
+    }
+    
+    // ---------- Avatar Upload ----------
+    $('#avatarFile').addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0];
+      if(!file) return;
+      if(file.size > 2*1024*1024){ 
+        toast('Image too large (>2MB)'); 
+        e.target.value=''; 
+        return; 
+      }
+      
+      // Convert to base64 for preview and storage
+      const reader = new FileReader();
+      reader.onload = async () => { 
+        $('#avatarPreview').src = reader.result;
+        
+        // Try to upload to server if available
+        try {
+          const username = $('#username').value.trim();
+          if (username) {
+            const response = await fetch('/api/upload-avatar', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                username,
+                avatar: reader.result
+              })
+            });
+            
+            if (response.ok) {
+              toast('Avatar uploaded successfully');
+            } else {
+              toast('Avatar saved locally only');
+            }
+          }
+        } catch (error) {
+          console.error('Error uploading avatar:', error);
+          toast('Avatar saved locally only');
+        }
+      };
+      reader.readAsDataURL(file);
+    })
+    
+    // ---------- Profile Save/Reset ----------
+    $('#btnSaveProfile').addEventListener('click', async ()=>{
+      const profileData = {
+        username: $('#username').value.trim(),
+        email: $('#email').value.trim(),
+        displayName: $('#displayName').value.trim(),
+        theme: $('#theme').value,
+        avatar: $('#avatarPreview').src || ''
+      };
+
+      try {
+        const response = await fetch('/api/update-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(profileData)
+        });
+
+        if (response.ok) {
+          // Update localStorage as fallback
+          const st = getState();
+          st.profile = { ...st.profile, ...profileData };
+          setState(st);
+          
+          toast('Profile saved');
+        } else {
+          const error = await response.json();
+          toast(error.error || 'Failed to save profile');
+        }
+      } catch (e) {
+        console.error('Error saving profile:', e);
+        toast('Network error (saved locally)');
+        
+        // Fallback to localStorage only
+        const st = getState();
+        st.profile = { ...st.profile, ...profileData };
+        setState(st);
+      }
+    })
+    
+    $('#btnResetProfile').addEventListener('click', ()=>{ 
+      setState(defaults()); 
+      loadUI(); 
+      toast('Profile reset'); 
+    })
+    
+    // ---------- Password Strength ----------
+    const pw = $('#newPass'), pw2 = $('#newPass2'), fill = $('#pwFill'), hint = $('#pwHint');
+    function score(s){
+      let n=0; 
+      if(!s) return 0; 
+      if(s.length>=8) n++; 
+      if(/[A-Z]/.test(s)) n++; 
+      if(/[a-z]/.test(s)) n++; 
+      if(/[0-9]/.test(s)) n++; 
+      if(/[^A-Za-z0-9]/.test(s)) n++; 
+      return Math.min(n,5);
+    }
+    function renderScore(){
+      const s=score(pw.value); 
+      const pct=[0,20,40,60,80,100][s]; 
+      fill.style.width=pct+'%';
+      
+      // Remove all strength classes
+      fill.classList.remove('password-strength-weak', 'password-strength-medium', 'password-strength-strong');
+      
+      // Add appropriate class based on strength
+      if(s >= 4) {
+        fill.classList.add('password-strength-strong');
+      } else if(s >= 2) {
+        fill.classList.add('password-strength-medium');
+      } else if(s > 0) {
+        fill.classList.add('password-strength-weak');
+      }
+      
+      hint.textContent = 'Strength: '+(['n/a','very weak','weak','ok','strong','excellent'][s]);
+    }
+    pw.addEventListener('input', renderScore);
+    renderScore();
+    
+    // ---------- Change Password ----------
+    $('#btnChangePass').addEventListener('click', async ()=>{
+      if(!$('#curPass').value){ 
+        toast('Enter current password'); 
+        return;
+      }
+      if(pw.value.length<8){ 
+        toast('New password too short'); 
+        return;
+      }
+      if(pw.value!==pw2.value){ 
+        toast('Passwords do not match'); 
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: $('#username').value.trim(),
+            currentPassword: $('#curPass').value,
+            newPassword: pw.value
+          })
+        });
+
+        if (response.ok) {
+          toast('Password changed');
+          $('#curPass').value = pw.value = pw2.value = '';
+          renderScore();
+        } else {
+          const error = await response.json();
+          toast(error.error || 'Failed to change password');
+        }
+      } catch (e) {
+        console.error('Error changing password:', e);
+        toast('Network error');
+      }
+    })
+    
+    // ---------- Logout others ----------
+    $('#btnLogoutOthers').addEventListener('click', async ()=>{
+      try{ 
+        await fetch('/api/logout-others',{
+          method:'POST', 
+          credentials:'include'
+        }); 
+        toast('Other sessions logged out'); 
+      }catch(e){ 
+        toast('Tried to logout others') 
+      }
+    })
+    
+    // ---------- 2FA ----------
+    $('#btnShow2FA').addEventListener('click', ()=>{ 
+      $('#twofa').showModal(); 
+    })
+    
+    // ---------- Delete account ----------
+    const dlg = $('#confirmDelete');
+    $('#btnDelete').addEventListener('click', ()=>{ 
+      $('#delText').value=''; 
+      $('#confirmDeleteBtn').disabled=true; 
+      dlg.showModal(); 
+    });
+    
+    $('#delText').addEventListener('input', (e)=>{ 
+      $('#confirmDeleteBtn').disabled = e.target.value !== 'DELETE'; 
+    });
+    
+    dlg.addEventListener('close', async ()=>{
+      if(dlg.returnValue==='confirm' && $('#delText').value==='DELETE'){
+        try {
+          const response = await fetch('/api/delete-account', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: $('#username').value.trim()
+            })
+          });
+
+          if (response.ok) {
+            toast('Account deleted');
+            // Redirect to login page after a short delay
+            setTimeout(() => {
+              window.location.href = '/index.html';
+            }, 1500);
+          } else {
+            const error = await response.json();
+            toast(error.error || 'Failed to delete account');
+          }
+        } catch (e) {
+          console.error('Error deleting account:', e);
+          toast('Network error');
+        }
+      }
+    })
+    
+    // ---------- Back button ----------
+    $('#backBtn').addEventListener('click', ()=>{ 
+      window.location.href = '../levels/networkinglevels.html'; 
+    })
+    
+    // ---------- Footer navigation ----------
+    function gotoAbout() { 
+      window.location.href = 'about.html'; 
+    }
+    
+    function gotoLeaderboard() { 
+      window.location.href = 'leaderboard.html'; 
+    }
+    
+    function gotoDashboard() { 
+      window.location.href = 'dashboard.html'; 
+    }
+    
+    function gotoLearning() { 
+      window.location.href = 'learning.html'; 
+    }
+    
+    function gotoSetting() { 
+      // Already on settings page
+    }
+    
+    // ---------- Bootstrap ----------
+    loadUI();
+  </script>
+</body>
+</html>

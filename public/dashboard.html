@@ -505,6 +505,7 @@
       <div class="icon" onclick="gotoAbout()">🧾</div>
       <div class="icon" onclick="gotoLeaderboard()">📊</div>
       <div class="icon active" onclick="gotoDashboard()">👑</div>
+      <div class="icon" onclick="gotoLearning()">📘</div>
       <div class="icon" onclick="gotoSetting()">⚙️</div>
     </footer>
   </div>
@@ -700,6 +701,10 @@
     
     document.addEventListener("DOMContentLoaded", loadDashboard);
     let dashCtx;
+    function gotoLearning() {
+  window.location.href = "learning.html";
+}
+
 
 // === INIT AUDIO ===
 function initAudio() {

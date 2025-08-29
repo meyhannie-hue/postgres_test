@@ -348,6 +348,12 @@
     box-shadow: 0 0 15px rgba(0,255,136,0.5);
   }
   
+  button:disabled {
+    background: #444;
+    color: #888;
+    cursor: not-allowed;
+  }
+  
   #startGameBtn {
     margin-top: 30px;
   }
@@ -369,13 +375,49 @@
     font-family: 'Fira Code', monospace;
   }
   
-  iframe {
+  .output-container {
+    width: 90%;
+    max-width: 700px;
+    margin: 15px auto;
     border: 1px solid #00ff88;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.7);
+    box-shadow: 0 0 15px rgba(0,255,136,0.2);
+    overflow: hidden;
+  }
+  
+  .output-header {
+    background: rgba(0,0,0,0.5);
+    padding: 8px 15px;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    color: #00ff88;
+    border-bottom: 1px solid rgba(0,255,136,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  iframe {
     width: 100%;
     min-height: 250px;
     background: rgba(0,0,0,0.7);
-    margin-top: 15px;
-    box-shadow: 0 0 15px rgba(0,255,136,0.2);
+    border: none;
+    display: block;
+  }
+  
+  .loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0,255,136,0.3);
+    border-radius: 50%;
+    border-top-color: #00ff88;
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
   
   /* Hide game container initially */
@@ -496,9 +538,14 @@
     
     <button id="nextBtn" onclick="goToNextPhase()">➡ NEXT PHASE</button>
     
-    <iframe id="output"></iframe>
+    <div class="output-container">
+      <div class="output-header">
+        <span>OUTPUT PREVIEW</span>
+        <span id="outputStatus"></span>
+      </div>
+      <iframe id="output"></iframe>
+    </div>
   </div>
-
 <script>
   // Matrix Rain Effect
   const matrixCanvas = document.getElementById('matrixRain');
@@ -560,10 +607,10 @@
   
   // Game Logic
   const phases = [
-    { instruction: 'Phase 1: Make all <h1> elements have green text color.', testHTML: '<h1>Hello World</h1>', expectedCSS: 'h1{color:green;}' },
+    { instruction: 'Phase 1: Make all h1 elements have green text color.', testHTML: '<h1>Hello World</h1>', expectedCSS: 'h1{color:green;}' },
     { instruction: 'Phase 2: Set all <p> elements to have a font size of 18px.', testHTML: '<p>Sample paragraph</p>', expectedCSS: 'p{font-size:18px;}' },
     { instruction: 'Phase 3: Create a CSS class .highlight that sets background color to lightblue.', testHTML: '<div class="highlight">Highlighted text</div>', expectedCSS: '.highlight{background:lightblue;}' },
-    { instruction: 'Phase 4: Add a 3px dashed red border to all <img> elements.', testHTML: '<img src="cat.jpg" alt="Cat Image">', expectedCSS: 'img{border:3px dashed red;}' },
+    { instruction: 'Phase 4: Add a 3px dashed red border to all <img> elements.', testHTML: '<img src="https://picsum.photos/seed/cat/200/150.jpg" alt="Cat Image">', expectedCSS: 'img{border:3px dashed red;}' },
     { instruction: 'Phase 5: Center all text inside the <body> element.', testHTML: '<p>Centered text</p>', expectedCSS: 'body{text-align:center;}' }
   ];
   
@@ -583,6 +630,7 @@
     document.getElementById('resultMsg').innerText = '';
     document.getElementById('nextBtn').style.display = 'none';
     document.getElementById('output').srcdoc = '';
+    document.getElementById('outputStatus').innerHTML = '';
     
     // Update progress bar
     const progressPercent = ((currentPhase+1) / phases.length) * 100;
@@ -590,25 +638,79 @@
   }
   
   function runAndCheck() {
-    const userCSS = document.getElementById('userCSS').value.trim().replace(/\s+/g,'').toLowerCase();
-    const expectedCSS = phases[currentPhase].expectedCSS.replace(/\s+/g,'').toLowerCase();
+    const userCSS = document.getElementById('userCSS').value.trim();
     const outputFrame = document.getElementById('output');
     const resultMsg = document.getElementById('resultMsg');
-    outputFrame.srcdoc = `<style>${document.getElementById('userCSS').value}</style>${phases[currentPhase].testHTML}`;
+    const runBtn = document.getElementById('runBtn');
+    const outputStatus = document.getElementById('outputStatus');
     
-    if(userCSS === expectedCSS){
-      if(currentPhase < phases.length - 1){
+    // Disable run button and show loading
+    runBtn.disabled = true;
+    resultMsg.innerText = "Executing code...";
+    resultMsg.style.color = "#00ff88";
+    outputStatus.innerHTML = '<span class="loading"></span> Running...';
+    
+    // Set the iframe content
+    outputFrame.srcdoc = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { 
+            font-family: 'Fira Code', monospace; 
+            background: #121212; 
+            color: #f5f5f5; 
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+          }
+          ${userCSS}
+        </style>
+      </head>
+      <body>
+        ${phases[currentPhase].testHTML}
+      </body>
+      </html>
+    `;
+    
+    // Wait for the iframe to load before checking the result
+    outputFrame.onload = function() {
+      // Normalize CSS for comparison (remove spaces, semicolons, etc.)
+      const normalizedUserCSS = userCSS.replace(/\s+/g, '').toLowerCase();
+      const normalizedExpectedCSS = phases[currentPhase].expectedCSS.replace(/\s+/g, '').toLowerCase();
+      
+      // Check if the CSS matches
+      if(normalizedUserCSS === normalizedExpectedCSS){
         resultMsg.innerText = "✅ ACCESS GRANTED. Proceed to next phase.";
         resultMsg.style.color = "#00ff88";
+        outputStatus.innerHTML = '<span style="color: #00ff88;">✓ Success</span>';
         document.getElementById('nextBtn').style.display = 'block';
+        
+        if(currentPhase === phases.length - 1) {
+          resultMsg.innerText = "🎉 ALL PHASES COMPLETE. SYSTEM STYLED!";
+          rewardPlayer();
+        }
       } else {
-        resultMsg.innerText = "🎉 ALL PHASES COMPLETE. SYSTEM STYLED!";
-        rewardPlayer();
+        resultMsg.innerText = "❌ ACCESS DENIED. Check your syntax or logic.";
+        resultMsg.style.color = "#ff5555";
+        outputStatus.innerHTML = '<span style="color: #ff5555;">✗ Failed</span>';
       }
-    } else {
-      resultMsg.innerText = "❌ ACCESS DENIED. Check your syntax or logic.";
-      resultMsg.style.color = "#ff5555";
-    }
+      
+      // Re-enable the run button
+      runBtn.disabled = false;
+    };
+    
+    // Fallback in case iframe doesn't load properly
+    setTimeout(() => {
+      if (outputStatus.innerHTML.includes('Running...')) {
+        outputStatus.innerHTML = '<span style="color: #ff5555;">✗ Error</span>';
+        resultMsg.innerText = "❌ Error executing code.";
+        resultMsg.style.color = "#ff5555";
+        runBtn.disabled = false;
+      }
+    }, 3000);
   }
   
   function goToNextPhase() {
@@ -653,46 +755,39 @@
     if(confirm("Terminate session? All progress will be lost.")) 
       window.location.href = "../levels/programminglevel.html";
   }
+  
   // === 🎵 PROGRAMMING GAME MUSIC (Auto Start) ===
   let progAudioCtx, progMasterGain, progIntervals = [];
-
   window.addEventListener("load", () => {
     // Create audio context on load
     progAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     progMasterGain = progAudioCtx.createGain();
     progMasterGain.gain.value = 0.5; // 🔊 softer cyber vibe
     progMasterGain.connect(progAudioCtx.destination);
-
     // Start loops
     startProgrammingMusic();
   });
-
   function startProgrammingMusic() {
     if (!progAudioCtx) return;
-
     // 🔹 Low synth pad (ambient background hum)
     progIntervals.push(setInterval(() => {
       playToneProg(220, "sawtooth", 1.2, 0.15); // low hum
     }, 1500));
-
     // 🔹 Random "data blips"
     progIntervals.push(setInterval(() => {
       let freqs = [440, 554, 659, 880, 988]; // coding beeps
       let f = freqs[Math.floor(Math.random() * freqs.length)];
       playToneProg(f, "square", 0.1, 0.25);
     }, 500));
-
     // 🔹 Hi-hat / typing clicks
     progIntervals.push(setInterval(() => {
       playNoiseProg(0.02, 0.15);
     }, 250));
-
     // 🔹 Deep pulse (like system heartbeat)
     progIntervals.push(setInterval(() => {
       playKickProg();
     }, 2000));
   }
-
   function stopProgrammingMusic() {
     progIntervals.forEach(id => clearInterval(id));
     progIntervals = [];
@@ -701,7 +796,6 @@
       progAudioCtx = null;
     }
   }
-
   // === SOUND GENERATORS ===
   function playToneProg(freq, type, duration, volume) {
     const osc = progAudioCtx.createOscillator();
@@ -711,11 +805,9 @@
     osc.frequency.value = freq;
     osc.connect(gain);
     gain.connect(progMasterGain);
-
     osc.start();
     osc.stop(progAudioCtx.currentTime + duration);
   }
-
   function playNoiseProg(duration, volume) {
     const bufferSize = progAudioCtx.sampleRate * duration;
     const buffer = progAudioCtx.createBuffer(1, bufferSize, progAudioCtx.sampleRate);
@@ -723,34 +815,25 @@
     for (let i = 0; i < bufferSize; i++) {
       data[i] = Math.random() * 2 - 1; // white noise
     }
-
     const noise = progAudioCtx.createBufferSource();
     noise.buffer = buffer;
-
     const gain = progAudioCtx.createGain();
     gain.gain.value = volume;
-
     noise.connect(gain);
     gain.connect(progMasterGain);
-
     noise.start();
     noise.stop(progAudioCtx.currentTime + duration);
   }
-
   function playKickProg() {
     const osc = progAudioCtx.createOscillator();
     const gain = progAudioCtx.createGain();
-
     osc.type = "sine";
     osc.frequency.setValueAtTime(100, progAudioCtx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(40, progAudioCtx.currentTime + 0.6);
-
     gain.gain.setValueAtTime(0.4, progAudioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, progAudioCtx.currentTime + 0.6);
-
     osc.connect(gain);
     gain.connect(progMasterGain);
-
     osc.start(progAudioCtx.currentTime);
     osc.stop(progAudioCtx.currentTime + 0.6);
   }

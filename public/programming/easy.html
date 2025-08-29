@@ -20,7 +20,6 @@
   position: relative;
   color: #f5f5f5;
 }
-
   
   /* Matrix Rain Effect */
   .matrix-rain { 
@@ -355,6 +354,7 @@
     background:rgba(0,0,0,0.7); 
     margin-top:15px;
     box-shadow: 0 0 15px rgba(0,255,136,0.2);
+    display: block;
   }
   
   /* Hacking task progress bar */
@@ -485,7 +485,6 @@
     
     <iframe id="output"></iframe>
   </div>
-
 <script>
   // Matrix Rain Effect
   const matrixCanvas=document.getElementById('matrixRain'); 
@@ -547,7 +546,7 @@
   
   // Game Logic
   const phases=[
-    {instruction:'Phase 1: Create a <h1> that says "Hello World"',expectedHTML:'<h1>Hello World</h1>',completed:false},
+    {instruction:'Phase 1: Create a h1/title that says "Hello World"',expectedHTML:'<h1>Hello World</h1>',completed:false},
     {instruction:'Phase 2: Create a paragraph that says "This is a paragraph"',expectedHTML:'<p>This is a paragraph</p>',completed:false},
     {instruction:'Phase 3: Create an image with src="cat.jpg" and alt="A cat"',expectedHTML:'<img src="cat.jpg" alt="A cat">',completed:false},
     {instruction:'Phase 4: Create an unordered list with 2 items: "Apple" and "Banana"',expectedHTML:'<ul><li>Apple</li><li>Banana</li></ul>',completed:false},
@@ -579,31 +578,65 @@
     const code=document.getElementById('userCode').value.trim();
     const outputFrame=document.getElementById('output'); 
     const resultMsg=document.getElementById('resultMsg');
-    outputFrame.srcdoc=code;
+    
+    // Create a complete HTML document for the iframe
+    const fullHTML = `<!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { 
+          margin: 10px; 
+          font-family: Arial, sans-serif; 
+          color: #f5f5f5;
+          background: #121212;
+        }
+        img { max-width: 100%; }
+      </style>
+    </head>
+    <body>
+      ${code}
+    </body>
+    </html>`;
+    
+    outputFrame.srcdoc = fullHTML;
+    
+    // Show a message that code is executing
+    resultMsg.innerText="⚡ Executing code...";
+    resultMsg.style.color="#00ff88";
     
     setTimeout(()=>{
-      const iframeDoc=outputFrame.contentDocument||outputFrame.contentWindow.document;
-      const bodyHTML=iframeDoc.body.innerHTML.trim();
-      const cleanedUser=bodyHTML.replace(/\s+/g,'').toLowerCase();
-      const cleanedExpected=phases[currentPhase].expectedHTML.replace(/\s+/g,'').toLowerCase();
-      
-      if(cleanedUser===cleanedExpected){
-        resultMsg.innerText="✅ ACCESS GRANTED. Proceed to next mission."; 
-        resultMsg.style.color="#00ff88";
-        phases[currentPhase].completed=true;
+      try {
+        const iframeDoc=outputFrame.contentDocument||outputFrame.contentWindow.document;
+        const bodyHTML=iframeDoc.body.innerHTML.trim();
+        const cleanedUser=bodyHTML.replace(/\s+/g,'').toLowerCase();
+        const cleanedExpected=phases[currentPhase].expectedHTML.replace(/\s+/g,'').toLowerCase();
         
-        if(currentPhase<phases.length-1){ 
-          document.getElementById('nextBtn').style.display='block'; 
+        if(cleanedUser===cleanedExpected){
+          resultMsg.innerText="✅ ACCESS GRANTED. Proceed to next mission."; 
+          resultMsg.style.color="#00ff88";
+          phases[currentPhase].completed=true;
+          
+          if(currentPhase<phases.length-1){ 
+            document.getElementById('nextBtn').style.display='block'; 
+          }
+          else { 
+            resultMsg.innerText="🎉 ALL MISSIONS COMPLETE. SYSTEM HACKED!"; 
+            rewardPlayer(); 
+          }
+        } else { 
+          resultMsg.innerText="❌ ACCESS DENIED. Try again."; 
+          resultMsg.style.color="#ff5555";
+          
+          // Debug information
+          console.log("Expected:", cleanedExpected);
+          console.log("Got:", cleanedUser);
         }
-        else { 
-          resultMsg.innerText="🎉 ALL MISSIONS COMPLETE. SYSTEM HACKED!"; 
-          rewardPlayer(); 
-        }
-      } else { 
-        resultMsg.innerText="❌ ACCESS DENIED. Try again."; 
-        resultMsg.style.color="#ff5555"; 
+      } catch (e) {
+        resultMsg.innerText="❌ Error executing code. Check your HTML syntax.";
+        resultMsg.style.color="#ff5555";
+        console.error("Error:", e);
       }
-    },200);
+    },500); // Increased timeout to ensure iframe loads properly
   }
   
   function goToNextPhase(){ 
@@ -616,7 +649,6 @@
   const username = localStorage.getItem("loggedInUser") || "Guest";
   const points = 7620;
   const coins = 6120;
-
   fetch("https://postgres-test-p05s.onrender.com/api/reward", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -632,7 +664,6 @@
     })
     .then(data => {
       const resultMsg = document.getElementById("resultMsg");
-
       if (data.success) {
         resultMsg.innerText +=
           ` 🎉 REWARD ACQUIRED: ${points} points and ${coins} coins!`;
@@ -641,7 +672,6 @@
         resultMsg.innerText += " ⚠️ Reward system error.";
         resultMsg.style.color = "#ff5555";
       }
-
       // ✅ Redirect after reward attempt
       setTimeout(() => {
         window.location.href = "../levels/programminglevel.html";
@@ -650,14 +680,12 @@
     .catch(err => {
       console.error("❌ Reward API error:", err);
       alert("Error applying reward. Please try again.");
-
       // Redirect even if error occurs
       window.location.href = "../levels/programminglevel.html";
     });
 }
    function confirmQuit() {
     const confirmExit = confirm("Are you sure you want to quit?");
-
     if (confirmExit) {
       // ✅ Redirect if user clicks "OK"
       window.location.href = "../levels/programminglevel.html";
@@ -666,47 +694,38 @@
       return;
     }
   }
-
  // === 🎵 PROGRAMMING GAME MUSIC (Auto Start) ===
   let progAudioCtx, progMasterGain, progIntervals = [];
-
   window.addEventListener("load", () => {
     // Create audio context on load
     progAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     progMasterGain = progAudioCtx.createGain();
     progMasterGain.gain.value = 0.5; // 🔊 softer cyber vibe
     progMasterGain.connect(progAudioCtx.destination);
-
     // Start loops
     startProgrammingMusic();
   });
-
   function startProgrammingMusic() {
     if (!progAudioCtx) return;
-
     // 🔹 Low synth pad (ambient background hum)
     progIntervals.push(setInterval(() => {
       playToneProg(220, "sawtooth", 1.2, 0.15); // low hum
     }, 1500));
-
     // 🔹 Random "data blips"
     progIntervals.push(setInterval(() => {
       let freqs = [440, 554, 659, 880, 988]; // coding beeps
       let f = freqs[Math.floor(Math.random() * freqs.length)];
       playToneProg(f, "square", 0.1, 0.25);
     }, 500));
-
     // 🔹 Hi-hat / typing clicks
     progIntervals.push(setInterval(() => {
       playNoiseProg(0.02, 0.15);
     }, 250));
-
     // 🔹 Deep pulse (like system heartbeat)
     progIntervals.push(setInterval(() => {
       playKickProg();
     }, 2000));
   }
-
   function stopProgrammingMusic() {
     progIntervals.forEach(id => clearInterval(id));
     progIntervals = [];
@@ -715,7 +734,6 @@
       progAudioCtx = null;
     }
   }
-
   // === SOUND GENERATORS ===
   function playToneProg(freq, type, duration, volume) {
     const osc = progAudioCtx.createOscillator();
@@ -725,11 +743,9 @@
     osc.frequency.value = freq;
     osc.connect(gain);
     gain.connect(progMasterGain);
-
     osc.start();
     osc.stop(progAudioCtx.currentTime + duration);
   }
-
   function playNoiseProg(duration, volume) {
     const bufferSize = progAudioCtx.sampleRate * duration;
     const buffer = progAudioCtx.createBuffer(1, bufferSize, progAudioCtx.sampleRate);
@@ -737,34 +753,25 @@
     for (let i = 0; i < bufferSize; i++) {
       data[i] = Math.random() * 2 - 1; // white noise
     }
-
     const noise = progAudioCtx.createBufferSource();
     noise.buffer = buffer;
-
     const gain = progAudioCtx.createGain();
     gain.gain.value = volume;
-
     noise.connect(gain);
     gain.connect(progMasterGain);
-
     noise.start();
     noise.stop(progAudioCtx.currentTime + duration);
   }
-
   function playKickProg() {
     const osc = progAudioCtx.createOscillator();
     const gain = progAudioCtx.createGain();
-
     osc.type = "sine";
     osc.frequency.setValueAtTime(100, progAudioCtx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(40, progAudioCtx.currentTime + 0.6);
-
     gain.gain.setValueAtTime(0.4, progAudioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, progAudioCtx.currentTime + 0.6);
-
     osc.connect(gain);
     gain.connect(progMasterGain);
-
     osc.start(progAudioCtx.currentTime);
     osc.stop(progAudioCtx.currentTime + 0.6);
   }
