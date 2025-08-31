@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Networking Easy Level - T568B</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Enhanced viewport meta tag for better mobile responsiveness -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <style>
     body { 
       margin: 0; 
@@ -114,7 +115,7 @@
       align-items: center;
       background-color: rgba(74, 44, 80, 0.8);
       color: #fff;
-      padding: 20px;
+      padding: 15px 20px;
       position: fixed;
       top: 0;
       left: 0;
@@ -341,14 +342,18 @@
       display: flex; 
       position: relative; 
       justify-content: center; 
-      width: 90%; 
-      max-width: 800px; 
+      width: 95%; 
+      max-width: 1000px; 
+      height: 600px; 
+      margin: 0 auto;
     }
     
     #lineCanvas { 
       position: absolute; 
       top: 0; 
       left: 0; 
+      width: 100%;
+      height: 100%;
       z-index: 2; 
       pointer-events: none; 
     }
@@ -356,9 +361,10 @@
     .column { 
       display: flex; 
       flex-direction: column; 
-      gap: 12px; 
-      padding: 5px; 
+      gap: 18px; 
+      padding: 10px; 
       z-index: 1; 
+      justify-content: space-around;
     }
     
     #pinColumn { 
@@ -373,13 +379,13 @@
     
     .slot, .wire {
       position: relative;
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 12px;
+      padding: 10px 15px; 
+      border-radius: 6px; 
+      font-size: 14px; 
       font-weight: bold;
       cursor: grab;
       user-select: none;
-      width: 70px;
+      width: 90px; 
       text-align: center;
       transition: transform 0.2s ease, box-shadow 0.3s ease;
       font-family: 'Poppins', sans-serif;
@@ -430,31 +436,31 @@
       position: absolute; 
       top: 50%; 
       transform: translateY(-50%); 
-      width: 12px; 
-      height: 12px; 
+      width: 16px; 
+      height: 16px; 
       border-radius: 50%; 
       background: #00e5ff;
       box-shadow: 0 0 5px rgba(0, 229, 255, 0.7);
     }
     
     .slot .pin-dot { 
-      right: -10px; 
+      right: -12px; 
     }
     
     .wire .pin-dot { 
-      left: -10px; 
+      left: -12px; 
     }
     
     .submit-btn {
       margin: 20px;
-      padding: 10px 16px;
+      padding: 12px 20px; 
       background: linear-gradient(45deg, #9527ae, #00ffff);
       border: none;
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
       transition: 0.2s;
-      font-size: 14px;
+      font-size: 16px; 
       color: #ffffff;
       font-family: 'Poppins', sans-serif;
       box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
@@ -484,7 +490,7 @@
     }
     
     #result { 
-      font-size: 16px; 
+      font-size: 18px; 
       font-weight: bold; 
       margin: 8px; 
       text-align: center; 
@@ -494,8 +500,8 @@
     /* Data Packets */
     .data-packet {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 10px; 
+      height: 10px; 
       background: #39ff14;
       border-radius: 50%;
       box-shadow: 0 0 10px #39ff14;
@@ -556,7 +562,7 @@
     /* Mobile-specific styles */
     @media (max-width: 768px) {
       header {
-        padding: 15px;
+        padding: 12px 15px;
       }
       
       .header-title {
@@ -590,17 +596,87 @@
       
       .game {
         width: 95%;
+        height: 550px; /* Increased from 450px */
       }
       
       .slot, .wire {
-        width: 60px;
-        font-size: 10px;
-        padding: 5px 8px;
+        width: 85px; /* Increased from 70px */
+        font-size: 13px; /* Increased from 12px */
+        padding: 10px 12px; /* Increased from 8px 10px */
+      }
+      
+      .pin-dot {
+        width: 16px; /* Increased from 14px */
+        height: 16px; /* Increased from 14px */
+      }
+      
+      .slot .pin-dot {
+        right: -12px; /* Adjusted from -10px */
+      }
+      
+      .wire .pin-dot {
+        left: -12px; /* Adjusted from -10px */
       }
       
       .submit-btn {
-        padding: 8px 14px;
-        font-size: 13px;
+        padding: 12px 18px; /* Increased from 10px 16px */
+        font-size: 15px; /* Increased from 14px */
+      }
+    }
+    
+    /* Small mobile devices */
+    @media (max-width: 480px) {
+      .header-title {
+        font-size: 14px;
+      }
+      
+      .game {
+        height: 500px; /* Increased from 400px */
+      }
+      
+      .slot, .wire {
+        width: 75px; /* Increased from 60px */
+        font-size: 12px; /* Increased from 11px */
+        padding: 8px 10px; /* Increased from 6px 8px */
+      }
+      
+      .pin-dot {
+        width: 14px; /* Increased from 12px */
+        height: 14px; /* Increased from 12px */
+      }
+      
+      .slot .pin-dot {
+        right: -10px;
+      }
+      
+      .wire .pin-dot {
+        left: -10px;
+      }
+    }
+    
+    /* Extra small mobile devices */
+    @media (max-width: 360px) {
+      .game {
+        height: 450px; /* Adjusted for very small screens */
+      }
+      
+      .slot, .wire {
+        width: 65px; /* Slightly smaller for very small screens */
+        font-size: 11px;
+        padding: 7px 8px;
+      }
+      
+      .pin-dot {
+        width: 12px;
+        height: 12px;
+      }
+      
+      .slot .pin-dot {
+        right: -8px;
+      }
+      
+      .wire .pin-dot {
+        left: -8px;
       }
     }
   </style>
@@ -650,7 +726,7 @@
   <div class="game-section" id="gameSection">
     <div class="timer">⏳ Time left: <span id="countdown">1:00</span></div>
     <div class="game">
-      <canvas id="lineCanvas" width="1200" height="600"></canvas>
+      <canvas id="lineCanvas"></canvas>
       <div class="column" id="pinColumn"></div>
       <div class="column" id="wireColumn"></div>
     </div>
@@ -700,14 +776,19 @@
     const rainCanvas = document.getElementById('digitalRain');
     const rainCtx = rainCanvas.getContext('2d');
     
-    // Set canvas size
-    rainCanvas.width = window.innerWidth;
-    rainCanvas.height = window.innerHeight;
+    // Function to set canvas size
+    function setCanvasSize() {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    }
+    
+    // Set initial canvas size
+    setCanvasSize();
     
     // Characters for the digital rain
     const characters = '01';
     const fontSize = 14;
-    const columns = rainCanvas.width / fontSize;
+    let columns = rainCanvas.width / fontSize;
     const drops = [];
     
     // Initialize drops
@@ -740,8 +821,14 @@
     
     // Resize canvas when window is resized
     window.addEventListener('resize', () => {
-      rainCanvas.width = window.innerWidth;
-      rainCanvas.height = window.innerHeight;
+      setCanvasSize();
+      // Recalculate columns after resize
+      columns = rainCanvas.width / fontSize;
+      // Reinitialize drops array for new canvas size
+      drops.length = 0;
+      for (let i = 0; i < columns; i++) {
+        drops[i] = Math.random() * rainCanvas.height;
+      }
     });
     
     // === Tutorial ===
@@ -767,12 +854,25 @@
     let animationProgress = 0;
     let animationId = null;
     
+    // Function to set game canvas size
+    function setGameCanvasSize() {
+      const gameContainer = document.querySelector('.game');
+      canvas.width = gameContainer.offsetWidth;
+      canvas.height = gameContainer.offsetHeight;
+    }
+    
     function startGame() {
       document.getElementById("instructions").style.display = "none";
       const section = document.getElementById("gameSection");
       section.style.display = "flex";
       section.style.animation = "fadeIn 1s ease forwards";
+      
+      // Set canvas size when starting the game
+      setGameCanvasSize();
+      
       startAnimation();
+      // 🎵 Start background music
+      startGameMusic();
     }
     
     function formatTime(seconds) {
@@ -939,7 +1039,7 @@
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, x2, y2);
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 5; 
         ctx.lineCap = 'round';
         
         // Apply IT theme to connection lines
@@ -990,7 +1090,7 @@
         
         // Add glow effect to lines
         ctx.shadowColor = '#00e5ff';
-        ctx.shadowBlur = 5;
+        ctx.shadowBlur = 8; 
         ctx.stroke();
         ctx.shadowBlur = 0;
         
@@ -1009,14 +1109,14 @@
           
           // Draw data packet
           ctx.beginPath();
-          ctx.arc(flowX, flowY, 6, 0, Math.PI * 2);
+          ctx.arc(flowX, flowY, 8, 0, Math.PI * 2); 
           ctx.fillStyle = '#39ff14';
           ctx.fill();
           
           // Add glow to data packet
           ctx.beginPath();
-          ctx.arc(flowX, flowY, 10, 0, Math.PI * 2);
-          const gradient = ctx.createRadialGradient(flowX, flowY, 0, flowX, flowY, 10);
+          ctx.arc(flowX, flowY, 12, 0, Math.PI * 2); 
+          const gradient = ctx.createRadialGradient(flowX, flowY, 0, flowX, flowY, 12);
           gradient.addColorStop(0, 'rgba(57, 255, 20, 0.8)');
           gradient.addColorStop(1, 'rgba(57, 255, 20, 0)');
           ctx.fillStyle = gradient;
@@ -1135,114 +1235,92 @@
         }
       }
     }
-  // === 🎵 GAME MUSIC SYSTEM ===
-  let audioCtx, masterGain, intervalIds = [];
-
-  function startGameMusic() {
-    if (audioCtx) return; // already playing
-
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.8; // 🎚 overall volume
-    masterGain.connect(audioCtx.destination);
-
-    // 🔹 Driving Bassline
-    intervalIds.push(setInterval(() => {
-      playTone(55, "square", 0.3, 0.4); // Low note
-      setTimeout(() => playTone(110, "square", 0.2, 0.3), 200); // Octave hit
-    }, 800));
-
-    // 🔹 Melody Arpeggio (classic retro blips)
-    intervalIds.push(setInterval(() => {
-      let notes = [440, 494, 523, 587, 659, 698, 784]; // C major scale
-      let note = notes[Math.floor(Math.random() * notes.length)];
-      playTone(note, "square", 0.25, 0.25);
-    }, 300));
-
-    // 🔹 Hi-Hat / Percussion
-    intervalIds.push(setInterval(() => {
-      playNoise(0.03, 0.2);
-    }, 200));
-
-    // 🔹 Kick Drum (boom effect)
-    intervalIds.push(setInterval(() => {
-      playKick();
-    }, 1200));
-  }
-
-  function stopGameMusic() {
-    intervalIds.forEach(id => clearInterval(id));
-    intervalIds = [];
-    if (audioCtx) {
-      audioCtx.close();
-      audioCtx = null;
+    
+    // Handle window resize for game canvas
+    window.addEventListener('resize', () => {
+      if (document.getElementById('gameSection').style.display === 'flex') {
+        setGameCanvasSize();
+        drawConnections();
+      }
+    });
+    
+    // === 🎵 GAME MUSIC SYSTEM ===
+    let audioCtx, masterGain, intervalIds = [];
+    function startGameMusic() {
+      if (audioCtx) return; // already playing
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.8; // 🎚 overall volume
+      masterGain.connect(audioCtx.destination);
+      // 🔹 Driving Bassline
+      intervalIds.push(setInterval(() => {
+        playTone(55, "square", 0.3, 0.4); // Low note
+        setTimeout(() => playTone(110, "square", 0.2, 0.3), 200); // Octave hit
+      }, 800));
+      // 🔹 Melody Arpeggio (classic retro blips)
+      intervalIds.push(setInterval(() => {
+        let notes = [440, 494, 523, 587, 659, 698, 784]; // C major scale
+        let note = notes[Math.floor(Math.random() * notes.length)];
+        playTone(note, "square", 0.25, 0.25);
+      }, 300));
+      // 🔹 Hi-Hat / Percussion
+      intervalIds.push(setInterval(() => {
+        playNoise(0.03, 0.2);
+      }, 200));
+      // 🔹 Kick Drum (boom effect)
+      intervalIds.push(setInterval(() => {
+        playKick();
+      }, 1200));
     }
-  }
-
-  // === SOUND GENERATORS ===
-  function playTone(freq, type, duration, volume) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    gain.gain.value = volume;
-    osc.type = type;
-    osc.frequency.value = freq;
-    osc.connect(gain);
-    gain.connect(masterGain);
-
-    osc.start();
-    osc.stop(audioCtx.currentTime + duration);
-  }
-
-  function playNoise(duration, volume) {
-    const bufferSize = audioCtx.sampleRate * duration;
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1; // white noise
+    function stopGameMusic() {
+      intervalIds.forEach(id => clearInterval(id));
+      intervalIds = [];
+      if (audioCtx) {
+        audioCtx.close();
+        audioCtx = null;
+      }
     }
-
-    const noise = audioCtx.createBufferSource();
-    noise.buffer = buffer;
-
-    const gain = audioCtx.createGain();
-    gain.gain.value = volume;
-
-    noise.connect(gain);
-    gain.connect(masterGain);
-
-    noise.start();
-    noise.stop(audioCtx.currentTime + duration);
-  }
-
-  function playKick() {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.5);
-
-    gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-
-    osc.connect(gain);
-    gain.connect(masterGain);
-
-    osc.start(audioCtx.currentTime);
-    osc.stop(audioCtx.currentTime + 0.5);
-  }
-
-  // === MODIFY START GAME ===
-  function startGame() {
-    document.getElementById("instructions").style.display = "none";
-    const section = document.getElementById("gameSection");
-    section.style.display = "flex";
-    section.style.animation = "fadeIn 1s ease forwards";
-    startAnimation();
-
-    // 🎵 Start background music
-    startGameMusic();
-  }
+    // === SOUND GENERATORS ===
+    function playTone(freq, type, duration, volume) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      gain.gain.value = volume;
+      osc.type = type;
+      osc.frequency.value = freq;
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+    function playNoise(duration, volume) {
+      const bufferSize = audioCtx.sampleRate * duration;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1; // white noise
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const gain = audioCtx.createGain();
+      gain.gain.value = volume;
+      noise.connect(gain);
+      gain.connect(masterGain);
+      noise.start();
+      noise.stop(audioCtx.currentTime + duration);
+    }
+    function playKick() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 0.5);
+    }
   </script>
 </body>
-</html>
+</html> 

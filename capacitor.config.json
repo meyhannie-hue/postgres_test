@@ -1,5 +1,9 @@
 {
   "appId": "com.techyme.postgrestest",
-  "appName": "Techy Me",
-  "webDir": "public"
+  "appName": " Techy Me ",
+  "webDir": "public",
+  "server": {
+    "url": "https://postgres-test-p05s.onrender.com",
+    "cleartext": true
+  }
 }
