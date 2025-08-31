@@ -219,53 +219,7 @@
       font-weight: bold;
       color: #00e5ff;
       text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-      animation: glitch 5s infinite;
       position: relative;
-    }
-    
-    .title::before, .title::after {
-      content: "TECHY ME";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    
-    .title::before {
-      animation: glitch-1 0.5s infinite;
-      color: #00e5ff;
-      z-index: -1;
-    }
-    
-    .title::after {
-      animation: glitch-2 0.5s infinite;
-      color: #0078d4;
-      z-index: -2;
-    }
-    
-    @keyframes glitch {
-      0%, 100% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
-      20% { text-shadow: -2px 0 #00e5ff, 2px 0 #0078d4; }
-      40% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
-      60% { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
-      80% { text-shadow: 2px 0 #00e5ff, -2px 0 #0078d4; }
-    }
-    
-    @keyframes glitch-1 {
-      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-      20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
-      40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
-      60% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
-      80% { clip-path: inset(80% 0 5% 0); transform: translate(-2px); }
-    }
-    
-    @keyframes glitch-2 {
-      0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-      20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
-      40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
-      60% { clip-path: inset(30% 0 40% 0); transform: translate(0); }
-      80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
     }
     
     .logout-btn {
@@ -469,6 +423,42 @@
         font-size: 30px;
       }
     }
+    
+    /* Loading state */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 30, 60, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(0, 229, 255, 0.3);
+      border-top: 4px solid #00e5ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: #00e5ff;
+      font-size: 18px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -477,6 +467,12 @@
   <div class="particles" id="particles"></div>
   <div class="circuit-lines" id="circuitLines"></div>
   <div class="binary-code" id="binaryCode"></div>
+  
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading your data...</div>
+  </div>
   
   <div class="app-container">
     <header>
@@ -490,12 +486,12 @@
         Networking
         <div class="description">Wiring Scheme</div>
       </div>
-      <div class="feature" onclick="handleProgrammingClick()" id="programmingFeature">
+      <div class="feature locked" onclick="handleProgrammingClick()" id="programmingFeature">
         <div class="feature-icon">💻</div>
         Programming
         <div class="description">HTML/CSS, PHP, & JS</div>
       </div>
-      <div class="feature" onclick="handleSystemUnitClick()" id="systemUnitFeature">
+      <div class="feature locked" onclick="handleSystemUnitClick()" id="systemUnitFeature">
         <div class="feature-icon">🧩</div>
         System Unit
         <div class="description">Assemble/Disassemble</div>
@@ -636,25 +632,54 @@
       window.location.href = "index.html";
     }
     
+    // Define unlock requirements
+    const UNLOCK_REQUIREMENTS = {
+      programming: 4560,  // Coins needed to unlock Programming
+      systemUnit: 9480    // Coins needed to unlock System Unit
+    };
+    
     async function loadDashboard() {
       try {
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         const players = await res.json();
         const loggedInPlayer = players.find(p => p.username === playerName);
-        const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
-        document.getElementById("coins").textContent = `💰 ${coins}`;
-        window.playerCoins= coins;
         
-        // Unlock logic using coins
-        if (coins < 4560) {
-          document.getElementById("programmingFeature").classList.add("locked");
-        }
-        if (coins < 9480) {
-          document.getElementById("systemUnitFeature").classList.add("locked");
+        if (loggedInPlayer) {
+          // Update coins display
+          const coins = loggedInPlayer.coins || 0;
+          document.getElementById("coins").textContent = `💰 ${coins}`;
+          
+          // Check unlocked features
+          if (coins >= UNLOCK_REQUIREMENTS.programming) {
+            document.getElementById("programmingFeature").classList.remove("locked");
+          }
+          
+          if (coins >= UNLOCK_REQUIREMENTS.systemUnit) {
+            document.getElementById("systemUnitFeature").classList.remove("locked");
+          }
+        } else {
+          // Player not found in database
+          document.getElementById("coins").textContent = "💰 0";
+          console.error("Player not found in database");
         }
       } catch (err) {
         console.error("Error loading dashboard:", err);
-        alert("❌ Failed to load dashboard.");
+        // Show error message
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = "❌ Failed to load your data. Please refresh the page.";
+        notification.style.color = "#ff5555";
+        notification.style.borderColor = "#ff5555";
+        notification.style.boxShadow = "0 0 15px rgba(255, 85, 85, 0.5)";
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      } finally {
+        // Hide loading overlay
+        document.getElementById("loadingOverlay").style.display = "none";
       }
     }
     
@@ -663,16 +688,34 @@
     }
     
     function handleProgrammingClick() {
-      if (window.playerCoins < 4560) {
-        alert("❌ Not enough coins to unlock Programming.");
+      if (document.getElementById("programmingFeature").classList.contains("locked")) {
+        // Create notification instead of alert
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = `❌ Not enough coins to unlock Programming. Need ${UNLOCK_REQUIREMENTS.programming} coins.`;
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
         return;
       }
       window.location.href = "levels/programminglevel.html";
     }
     
     function handleSystemUnitClick() {
-      if (window.playerCoins < 9480) {
-        alert("❌ Not enough coins to unlock System Unit.");
+      if (document.getElementById("systemUnitFeature").classList.contains("locked")) {
+        // Create notification instead of alert
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = `❌ Not enough coins to unlock System Unit. Need ${UNLOCK_REQUIREMENTS.systemUnit} coins.`;
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
         return;
       }
       window.location.href = "levels/systemunitlevel.html";
@@ -698,75 +741,99 @@
     function gotoSetting() { 
       window.location.href = "settings.html"; 
     }   
-    document.addEventListener("DOMContentLoaded", loadDashboard);
-    let dashCtx;
+    
     function gotoLearning() {
-  window.location.href = "learning.html";
-}
-
-
-// === INIT AUDIO ===
-function initAudio() {
-  if (!dashCtx) {
-    dashCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-}
-
-// === PLAY SOUND ===
-function playSound(freq, type = "sine", duration = 0.2, volume = 0.3) {
-  initAudio();
-  const osc = dashCtx.createOscillator();
-  const gain = dashCtx.createGain();
-
-  osc.type = type;
-  osc.frequency.value = freq;
-
-  gain.gain.value = volume;
-
-  osc.connect(gain);
-  gain.connect(dashCtx.destination);
-
-  osc.start();
-  osc.stop(dashCtx.currentTime + duration);
-}
-
-// === SPECIAL EFFECTS ===
-
-// Hover = soft blip
-function hoverSound() {
-  playSound(440, "sine", 0.15, 0.15);
-}
-
-// Click = deeper tech beep
-function clickSound() {
-  playSound(220, "square", 0.2, 0.25);
-  setTimeout(() => playSound(660, "sine", 0.1, 0.15), 100);
-}
-
-// Navigation success = rising "confirmation" tone
-function navSuccessSound() {
-  playSound(400, "triangle", 0.15, 0.2);
-  setTimeout(() => playSound(600, "triangle", 0.15, 0.2), 150);
-  setTimeout(() => playSound(800, "triangle", 0.25, 0.25), 300);
-}
-
-// === ATTACH TO DASHBOARD ELEMENTS ===
-window.addEventListener("load", () => {
-  initAudio();
-
-  // Example: all buttons get sounds
-  document.querySelectorAll("button, .btn, .menu-item").forEach(el => {
-    el.addEventListener("mouseenter", hoverSound);
-    el.addEventListener("click", clickSound);
-  });ccccc
-
-  // Example: simulate "navigation success" when a page link is clicked
-  document.querySelectorAll("a").forEach(el => {
-    el.addEventListener("click", (e) => {
-      navSuccessSound();
+      window.location.href = "learning.html";
+    }
+    
+    // Notification styling
+    const style = document.createElement('style');
+    style.textContent = `
+      .notification {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(13, 13, 13, 0.9);
+        color: #ff5555;
+        padding: 15px 25px;
+        border-radius: 10px;
+        border: 1px solid #ff5555;
+        box-shadow: 0 0 15px rgba(255, 85, 85, 0.5);
+        z-index: 1000;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        text-align: center;
+        opacity: 0;
+        animation: fadeInOut 3s forwards;
+      }
+      
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        20% { opacity: 1; transform: translate(-50%, 0); }
+        80% { opacity: 1; transform: translate(-50%, 0); }
+        100% { opacity: 0; transform: translate(-50%, 20px); }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Initialize audio context
+    let dashCtx;
+    
+    function initAudio() {
+      if (!dashCtx) {
+        dashCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+    
+    // Play sound effects
+    function playSound(freq, type = "sine", duration = 0.2, volume = 0.3) {
+      initAudio();
+      const osc = dashCtx.createOscillator();
+      const gain = dashCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.value = volume;
+      osc.connect(gain);
+      gain.connect(dashCtx.destination);
+      osc.start();
+      osc.stop(dashCtx.currentTime + duration);
+    }
+    
+    // Sound effect functions
+    function hoverSound() {
+      playSound(440, "sine", 0.15, 0.15);
+    }
+    
+    function clickSound() {
+      playSound(220, "square", 0.2, 0.25);
+      setTimeout(() => playSound(660, "sine", 0.1, 0.15), 100);
+    }
+    
+    function navSuccessSound() {
+      playSound(400, "triangle", 0.15, 0.2);
+      setTimeout(() => playSound(600, "triangle", 0.15, 0.2), 150);
+      setTimeout(() => playSound(800, "triangle", 0.25, 0.25), 300);
+    }
+    
+    // Attach sound effects to elements
+    window.addEventListener("load", () => {
+      initAudio();
+      
+      // Add hover and click sounds to interactive elements
+      document.querySelectorAll(".feature, .icon, .logout-btn").forEach(el => {
+        el.addEventListener("mouseenter", hoverSound);
+        el.addEventListener("click", clickSound);
+      });
+      
+      // Add navigation success sound to links
+      document.querySelectorAll("a").forEach(el => {
+        el.addEventListener("click", navSuccessSound);
+      });
     });
-  });
-});
+    
+    // Load dashboard when DOM is ready
+    document.addEventListener("DOMContentLoaded", loadDashboard);
   </script>
 </body>
 </html>

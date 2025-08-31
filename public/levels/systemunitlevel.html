@@ -203,8 +203,6 @@
     
     /* Updated Coins Display to match dashboard */
     .coins-display {
-      position: absolute;
-      left: 20px;
       font-size: 1rem;
       font-weight: bold;
       color: #00e5ff;
@@ -755,8 +753,11 @@
     <div class="tech-header">
       <div class="back-btn" onclick="goBack()">←</div>
       <div class="title">Techy Me</div>
-      <!-- Updated coins display to match dashboard -->
-      <div id="coins" class="coins-display">💰 0</div>
+      <div class="user-info">
+        <!-- Updated coins display to match dashboard -->
+        <div id="coins" class="coins-display">💰 0</div>
+        <span id="usernameDisplay">Guest</span>
+      </div>
     </div>
     
     <div class="content-title">System Unit</div>
@@ -863,7 +864,8 @@
     });
     
     // User info
-    const loggedInUser = localStorage.getItem("loggedInUser") || "User";
+    const loggedInUser = localStorage.getItem("loggedInUser") || "Guest";
+    document.getElementById("usernameDisplay").innerText = loggedInUser;
     
     // Define purchase costs for level unlocking
     const PURCHASE_COSTS = {
@@ -871,53 +873,60 @@
       HARD: 10200     // Coins needed to unlock Hard level
     };
     
-    // Load coins from API like in dashboard
-    async function loadCoins() {
+    // Load user data from database
+    async function loadUserData() {
       try {
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
+        if (!res.ok) throw new Error("Failed to fetch players");
         const players = await res.json();
         const loggedInPlayer = players.find(p => p.username === loggedInUser);
-        const coins = loggedInPlayer ? loggedInPlayer.coins : 0;
-        document.getElementById("coins").textContent = `💰 ${coins}`;
-        window.playerCoins = coins;
         
-        // Update localStorage with the latest coins from database
-        localStorage.setItem("coins", coins.toString());
-        
-        // Check unlocked levels from localStorage
-        checkUnlockedLevels();
-        
-        // Update progress bars
-        updateProgressBars(coins);
+        if (loggedInPlayer) {
+          // Get coins from database
+          const coins = loggedInPlayer.coins || 0;
+          document.getElementById("coins").textContent = `💰 ${coins}`;
+          window.playerCoins = coins;
+          
+          // Get unlocked levels from database
+          const unlockedLevels = loggedInPlayer.unlocked_levels || 
+            JSON.stringify({ easy: true, medium: false, hard: false });
+          window.unlockedLevels = JSON.parse(unlockedLevels);
+          
+          // Update UI based on unlocked status
+          checkUnlockedLevels();
+          
+          // Update progress bars
+          updateProgressBars(coins);
+        } else {
+          // Default values if player not found
+          document.getElementById("coins").textContent = "💰 0";
+          window.playerCoins = 0;
+          window.unlockedLevels = { easy: true, medium: false, hard: false };
+          checkUnlockedLevels();
+          updateProgressBars(0);
+        }
       } catch (err) {
-        console.error("Error loading coins:", err);
-        // Fallback to localStorage if API fails
-        const coins = localStorage.getItem("coins") || 0;
-        document.getElementById("coins").textContent = `💰 ${coins}`;
-        window.playerCoins = parseInt(coins);
-        
-        // Check unlocked levels from localStorage
+        console.error("Error loading user data:", err);
+        // Fallback to default values if database fetch fails
+        document.getElementById("coins").textContent = "💰 0";
+        window.playerCoins = 0;
+        window.unlockedLevels = { easy: true, medium: false, hard: false };
         checkUnlockedLevels();
-        
-        // Apply progress bars with fallback coins
-        updateProgressBars(coins);
+        updateProgressBars(0);
       }
     }
     
-    // Check which levels are unlocked from localStorage
+    // Check which levels are unlocked from database
     function checkUnlockedLevels() {
-      // Get unlocked levels from localStorage
-      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedSystemUnitLevels") || '{"easy":true,"medium":false,"hard":false}');
-      
       // Update UI based on unlocked status
-      if (unlockedLevels.medium) {
+      if (window.unlockedLevels.medium) {
         document.getElementById("mediumLevel").classList.remove("locked");
         document.querySelector("#mediumLevel .level-status").classList.remove("locked");
         document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
         document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
       }
       
-      if (unlockedLevels.hard) {
+      if (window.unlockedLevels.hard) {
         document.getElementById("hardLevel").classList.remove("locked");
         document.querySelector("#hardLevel .level-status").classList.remove("locked");
         document.querySelector("#hardLevel .level-status").classList.add("unlocked");
@@ -941,8 +950,8 @@
       }, 500);
     }
     
-    // Initialize coins on page load
-    document.addEventListener("DOMContentLoaded", loadCoins);
+    // Initialize user data on page load
+    document.addEventListener("DOMContentLoaded", loadUserData);
     
     function startLevel(level) {
       const levelElement = document.getElementById(level + "Level");
@@ -1026,17 +1035,12 @@
       // Deduct coins
       const newCoins = window.playerCoins - cost;
       
-      // Update localStorage for coins
-      localStorage.setItem("coins", newCoins.toString());
-      
-      // Update unlocked levels in localStorage
-      const unlockedLevels = JSON.parse(localStorage.getItem("unlockedSystemUnitLevels") || '{"easy":true,"medium":false,"hard":false}');
-      unlockedLevels[level] = true;
-      localStorage.setItem("unlockedSystemUnitLevels", JSON.stringify(unlockedLevels));
+      // Update unlocked levels
+      window.unlockedLevels[level] = true;
       
       // Try to update the database
       try {
-        const response = await fetch("https://postgres-test-p05s.onrender.com/update-coins", {
+        const response = await fetch("https://postgres-test-p05s.onrender.com/update-player-data", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -1044,17 +1048,17 @@
           body: JSON.stringify({ 
             username: loggedInUser, 
             coins: newCoins,
-            unlockedLevels: unlockedLevels
+            unlocked_levels: JSON.stringify(window.unlockedLevels)
           })
         });
         
         if (response.ok) {
-          console.log("Coins and unlocked levels updated in database successfully");
+          console.log("Player data updated in database successfully");
         } else {
-          console.error("Failed to update coins and unlocked levels in database");
+          console.error("Failed to update player data in database");
         }
       } catch (err) {
-        console.error("Error updating coins and unlocked levels in database:", err);
+        console.error("Error updating player data in database:", err);
       }
       
       // Update the UI for the level card

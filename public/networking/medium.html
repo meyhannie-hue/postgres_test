@@ -432,6 +432,14 @@
       animation: shake 0.4s, error-flash 0.5s; 
     }
     
+    /* New style for placed wires */
+    .wire.placed {
+      opacity: 0.6;
+      cursor: default;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+    }
+    
     .pin-dot { 
       position: absolute; 
       top: 50%; 
@@ -903,16 +911,59 @@
       slot.dataset.pin = i;
       slot.innerHTML = `Pin ${i} <span class="pin-dot"></span>`;
       pins.appendChild(slot);
-      slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('hover'); });
-      slot.addEventListener('dragleave', () => { slot.classList.remove('hover'); });
-      slot.addEventListener('drop', () => {
+      slot.addEventListener('dragover', e => { 
+        e.preventDefault(); 
+        slot.classList.add('hover'); 
+      });
+      slot.addEventListener('dragleave', () => { 
+        slot.classList.remove('hover'); 
+      });
+      slot.addEventListener('drop', (e) => {
+        e.preventDefault();
         slot.classList.remove('hover');
+        
+        // Check if wire is already placed
+        if (startWire.classList.contains('placed')) {
+          return;
+        }
+        
         const pin = slot.getAttribute('data-pin');
         const color = startWire.getAttribute('data-color');
+        
+        // Check if this pin already has a wire
+        const existingConnection = connections.find(c => c.pin === pin);
+        if (existingConnection) {
+          // Remove the existing connection and make the wire available again
+          existingConnection.wire.classList.remove('placed');
+          existingConnection.wire.draggable = true;
+          existingConnection.wire.style.cursor = 'grab';
+          // Remove active class from the slot
+          document.querySelector(`.slot[data-pin="${pin}"]`).classList.remove('active');
+        }
+        
+        // Check if this wire is already connected to another pin
+        const wireConnection = connections.find(c => c.color === color);
+        if (wireConnection) {
+          // Remove the connection and make the wire available again
+          wireConnection.wire.classList.remove('placed');
+          wireConnection.wire.draggable = true;
+          wireConnection.wire.style.cursor = 'grab';
+          // Remove active class from the previous slot
+          document.querySelector(`.slot[data-pin="${wireConnection.pin}"]`).classList.remove('active');
+        }
+        
+        // Filter out the old connections for this pin and wire
         connections = connections.filter(c => c.pin !== pin && c.color !== color);
+        
+        // Add the new connection
         connections.push({ pin, color, wire: startWire });
         
-        // Add active class to slot when wire is connected
+        // Mark the wire as placed
+        startWire.classList.add('placed');
+        startWire.draggable = false;
+        startWire.style.cursor = 'default';
+        
+        // Add active class to the slot
         slot.classList.add('active');
         
         drawConnections();
@@ -995,7 +1046,16 @@
       div.style.background = wiresData[color];
       div.innerHTML = `<span class="pin-dot"></span> ${color}`;
       wiresContainer.appendChild(div);
-      div.addEventListener('dragstart', () => { startWire = div; startTimer(); });
+      div.addEventListener('dragstart', (e) => { 
+        // Prevent dragging if wire is already placed
+        if (div.classList.contains('placed')) {
+          e.preventDefault();
+          return;
+        }
+        startWire = div; 
+        startTimer(); 
+        e.dataTransfer.effectAllowed = 'move';
+      });
       div.addEventListener('mousedown', startTimer);
       div.addEventListener('touchstart', startTimer);
     });
