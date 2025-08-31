@@ -638,23 +638,115 @@
       transform: translateY(-3px);
     }
     
-    /* Responsive */
+    /* Mobile Responsive Styles */
     @media (max-width: 480px) {
+      /* Container adjustments */
       .cyber-container {
-        min-height: 95vh;
+        min-height: 100vh;
         border-radius: 0;
       }
       
-      .content-title {
+      /* Header elements */
+      .title {
         font-size: 24px;
+        letter-spacing: 1px;
+      }
+      
+      .back-btn {
+        font-size: 26px;
+      }
+      
+      .user-info {
+        font-size: 16px;
+      }
+      
+      .coins-display {
+        font-size: 1.2rem;
+      }
+      
+      /* Content title */
+      .content-title {
+        font-size: 28px;
+        margin: 25px 0;
+        letter-spacing: 2px;
+      }
+      
+      .content-title::before,
+      .content-title::after {
+        width: 60px;
+      }
+      
+      /* Level cards */
+      .level-cards {
+        gap: 20px;
+        padding: 0 15px 30px 15px;
       }
       
       .level-card {
-        padding: 15px;
+        padding: 20px;
       }
       
       .level-name {
-        font-size: 18px;
+        font-size: 20px;
+      }
+      
+      .level-name .emoji {
+        font-size: 26px;
+      }
+      
+      .level-description {
+        font-size: 15px;
+        margin-bottom: 18px;
+      }
+      
+      .cyber-badge {
+        font-size: 12px;
+        padding: 5px 12px;
+        margin-bottom: 12px;
+      }
+      
+      .level-status {
+        font-size: 13px;
+        padding: 6px 14px;
+      }
+      
+      /* Progress bar */
+      .progress-container {
+        height: 8px;
+      }
+      
+      /* Notification */
+      .notification {
+        font-size: 16px;
+        padding: 18px 25px;
+        bottom: 20px;
+      }
+      
+      /* Modal elements */
+      .modal-title {
+        font-size: 24px;
+        margin-bottom: 25px;
+      }
+      
+      .modal-text {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+      
+      .modal-btn {
+        font-size: 14px;
+        padding: 12px 22px;
+      }
+      
+      /* Loading overlay */
+      .loading-text {
+        font-size: 22px;
+        margin-bottom: 35px;
+      }
+      
+      .loading-circle {
+        width: 24px;
+        height: 24px;
       }
     }
   </style>

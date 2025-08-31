@@ -183,6 +183,7 @@
       border: 1px solid rgba(207, 216, 220, 0.2);
       margin-bottom: 30px;
       line-height: 1.6;
+      font-family: 'Poppins', sans-serif;
     }
     
     .instructions-text p {
@@ -195,6 +196,12 @@
     
     .instructions-text li {
       margin: 10px 0;
+    }
+    
+    .instructions-text h3 {
+      color: #ff9100;
+      margin-top: 20px;
+      font-family: 'Orbitron', sans-serif;
     }
     
     .port-list {
@@ -227,12 +234,14 @@
       color: #ff9100;
       font-weight: bold;
       font-size: 14px;
+      font-family: 'Orbitron', sans-serif;
     }
     
     .port-name {
       font-weight: 600;
       color: #cfd8dc;
       font-size: 14px;
+      font-family: 'Poppins', sans-serif;
     }
     
     .start-button {
@@ -313,6 +322,7 @@
       overflow: hidden;
       padding: 10px;
       box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
     
     .drop-zone:hover {
@@ -562,10 +572,10 @@
       <div class="instructions-text">
         <p>Welcome to the Tech Lab! Your mission is to identify and correctly label the various ports on the back of a computer case.</p>
         
-        <h3 style="color: #ff9100; margin-top: 20px;">Mission Briefing:</h3>
+        <h3>Mission Briefing:</h3>
         <p>This interactive simulation will test your knowledge of computer ports and their proper identification.</p>
         
-        <h3 style="color: #ff9100; margin-top: 20px;">Ports to Identify:</h3>
+        <h3>Ports to Identify:</h3>
         <div class="port-list">
           <div class="port-item">
             <div class="port-icon">PS2</div>
@@ -585,7 +595,7 @@
           </div>
         </div>
         
-        <h3 style="color: #ff9100; margin-top: 20px;">Instructions:</h3>
+        <h3>Instructions:</h3>
         <ul>
           <li>Drag each port label from the selection area to its correct position on the computer case</li>
           <li>Labels will snap into place with a magnetic animation when correctly positioned</li>
@@ -594,7 +604,7 @@
           <li>Earn points based on the number of correctly identified ports</li>
         </ul>
         
-        <h3 style="color: #ff9100; margin-top: 20px;">Rewards:</h3>
+        <h3>Rewards:</h3>
         <p>Successfully identifying all ports will earn you maximum points. Each correctly labeled port contributes to your total score.</p>
       </div>
       
@@ -755,74 +765,74 @@
       }
     }
     // === 🎵 SYSTEM UNIT LAB AMBIENCE ===
-let sysAudioCtx, sysMasterGain, sysIntervals = [];
-function startSystemUnitMusic() {
-  if (sysAudioCtx) return; // already playing
-  sysAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  sysMasterGain = sysAudioCtx.createGain();
-  sysMasterGain.gain.value = 0.6; // 🎚 lower ambient volume
-  sysMasterGain.connect(sysAudioCtx.destination);
-  // 🔹 Ambient low hum (feels like PC fans or lab machines running)
-  sysIntervals.push(setInterval(() => {
-    playToneSys(80, "sawtooth", 2, 0.15);
-  }, 2000));
-  // 🔹 Random digital beeps (assembly scanner sounds)
-  sysIntervals.push(setInterval(() => {
-    let freqs = [523, 659, 784, 988]; // high-tech tones
-    let freq = freqs[Math.floor(Math.random() * freqs.length)];
-    playToneSys(freq, "triangle", 0.2, 0.25);
-  }, 1200));
-  // 🔹 Metallic click / clank (like snapping PC parts in)
-  sysIntervals.push(setInterval(() => {
-    playClickSys();
-  }, 2500));
-}
-// === SOUND HELPERS ===
-function playToneSys(freq, type, duration, volume) {
-  const osc = sysAudioCtx.createOscillator();
-  const gain = sysAudioCtx.createGain();
-  gain.gain.value = volume;
-  osc.type = type;
-  osc.frequency.value = freq;
-  osc.connect(gain);
-  gain.connect(sysMasterGain);
-  osc.start();
-  osc.stop(sysAudioCtx.currentTime + duration);
-}
-function playClickSys() {
-  const bufferSize = sysAudioCtx.sampleRate * 0.05;
-  const buffer = sysAudioCtx.createBuffer(1, bufferSize, sysAudioCtx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = Math.random() * 2 - 1; // noise
-  }
-  const noise = sysAudioCtx.createBufferSource();
-  noise.buffer = buffer;
-  const gain = sysAudioCtx.createGain();
-  gain.gain.value = 0.2;
-  noise.connect(gain);
-  gain.connect(sysMasterGain);
-  noise.start();
-  noise.stop(sysAudioCtx.currentTime + 0.05);
-}
-// === STOP ===
-function stopSystemUnitMusic() {
-  sysIntervals.forEach(id => clearInterval(id));
-  sysIntervals = [];
-  if (sysAudioCtx) {
-    sysAudioCtx.close();
-    sysAudioCtx = null;
-  }
-}
-// === AUTO START ===
-window.addEventListener("load", () => {
-  // Some browsers require a user interaction — this ensures auto-start after first click
-  document.body.addEventListener("click", () => {
-    if (!sysAudioCtx) startSystemUnitMusic();
-  }, { once: true });
-  // If autoplay is allowed, try directly
-  startSystemUnitMusic();
-});
+    let sysAudioCtx, sysMasterGain, sysIntervals = [];
+    function startSystemUnitMusic() {
+      if (sysAudioCtx) return; // already playing
+      sysAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      sysMasterGain = sysAudioCtx.createGain();
+      sysMasterGain.gain.value = 0.6; // 🎚 lower ambient volume
+      sysMasterGain.connect(sysAudioCtx.destination);
+      // 🔹 Ambient low hum (feels like PC fans or lab machines running)
+      sysIntervals.push(setInterval(() => {
+        playToneSys(80, "sawtooth", 2, 0.15);
+      }, 2000));
+      // 🔹 Random digital beeps (assembly scanner sounds)
+      sysIntervals.push(setInterval(() => {
+        let freqs = [523, 659, 784, 988]; // high-tech tones
+        let freq = freqs[Math.floor(Math.random() * freqs.length)];
+        playToneSys(freq, "triangle", 0.2, 0.25);
+      }, 1200));
+      // 🔹 Metallic click / clank (like snapping PC parts in)
+      sysIntervals.push(setInterval(() => {
+        playClickSys();
+      }, 2500));
+    }
+    // === SOUND HELPERS ===
+    function playToneSys(freq, type, duration, volume) {
+      const osc = sysAudioCtx.createOscillator();
+      const gain = sysAudioCtx.createGain();
+      gain.gain.value = volume;
+      osc.type = type;
+      osc.frequency.value = freq;
+      osc.connect(gain);
+      gain.connect(sysMasterGain);
+      osc.start();
+      osc.stop(sysAudioCtx.currentTime + duration);
+    }
+    function playClickSys() {
+      const bufferSize = sysAudioCtx.sampleRate * 0.05;
+      const buffer = sysAudioCtx.createBuffer(1, bufferSize, sysAudioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1; // noise
+      }
+      const noise = sysAudioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const gain = sysAudioCtx.createGain();
+      gain.gain.value = 0.2;
+      noise.connect(gain);
+      gain.connect(sysMasterGain);
+      noise.start();
+      noise.stop(sysAudioCtx.currentTime + 0.05);
+    }
+    // === STOP ===
+    function stopSystemUnitMusic() {
+      sysIntervals.forEach(id => clearInterval(id));
+      sysIntervals = [];
+      if (sysAudioCtx) {
+        sysAudioCtx.close();
+        sysAudioCtx = null;
+      }
+    }
+    // === AUTO START ===
+    window.addEventListener("load", () => {
+      // Some browsers require a user interaction — this ensures auto-start after first click
+      document.body.addEventListener("click", () => {
+        if (!sysAudioCtx) startSystemUnitMusic();
+      }, { once: true });
+      // If autoplay is allowed, try directly
+      startSystemUnitMusic();
+    });
   </script>
 </body>
 </html>

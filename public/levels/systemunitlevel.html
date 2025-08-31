@@ -712,34 +712,180 @@
       transform: translateY(-3px);
     }
     
-    /* Responsive */
+    /* Enhanced Mobile Responsive Styles */
     @media (max-width: 480px) {
+      /* Container adjustments */
       .tech-container {
-        min-height: 95vh;
+        min-height: 100vh;
         border-radius: 0;
       }
       
+      /* Header elements */
+      .title {
+        font-size: 26px;
+        letter-spacing: 1px;
+      }
+      
+      .back-btn {
+        font-size: 26px;
+        width: 44px;
+        height: 44px;
+      }
+      
+      .user-info {
+        font-size: 16px;
+      }
+      
+      .coins-display {
+        font-size: 1.4rem;
+      }
+      
+      /* Content title */
       .content-title {
-        font-size: 24px;
+        font-size: 30px;
+        margin: 25px 0 20px;
+        letter-spacing: 2px;
+      }
+      
+      .content-title::before,
+      .content-title::after {
+        width: 60px;
+      }
+      
+      /* Level cards */
+      .level-cards {
+        gap: 20px;
+        padding: 0 15px 30px 15px;
       }
       
       .level-card {
-        padding: 15px;
+        padding: 22px;
+        min-height: 160px;
       }
       
       .level-name {
-        font-size: 18px;
+        font-size: 22px;
+        gap: 12px;
       }
       
+      .level-name .icon {
+        font-size: 28px;
+      }
+      
+      .level-description {
+        font-size: 16px;
+        margin-bottom: 18px;
+        line-height: 1.5;
+      }
+      
+      .tech-badge {
+        font-size: 13px;
+        padding: 6px 14px;
+        margin-bottom: 12px;
+        border-radius: 6px;
+      }
+      
+      .level-status {
+        font-size: 14px;
+        padding: 8px 16px;
+        border-radius: 20px;
+      }
+      
+      /* Progress bar */
+      .progress-container {
+        height: 10px;
+        border-radius: 5px;
+      }
+      
+      /* Notification */
+      .notification {
+        font-size: 18px;
+        padding: 20px 25px;
+        bottom: 20px;
+        max-width: 90%;
+        border-radius: 12px;
+      }
+      
+      /* Modal elements */
+      .modal-title {
+        font-size: 26px;
+        margin-bottom: 25px;
+      }
+      
+      .modal-text {
+        font-size: 18px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+      
+      .modal-btn {
+        font-size: 16px;
+        padding: 14px 24px;
+        border-radius: 30px;
+        min-width: 120px;
+        min-height: 48px;
+      }
+      
+      .modal-buttons {
+        gap: 20px;
+      }
+      
+      /* Loading overlay */
+      .loading-text {
+        font-size: 24px;
+        margin-bottom: 35px;
+        letter-spacing: 3px;
+      }
+      
+      .loading-hardware {
+        gap: 20px;
+      }
+      
+      .hardware-icon {
+        font-size: 28px;
+      }
+      
+      /* PC Parts and Drop Zone */
       .pc-parts-container {
-        bottom: 10px;
-        right: 10px;
+        bottom: 15px;
+        right: 15px;
+        gap: 12px;
       }
       
       .pc-part {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
+        width: 56px;
+        height: 56px;
+        font-size: 28px;
+      }
+      
+      .drop-zone {
+        width: 180px;
+        height: 180px;
+      }
+      
+      .drop-zone .pc-part {
+        width: 70px;
+        height: 70px;
+        font-size: 35px;
+      }
+      
+      .drop-zone-text {
+        font-size: 16px;
+      }
+      
+      /* Additional mobile improvements */
+      .tech-header {
+        padding: 15px;
+      }
+      
+      /* Make sure touch targets are large enough */
+      .level-card {
+        min-height: 180px;
+      }
+      
+      /* Improve readability with more contrast */
+      .level-description {
+        color: #e0e0e0;
       }
     }
   </style>

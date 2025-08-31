@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TECHY ME - Get Started</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Space+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -11,7 +14,7 @@
       box-sizing: border-box;
     }
     body {
-      font-family: 'Courier New', monospace;
+      font-family: 'Space Mono', monospace;
       background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
       min-height: 100vh;
       display: flex;
@@ -140,6 +143,7 @@
       position: relative;
       animation: glitch 5s infinite;
       text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+      font-family: 'Orbitron', sans-serif;
     }
     
     .card h1::before, .card h1::after {
@@ -168,6 +172,7 @@
       margin-bottom: 30px;
       color: #b3e5fc;
       animation: fadeIn 2s ease;
+      font-family: 'Share Tech Mono', monospace;
     }
     
     .btn {
@@ -183,6 +188,8 @@
       position: relative;
       overflow: hidden;
       animation: fadeIn 1.5s ease;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 700;
     }
     
     /* Button Shine Effect */
@@ -281,7 +288,7 @@
       80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
     }
     
-    /* Enhanced Loading Screen with IT Theme */
+    /* NEW LOADING SCREEN - FUTURISTIC TECH STYLE */
     .loader {
       position: fixed;
       top: 0;
@@ -295,13 +302,13 @@
       justify-content: center;
       align-items: center;
       color: #00e5ff;
-      font-family: monospace;
+      font-family: 'Share Tech Mono', monospace;
       text-align: center;
       overflow: hidden;
     }
     
-    /* Digital Rain for Loading Screen */
-    .loader-digital-rain {
+    /* Animated Circuit Background */
+    .circuit-bg {
       position: absolute;
       top: 0;
       left: 0;
@@ -311,140 +318,227 @@
       opacity: 0.1;
     }
     
-    /* Loading Circuit Board */
-    .loader-circuit-board {
+    .circuit-line {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+      height: 2px;
+      transform-origin: left center;
+      animation: circuit-flow 3s linear infinite;
+    }
+    
+    @keyframes circuit-flow {
+      0% {
+        transform: scaleX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: scaleX(1);
+        opacity: 0;
+      }
+    }
+    
+    /* Central Tech Hub */
+    .tech-hub {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin-bottom: 40px;
+    }
+    
+    /* Rotating Rings */
+    .ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba(0, 229, 255, 0.5);
+    }
+    
+    .ring-1 {
+      width: 200px;
+      height: 200px;
+      animation: rotate-clockwise 10s linear infinite;
+    }
+    
+    .ring-2 {
+      width: 160px;
+      height: 160px;
+      border-color: rgba(0, 120, 212, 0.7);
+      animation: rotate-counter 8s linear infinite;
+    }
+    
+    .ring-3 {
+      width: 120px;
+      height: 120px;
+      border-color: rgba(0, 229, 255, 0.9);
+      animation: rotate-clockwise 6s linear infinite;
+    }
+    
+    /* Central Core */
+    .core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #00e5ff, #0078d4);
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
+      animation: pulse-core 2s infinite alternate;
+    }
+    
+    @keyframes rotate-clockwise {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes rotate-counter {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+    
+    @keyframes pulse-core {
+      0% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.8); }
+      100% { box-shadow: 0 0 40px rgba(0, 229, 255, 1); }
+    }
+    
+    /* Scanning Text Effect */
+    .scanning-text {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .scanning-text::after {
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
-      opacity: 0.05;
-      background-image: 
-        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
-      background-size: 20px 20px;
+      background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
+      animation: scan 2s linear infinite;
     }
     
-    /* Loading Logo Animation */
-    .loading-logo {
-      margin-bottom: 30px;
-      position: relative;
-      animation: pulse-logo 2s infinite alternate;
-    }
-    
-    @keyframes pulse-logo {
-      0% { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(1.05); opacity: 1; }
-    }
-    
-    .loading-logo::before {
-      content: '';
-      position: absolute;
-      top: -20px;
-      left: -20px;
-      right: -20px;
-      bottom: -20px;
-      border: 2px solid #00e5ff;
-      border-radius: 50%;
-      opacity: 0.3;
-      animation: rotate 10s linear infinite;
-    }
-    
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    .loading-logo::after {
-      content: '';
-      position: absolute;
-      top: -15px;
-      left: -15px;
-      right: -15px;
-      bottom: -15px;
-      border: 1px dashed #0078d4;
-      border-radius: 50%;
-      opacity: 0.5;
-      animation: rotate-reverse 8s linear infinite;
-    }
-    
-    @keyframes rotate-reverse {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(-360deg); }
-    }
-    
-    .typing-text {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 2px solid #00e5ff;
-      animation: typing 2s steps(20, end), blink 0.7s step-end infinite;
-    }
-    
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 18ch }
-    }
-    
-    @keyframes blink {
-      50% { border-color: transparent }
-    }
-    
-    .progress-bar {
-      width: 300px;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 5px;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #00e5ff, #0078d4);
-      animation: fillBar 7s linear forwards;
-    }
-    
-    /* Progress Bar Glow Effect */
-    .progress-bar::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(to right, transparent, rgba(0, 229, 255, 0.5), transparent);
-      animation: progress-glow 2s linear infinite;
-    }
-    
-    @keyframes progress-glow {
+    @keyframes scan {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(100%); }
     }
     
-    @keyframes fillBar {
-      to { width: 100%; }
+    /* Circular Progress Bar */
+    .progress-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin-bottom: 30px;
     }
     
-    /* Loading Status Messages */
-    .loading-status {
+    .progress-circle {
+      transform: rotate(-90deg);
+    }
+    
+    .progress-background {
+      fill: none;
+      stroke: rgba(0, 229, 255, 0.2);
+      stroke-width: 8;
+    }
+    
+    .progress-bar {
+      fill: none;
+      stroke: url(#gradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 440;
+      animation: progress 7s linear forwards;
+    }
+    
+    @keyframes progress {
+      to { stroke-dashoffset: 0; }
+    }
+    
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    /* Tech Status Dots */
+    .status-dots {
+      display: flex;
+      justify-content: center;
       margin-top: 20px;
-      font-size: 0.9rem;
-      color: #b3e5fc;
-      opacity: 0.7;
+    }
+    
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.3);
+      margin: 0 5px;
+      position: relative;
+    }
+    
+    .dot.active {
+      background: #00e5ff;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+    }
+    
+    .dot::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
       height: 20px;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.2);
+      animation: dot-pulse 2s infinite;
     }
     
-    .loading-status-item {
-      display: none;
+    .dot.active::after {
+      background: rgba(0, 229, 255, 0.4);
     }
     
-    .loading-status-item.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
+    @keyframes dot-pulse {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.4; }
+      100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+    }
+    
+    /* Tech Loading Messages */
+    .loading-messages {
+      margin-top: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .message {
+      position: absolute;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    
+    .message.active {
+      opacity: 1;
     }
     
     @media (max-width: 500px) {
@@ -455,8 +549,32 @@
         font-size: 0.95rem;
         padding: 10px 24px;
       }
-      .progress-bar {
-        width: 250px;
+      .tech-hub {
+        width: 150px;
+        height: 150px;
+      }
+      .ring-1 {
+        width: 150px;
+        height: 150px;
+      }
+      .ring-2 {
+        width: 120px;
+        height: 120px;
+      }
+      .ring-3 {
+        width: 90px;
+        height: 90px;
+      }
+      .core {
+        width: 60px;
+        height: 60px;
+      }
+      .scanning-text {
+        font-size: 1.2rem;
+      }
+      .progress-container {
+        width: 120px;
+        height: 120px;
       }
     }
   </style>
@@ -467,29 +585,45 @@
   <div class="circuit-board"></div>
   <div class="particles" id="particles"></div>
   
-  <!-- Enhanced Loading Screen -->
+  <!-- NEW LOADING SCREEN -->
   <div class="loader" id="loader">
-    <canvas class="loader-digital-rain" id="loaderDigitalRain"></canvas>
-    <div class="loader-circuit-board"></div>
+    <div class="circuit-bg" id="circuitBg"></div>
     
-    <div class="loading-logo">
-      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7V12C2 16.5 4.23 20.68 12 22C19.77 20.68 22 16.5 22 12V7L12 2Z" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M12 11V15" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="12" cy="8" r="1" fill="#00e5ff"/>
+    <div class="tech-hub">
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="ring ring-3"></div>
+      <div class="core"></div>
+    </div>
+    
+    <div class="scanning-text">INITIALIZING TECHY ME</div>
+    
+    <div class="progress-container">
+      <svg class="progress-circle" width="150" height="150">
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0078d4" />
+            <stop offset="100%" stop-color="#00e5ff" />
+          </linearGradient>
+        </defs>
+        <circle class="progress-background" cx="75" cy="75" r="70"></circle>
+        <circle class="progress-bar" cx="75" cy="75" r="70"></circle>
       </svg>
+      <div class="progress-text">0%</div>
     </div>
     
-    <div class="typing-text">Loading TECHY ME</div>
-    <div class="progress-bar">
-      <div class="progress-fill"></div>
+    <div class="status-dots">
+      <div class="dot" id="dot1"></div>
+      <div class="dot" id="dot2"></div>
+      <div class="dot" id="dot3"></div>
+      <div class="dot" id="dot4"></div>
     </div>
     
-    <div class="loading-status">
-      <div class="loading-status-item active" id="status1">Initializing system...</div>
-      <div class="loading-status-item" id="status2">Loading modules...</div>
-      <div class="loading-status-item" id="status3">Connecting to server...</div>
-      <div class="loading-status-item" id="status4">Almost ready...</div>
+    <div class="loading-messages">
+      <div class="message active" id="msg1">Booting system...</div>
+      <div class="message" id="msg2">Loading modules...</div>
+      <div class="message" id="msg3">Connecting to network...</div>
+      <div class="message" id="msg4">System ready!</div>
     </div>
   </div>
   
@@ -531,7 +665,7 @@
       rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
       
       rainCtx.fillStyle = '#00e5ff';
-      rainCtx.font = `${fontSize}px monospace`;
+      rainCtx.font = `${fontSize}px 'Space Mono', monospace`;
       
       for (let i = 0; i < drops.length; i++) {
         const text = characters.charAt(Math.floor(Math.random() * characters.length));
@@ -553,43 +687,6 @@
       rainCanvas.width = window.innerWidth;
       rainCanvas.height = window.innerHeight;
     });
-    
-    // Digital Rain Effect for Loading Screen
-    const loaderRainCanvas = document.getElementById('loaderDigitalRain');
-    const loaderRainCtx = loaderRainCanvas.getContext('2d');
-    
-    // Set canvas size
-    loaderRainCanvas.width = window.innerWidth;
-    loaderRainCanvas.height = window.innerHeight;
-    
-    // Initialize drops for loader
-    const loaderDrops = [];
-    for (let i = 0; i < columns; i++) {
-      loaderDrops[i] = Math.random() * loaderRainCanvas.height;
-    }
-    
-    // Draw the digital rain for loader
-    function drawLoaderRain() {
-      loaderRainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
-      loaderRainCtx.fillRect(0, 0, loaderRainCanvas.width, loaderRainCanvas.height);
-      
-      loaderRainCtx.fillStyle = '#00e5ff';
-      loaderRainCtx.font = `${fontSize}px monospace`;
-      
-      for (let i = 0; i < loaderDrops.length; i++) {
-        const text = characters.charAt(Math.floor(Math.random() * characters.length));
-        loaderRainCtx.fillText(text, i * fontSize, loaderDrops[i] * fontSize);
-        
-        if (loaderDrops[i] * fontSize > loaderRainCanvas.height && Math.random() > 0.975) {
-          loaderDrops[i] = 0;
-        }
-        
-        loaderDrops[i]++;
-      }
-    }
-    
-    // Animation loop for loader digital rain
-    setInterval(drawLoaderRain, 33);
     
     // Create floating particles
     const particlesContainer = document.getElementById('particles');
@@ -633,38 +730,95 @@
       binaryContainer.appendChild(binaryChar);
     }
     
-    // Loading status messages animation
-    const statusMessages = [
-      document.getElementById('status1'),
-      document.getElementById('status2'),
-      document.getElementById('status3'),
-      document.getElementById('status4')
-    ];
+    // Create circuit lines for loading screen
+    const circuitBg = document.getElementById('circuitBg');
+    const lineCount = 15;
     
-    let currentStatus = 0;
+    for (let i = 0; i < lineCount; i++) {
+      const line = document.createElement('div');
+      line.className = 'circuit-line';
+      
+      // Random position
+      line.style.top = `${Math.random() * 100}%`;
+      line.style.left = '0';
+      line.style.width = `${Math.random() * 30 + 20}%`;
+      
+      // Random animation delay and duration
+      const delay = Math.random() * 3;
+      const duration = Math.random() * 2 + 2;
+      line.style.animationDelay = `${delay}s`;
+      line.style.animationDuration = `${duration}s`;
+      
+      circuitBg.appendChild(line);
+    }
     
-    // Change status messages during loading
-    const statusInterval = setInterval(() => {
-      if (currentStatus < statusMessages.length - 1) {
-        statusMessages[currentStatus].classList.remove('active');
-        currentStatus++;
-        statusMessages[currentStatus].classList.add('active');
-      } else {
-        clearInterval(statusInterval);
-      }
-    }, 1750); // 7000ms / 4 messages
-    
-    // Original functionality
+    // Loading screen animations
     window.addEventListener("load", () => {
       const loader = document.getElementById("loader");
       const mainCard = document.getElementById("mainCard");
       const loadingSound = document.getElementById("loadingSound");
+      const progressText = document.querySelector('.progress-text');
       
       // Play loading sound
       loadingSound.muted = false;
       loadingSound.play().catch(err => {
         console.warn("Autoplay blocked:", err);
       });
+      
+      // Animate progress text
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += 1;
+        progressText.textContent = `${progress}%`;
+        
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+        }
+      }, 70);
+      
+      // Animate status dots
+      const dots = [
+        document.getElementById('dot1'),
+        document.getElementById('dot2'),
+        document.getElementById('dot3'),
+        document.getElementById('dot4')
+      ];
+      
+      let currentDot = 0;
+      const dotInterval = setInterval(() => {
+        if (currentDot > 0) {
+          dots[currentDot - 1].classList.remove('active');
+        }
+        
+        if (currentDot < dots.length) {
+          dots[currentDot].classList.add('active');
+          currentDot++;
+        } else {
+          clearInterval(dotInterval);
+        }
+      }, 1750);
+      
+      // Animate loading messages
+      const messages = [
+        document.getElementById('msg1'),
+        document.getElementById('msg2'),
+        document.getElementById('msg3'),
+        document.getElementById('msg4')
+      ];
+      
+      let currentMessage = 0;
+      const messageInterval = setInterval(() => {
+        if (currentMessage > 0) {
+          messages[currentMessage - 1].classList.remove('active');
+        }
+        
+        if (currentMessage < messages.length) {
+          messages[currentMessage].classList.add('active');
+          currentMessage++;
+        } else {
+          clearInterval(messageInterval);
+        }
+      }, 1750);
       
       // Show card after 7 seconds
       setTimeout(() => {
@@ -686,4 +840,4 @@
     }
   </script>
 </body>
-</html> 
+</html>

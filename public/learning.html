@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechLearn Academy - Techy Me Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -11,7 +12,7 @@
       box-sizing: border-box;
     }
     body {
-      font-family: 'Courier New', monospace;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
       color: #e0f7fa;
       overflow-x: hidden;
@@ -127,7 +128,7 @@
       z-index: -1;
       opacity: 0.03;
       pointer-events: none;
-      font-family: monospace;
+      font-family: 'Courier New', monospace;
       font-size: 14px;
       color: #00e5ff;
       overflow: hidden;
@@ -207,6 +208,7 @@
       color: #00e5ff;
       text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
       animation: pulse 2s infinite;
+      font-family: 'Orbitron', sans-serif;
     }
     
     @keyframes pulse {
@@ -222,6 +224,7 @@
       text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
       animation: glitch 5s infinite;
       position: relative;
+      font-family: 'Orbitron', sans-serif;
     }
     
     .title::before, .title::after {
@@ -307,6 +310,7 @@
       border-radius: 8px;
       transition: all 0.3s ease;
       margin: 0 5px;
+      font-family: 'Orbitron', sans-serif;
     }
     
     .tab-button:hover {
@@ -345,6 +349,7 @@
       color: #00ffff;
       border-bottom: 3px solid #00ffff;
       text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      font-family: 'Orbitron', sans-serif;
     }
     
     h3 {
@@ -352,12 +357,14 @@
       font-size: 1.2rem;
       color: #00ccff;
       text-shadow: 0 0 5px rgba(0, 204, 255, 0.5);
+      font-family: 'Orbitron', sans-serif;
     }
     
     h4 {
       margin-bottom: 8px;
       font-size: 1rem;
       color: #00ffff;
+      font-family: 'Orbitron', sans-serif;
     }
     
     .card {
@@ -418,6 +425,7 @@
       text-align: center;
       margin-bottom: 10px;
       color: #00ffff;
+      font-family: 'Orbitron', sans-serif;
     }
     
     ul {
@@ -440,6 +448,7 @@
     
     .advanced-topic h4 {
       color: #00ccff;
+      font-family: 'Orbitron', sans-serif;
     }
     
     .explanation {
@@ -452,6 +461,7 @@
     
     .explanation h4 {
       color: #00ff99;
+      font-family: 'Orbitron', sans-serif;
     }
     
     footer {
@@ -576,6 +586,7 @@
       color: #00e5ff;
       font-size: 18px;
       text-align: center;
+      font-family: 'Orbitron', sans-serif;
     }
     
     /* Notification styling */
@@ -874,7 +885,7 @@
       
       <div class="code-block">
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: #f0f0f0;
   margin: 0;
   padding: 20px;
@@ -890,6 +901,7 @@ body {
 h1 {
   color: #333;
   text-align: center;
+  font-family: 'Orbitron', sans-serif;
 }
 .button {
   display: inline-block;
@@ -1596,7 +1608,6 @@ fetch('https://api.example.com/data')
         window.location.href = "index.html";
         return;
       }
-
       try {
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         const players = await res.json();

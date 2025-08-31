@@ -220,6 +220,7 @@
     margin-bottom: 20px;
     font-size: 24px;
     text-shadow: 0 0 10px rgba(0,255,136,0.5);
+    font-family: 'Fira Code', monospace;
   }
   
   .terminal-prompt {
@@ -248,6 +249,7 @@
     border: 1px solid rgba(0,255,136,0.3);
     margin-bottom: 20px;
     line-height: 1.6;
+    font-family: 'Poppins', sans-serif;
   }
   
   .instructions-text p {
@@ -260,6 +262,12 @@
   
   .instructions-text li {
     margin: 8px 0;
+  }
+  
+  .instructions-text h3 {
+    color: #00ff88;
+    margin-top: 20px;
+    font-family: 'Fira Code', monospace;
   }
   
   .challenge {
@@ -482,10 +490,10 @@
       <div class="instructions-text">
         <p>Agent, your mission is to infiltrate the system by completing a series of CSS styling challenges to manipulate the visual interface.</p>
         
-        <h3 style="color: #00ff88; margin-top: 20px;">OBJECTIVE:</h3>
+        <h3>OBJECTIVE:</h3>
         <p>Successfully complete all 5 phases of CSS challenges to gain access to the system's styling controls.</p>
         
-        <h3 style="color: #00ff88; margin-top: 20px;">MISSION PARAMETERS:</h3>
+        <h3>MISSION PARAMETERS:</h3>
         <ul>
           <li>Each phase requires writing CSS code to style HTML elements</li>
           <li>Your code will be applied to a test environment for evaluation</li>
@@ -494,10 +502,10 @@
           <li>Complete all phases to unlock the system</li>
         </ul>
         
-        <h3 style="color: #00ff88; margin-top: 20px;">REWARD:</h3>
+        <h3>REWARD:</h3>
         <p>Upon successful completion, you will be awarded 9,120 points and 7,620 coins.</p>
         
-        <h3 style="color: #00ff88; margin-top: 20px;">SECURITY WARNING:</h3>
+        <h3>SECURITY WARNING:</h3>
         <p>The system has advanced CSS parsing mechanisms. Precision in syntax is required.</p>
       </div>
       
@@ -518,7 +526,7 @@
       <div class="placeholder"></div>
     </header>
     <div class="challenge">
-      <div id="instruction">Phase 1: Make all &lt;h1&gt; elements have green text color.</div>
+      <div id="instruction">Phase 1: Make all h1 elements have green text color.</div>
       <div id="progress">1 / 5</div>
       <div class="progress-container">
         <div class="progress-bar" id="progressBar"></div>

@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Techy Me</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Space+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -11,7 +14,7 @@
       box-sizing: border-box;
     }
     body {
-      font-family: 'Courier New', monospace;
+      font-family: 'Space Mono', monospace;
       background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
       color: #e0f7fa;
       overflow: hidden;
@@ -126,7 +129,7 @@
       z-index: -1;
       opacity: 0.03;
       pointer-events: none;
-      font-family: monospace;
+      font-family: 'Space Mono', monospace;
       font-size: 14px;
       color: #00e5ff;
       overflow: hidden;
@@ -220,6 +223,7 @@
       color: #00e5ff;
       text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
       position: relative;
+      font-family: 'Orbitron', sans-serif;
     }
     
     .logout-btn {
@@ -262,6 +266,7 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       cursor: pointer;
       overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
     }
     
     /* Circuit Pattern Overlay for Feature Cards */
@@ -458,6 +463,7 @@
       color: #00e5ff;
       font-size: 18px;
       text-align: center;
+      font-family: 'Share Tech Mono', monospace;
     }
   </style>
 </head>
@@ -532,7 +538,7 @@
       rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
       
       rainCtx.fillStyle = '#00e5ff';
-      rainCtx.font = `${fontSize}px monospace`;
+      rainCtx.font = `${fontSize}px 'Space Mono', monospace`;
       
       for (let i = 0; i < drops.length; i++) {
         const text = characters.charAt(Math.floor(Math.random() * characters.length));
@@ -761,7 +767,7 @@
         border: 1px solid #ff5555;
         box-shadow: 0 0 15px rgba(255, 85, 85, 0.5);
         z-index: 1000;
-        font-family: 'Courier New', monospace;
+        font-family: 'Share Tech Mono', monospace;
         font-size: 14px;
         text-align: center;
         opacity: 0;

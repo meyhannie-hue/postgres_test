@@ -634,31 +634,81 @@
     
     /* Small mobile devices */
     @media (max-width: 480px) {
+      /* Header adjustments */
+      header {
+        padding: 15px 10px;
+      }
+      
       .header-title {
-        font-size: 14px;
+        font-size: 18px; /* Increased for better readability */
+      }
+      
+      .back-button {
+        font-size: 24px; /* Larger back button for easier tapping */
+      }
+      
+      /* Instructions section */
+      .instructions {
+        font-size: 15px; /* Larger text for better readability */
+        padding: 15px; /* More padding for better spacing */
+        margin: 10px 15px;
+      }
+      
+      .instructions strong {
+        font-size: 17px; /* Emphasized headings */
+      }
+      
+      /* Tutorial box */
+      .tutorial-box {
+        padding: 15px; /* More padding */
+        margin: 15px auto;
+      }
+      
+      .tutorial-step {
+        font-size: 15px; /* Larger tutorial text */
+      }
+      
+      .video-caption {
+        font-size: 14px; /* Increased caption size */
+      }
+      
+      /* Buttons */
+      .start-btn, .submit-btn {
+        font-size: 18px; /* Larger button text */
+        padding: 15px 25px; /* More padding for larger touch targets */
+      }
+      
+      /* Game elements */
+      .timer {
+        font-size: 18px; /* Larger timer text */
       }
       
       .game {
-        height: 500px; /* Increased from 400px */
+        height: 480px; /* Adjusted height */
       }
       
       .slot, .wire {
-        width: 75px; /* Increased from 60px */
-        font-size: 12px; /* Increased from 11px */
-        padding: 8px 10px; /* Increased from 6px 8px */
+        font-size: 14px; /* Larger text in game elements */
+        padding: 12px 15px; /* More padding */
+        width: 80px; /* Slightly wider for better text display */
       }
       
+      #result {
+        font-size: 20px; /* Larger result text */
+      }
+      
+      /* Pin dots */
       .pin-dot {
-        width: 14px; /* Increased from 12px */
-        height: 14px; /* Increased from 12px */
+        width: 18px; /* Larger pin dots */
+        height: 18px;
       }
       
       .slot .pin-dot {
-        right: -10px;
+        right: -14px; /* Adjusted position */
       }
       
       .wire .pin-dot {
-        left: -10px;
+        left: -14px; /* Adjusted position */
       }
     }
     
