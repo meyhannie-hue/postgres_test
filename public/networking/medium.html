@@ -230,16 +230,17 @@
     
     .tutorial-box { 
       margin: 15px auto; 
-      padding: 12px 15px; 
-      border: 1px solid #0056b3; 
-      border-radius: 4px; 
-      background: rgba(0, 20, 40, 0.8); 
-      box-shadow: 0 0 10px rgba(0, 86, 179, 0.3); 
+      padding: 20px 25px; /* Increased padding */
+      border: 2px solid #0056b3; /* Thicker border */
+      border-radius: 8px; /* Larger border radius */
+      background: rgba(0, 20, 40, 0.9); /* Darker background */
+      box-shadow: 0 0 20px rgba(0, 86, 179, 0.5); /* Stronger shadow */
       text-align: center; 
-      max-width: 500px; 
-      min-height: 80px;
+      max-width: 600px; /* Increased max-width */
+      min-height: 120px; /* Increased min-height */
       position: relative;
       overflow: hidden;
+      transform: scale(1.05); /* Slightly larger */
     }
     
     .tutorial-box::before {
@@ -260,12 +261,13 @@
     }
     
     .tutorial-step { 
-      font-size: 14px; 
+      font-size: 18px; /* Increased font size */
       color: #e0f7fa; 
       opacity: 0; 
       transform: translateY(10px); 
       transition: opacity 0.6s ease, transform 0.6s ease; 
       position: relative;
+      padding: 5px 0; /* Added padding */
     }
     
     .tutorial-step.active { 
@@ -273,6 +275,7 @@
       transform: translateY(0); 
       color: #00e5ff; 
       animation: typing 1.5s steps(20, end);
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.7); /* Added glow */
     }
     
     .video-caption { 
@@ -284,19 +287,20 @@
     
     .start-btn { 
       margin-top: 20px; 
-      padding: 10px 18px; 
-      font-size: 16px; 
+      padding: 12px 22px; /* Increased padding */
+      font-size: 18px; /* Increased font size */
       font-weight: bold; 
       background: linear-gradient(45deg, #9527ae, #00ffff);
       color: #ffffff; 
       border: none; 
-      border-radius: 8px; 
+      border-radius: 10px; /* Larger border radius */
       cursor: pointer; 
       transition: 0.2s;
       font-family: 'Poppins', sans-serif;
-      box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
+      box-shadow: 0 0 12px rgba(0, 86, 179, 0.6); /* Stronger shadow */
       position: relative;
       overflow: hidden;
+      transform: scale(1.1); /* Slightly larger */
     }
     
     .start-btn::before {
@@ -317,7 +321,8 @@
     .start-btn:hover { 
       background: linear-gradient(45deg, #219150, #ff00ff); 
       color: #ffffff; 
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.7); 
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.8); /* Stronger shadow */
+      transform: scale(1.15); /* Larger on hover */
     }
     
     .game-section { 
@@ -589,17 +594,24 @@
       
       .tutorial-box {
         margin: 10px auto;
-        padding: 10px 12px;
+        padding: 15px 20px; /* Increased from 10px 12px */
         max-width: 90%;
+        min-height: 100px; /* Increased from 80px */
+        transform: scale(1.02); /* Slightly larger */
       }
       
       .tutorial-step {
-        font-size: 13px;
+        font-size: 16px; /* Increased from 13px */
+      }
+      
+      .video-caption {
+        font-size: 14px; /* Increased from 12px */
       }
       
       .start-btn {
-        padding: 8px 15px;
-        font-size: 14px;
+        padding: 10px 18px; /* Increased from 8px 15px */
+        font-size: 16px; /* Increased from 14px */
+        transform: scale(1.05); /* Slightly larger */
       }
       
       .game {
@@ -660,24 +672,26 @@
       
       /* Tutorial box - made significantly larger */
       .tutorial-box {
-        padding: 20px; /* Increased from 15px */
+        padding: 25px; /* Increased from 20px */
         margin: 15px auto;
         max-width: 95%; /* Increased from 90% */
-        min-height: 100px; /* Increased from 80px */
+        min-height: 120px; /* Increased from 100px */
+        transform: scale(1.03); /* Slightly larger */
       }
       
       .tutorial-step {
-        font-size: 16px; /* Increased from 15px */
+        font-size: 18px; /* Increased from 16px */
       }
       
       .video-caption {
-        font-size: 14px; /* Increased caption size */
+        font-size: 16px; /* Increased from 14px */
       }
       
       /* Buttons - made larger for easier tapping */
       .start-btn, .submit-btn {
         font-size: 18px; /* Larger button text */
         padding: 15px 25px; /* More padding for larger touch targets */
+        transform: scale(1.08); /* Slightly larger */
       }
       
       /* Game elements */

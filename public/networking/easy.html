@@ -831,7 +831,7 @@
     <ul>
       <li>Drag each <strong>wire</strong> from the right column and drop it onto the correct <strong>pin</strong> (1–8).</li>
       <li>The correct wiring sequence follows the <strong>Straight Through standard</strong>.</li>
-      <li>You have <strong>2 minutes</strong> to complete the task.</li>
+      <li>You have <strong>1 minute</strong> to complete the task.</li>
       <li>Click <strong>Submit</strong> to check your connections.</li>
     </ul>
     <div class="tutorial-box" id="tutorialBox">
@@ -847,7 +847,7 @@
   
   <!-- Game Section -->
   <div class="game-section" id="gameSection">
-    <div class="timer">⏳ Time left: <span id="countdown">2:00</span></div>
+    <div class="timer">⏳ Time left: <span id="countdown">1:00</span></div>
     <div class="game">
       <canvas id="lineCanvas"></canvas>
       <div class="column" id="pinColumn"></div>
@@ -986,7 +986,7 @@
     const ctx = canvas.getContext('2d');
     let startWire = null;
     let connections = [];
-    let timeLeft = 120; // Changed from 60 to 120 seconds (2 minutes)
+    let timeLeft = 120;
     let timerStarted = false;
     let timer;
     const countdownEl = document.getElementById('countdown');
