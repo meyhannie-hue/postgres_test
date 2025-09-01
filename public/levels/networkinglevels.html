@@ -622,7 +622,6 @@
       <div class="back-btn" onclick="goBack()">⤺</div>
       <div class="title">TECHY ME</div>
       <div class="user-info">
-        <!-- Updated coins display to match dashboard -->
         <div id="coins" class="coins-display">💰 0</div>
         <span id="usernameDisplay">Guest</span>
       </div>
@@ -724,6 +723,20 @@
       HARD: 3000     // Coins needed to unlock Hard level
     };
     
+    // Function to save unlocked levels to localStorage
+    function saveUnlockedLevelsToLocalStorage() {
+      localStorage.setItem('unlockedLevels', JSON.stringify(window.unlockedLevels));
+    }
+    
+    // Function to load unlocked levels from localStorage
+    function loadUnlockedLevelsFromLocalStorage() {
+      const savedLevels = localStorage.getItem('unlockedLevels');
+      if (savedLevels) {
+        return JSON.parse(savedLevels);
+      }
+      return { easy: true, medium: false, hard: false }; // Default values
+    }
+    
     // Load user data from database
     async function loadUserData() {
       try {
@@ -743,21 +756,24 @@
             JSON.stringify({ easy: true, medium: false, hard: false });
           window.unlockedLevels = JSON.parse(unlockedLevels);
           
+          // Save to localStorage for persistence
+          saveUnlockedLevelsToLocalStorage();
+          
           // Update UI based on unlocked status
           checkUnlockedLevels();
         } else {
           // Default values if player not found
           document.getElementById("coins").textContent = "💰 0";
           window.playerCoins = 0;
-          window.unlockedLevels = { easy: true, medium: false, hard: false };
+          window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
           checkUnlockedLevels();
         }
       } catch (err) {
         console.error("Error loading user data:", err);
-        // Fallback to default values if database fetch fails
+        // Fallback to localStorage if database fetch fails
         document.getElementById("coins").textContent = "💰 0";
         window.playerCoins = 0;
-        window.unlockedLevels = { easy: true, medium: false, hard: false };
+        window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
         checkUnlockedLevels();
       }
     }
@@ -909,6 +925,9 @@
       
       // Update unlocked levels
       window.unlockedLevels[level] = true;
+      
+      // Save to localStorage immediately
+      saveUnlockedLevelsToLocalStorage();
       
       // Try to update the database
       try {

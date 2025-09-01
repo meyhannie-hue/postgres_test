@@ -1019,9 +1019,27 @@
       HARD: 10200     // Coins needed to unlock Hard level
     };
     
+    // Load unlocked levels from localStorage
+    function loadUnlockedLevelsFromLocalStorage() {
+      const savedLevels = localStorage.getItem(`unlockedLevels_${loggedInUser}`);
+      if (savedLevels) {
+        return JSON.parse(savedLevels);
+      }
+      // Default values if nothing is saved
+      return { easy: true, medium: false, hard: false };
+    }
+    
+    // Save unlocked levels to localStorage
+    function saveUnlockedLevelsToLocalStorage(unlockedLevels) {
+      localStorage.setItem(`unlockedLevels_${loggedInUser}`, JSON.stringify(unlockedLevels));
+    }
+    
     // Load user data from database
     async function loadUserData() {
       try {
+        // First, try to load from localStorage as a fallback
+        window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
+        
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         if (!res.ok) throw new Error("Failed to fetch players");
         const players = await res.json();
@@ -1034,9 +1052,19 @@
           window.playerCoins = coins;
           
           // Get unlocked levels from database
-          const unlockedLevels = loggedInPlayer.unlocked_levels || 
+          const dbUnlockedLevels = loggedInPlayer.unlocked_levels || 
             JSON.stringify({ easy: true, medium: false, hard: false });
-          window.unlockedLevels = JSON.parse(unlockedLevels);
+          const dbLevels = JSON.parse(dbUnlockedLevels);
+          
+          // Merge with localStorage data (prioritize database)
+          window.unlockedLevels = {
+            easy: dbLevels.easy || window.unlockedLevels.easy,
+            medium: dbLevels.medium || window.unlockedLevels.medium,
+            hard: dbLevels.hard || window.unlockedLevels.hard
+          };
+          
+          // Save merged data back to localStorage
+          saveUnlockedLevelsToLocalStorage(window.unlockedLevels);
           
           // Update UI based on unlocked status
           checkUnlockedLevels();
@@ -1044,19 +1072,17 @@
           // Update progress bars
           updateProgressBars(coins);
         } else {
-          // Default values if player not found
+          // Use localStorage values if player not found in database
           document.getElementById("coins").textContent = "💰 0";
           window.playerCoins = 0;
-          window.unlockedLevels = { easy: true, medium: false, hard: false };
           checkUnlockedLevels();
           updateProgressBars(0);
         }
       } catch (err) {
         console.error("Error loading user data:", err);
-        // Fallback to default values if database fetch fails
+        // Fallback to localStorage values if database fetch fails
         document.getElementById("coins").textContent = "💰 0";
         window.playerCoins = 0;
-        window.unlockedLevels = { easy: true, medium: false, hard: false };
         checkUnlockedLevels();
         updateProgressBars(0);
       }
@@ -1183,6 +1209,9 @@
       
       // Update unlocked levels
       window.unlockedLevels[level] = true;
+      
+      // Save to localStorage immediately
+      saveUnlockedLevelsToLocalStorage(window.unlockedLevels);
       
       // Try to update the database
       try {
