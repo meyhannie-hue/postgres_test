@@ -821,7 +821,7 @@
   <!-- Header with Back Button -->
   <header>
     <div class="back-button" onclick="window.location.href='../levels/networkinglevels.html'">⤺</div>
-    <div class="header-title">Networking Easy Level - T568B</div>
+    <div class="header-title">Networking Easy Level - Straight Through</div>
     <div class="placeholder"></div>
   </header>
   
@@ -830,15 +830,15 @@
     <p><strong>Instructions:</strong></p>
     <ul>
       <li>Drag each <strong>wire</strong> from the right column and drop it onto the correct <strong>pin</strong> (1–8).</li>
-      <li>The correct wiring sequence follows the <strong>T568B standard</strong>.</li>
-      <li>You have <strong>1 minute</strong> to complete the task.</li>
+      <li>The correct wiring sequence follows the <strong>Straight Through standard</strong>.</li>
+      <li>You have <strong>2 minutes</strong> to complete the task.</li>
       <li>Click <strong>Submit</strong> to check your connections.</li>
     </ul>
     <div class="tutorial-box" id="tutorialBox">
       <div class="tutorial-step active">👋 Welcome! This is a quick demo.</div>
       <div class="tutorial-step">➡ Drag a wire from the right side.</div>
       <div class="tutorial-step">⬅ Drop it onto the correct pin (1–8).</div>
-      <div class="tutorial-step">✅ Match all 8 wires using T568B order.</div>
+      <div class="tutorial-step">✅ Match all 8 wires using Straight Through68B order.</div>
       <div class="tutorial-step">▶ Click "Start Game" when ready!</div>
     </div>
     <p class="video-caption">📘 Steps auto-play below instead of video</p>
@@ -847,7 +847,7 @@
   
   <!-- Game Section -->
   <div class="game-section" id="gameSection">
-    <div class="timer">⏳ Time left: <span id="countdown">1:00</span></div>
+    <div class="timer">⏳ Time left: <span id="countdown">2:00</span></div>
     <div class="game">
       <canvas id="lineCanvas"></canvas>
       <div class="column" id="pinColumn"></div>
@@ -986,7 +986,7 @@
     const ctx = canvas.getContext('2d');
     let startWire = null;
     let connections = [];
-    let timeLeft = 60;
+    let timeLeft = 120; // Changed from 60 to 120 seconds (2 minutes)
     let timerStarted = false;
     let timer;
     const countdownEl = document.getElementById('countdown');
@@ -1410,7 +1410,7 @@
           .then(res => res.json())
           .then(data => {
             if (data.success) {
-              alert("🏆 You earned 100 points and 100 coins!");
+              alert("🏆 You earned 3060 points and 1560 coins!");
               // ✅ Redirect after reward
               window.location.href = "../levels/networkinglevels.html";
             } else {

@@ -297,7 +297,7 @@
       width: 100vw;
       background-color: #0a1929;
       z-index: 999;
-      display: flex;
+      display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -541,11 +541,145 @@
       opacity: 1;
     }
     
+    /* Mode Selection Screen */
+    .mode-selection {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .mode-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 30, 60, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 15px;
+      padding: 40px 30px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 30px rgba(0, 229, 255, 0.2);
+      animation: fadeInUp 1s ease;
+      overflow: hidden;
+    }
+    
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 229, 255, 0.03) 10px,
+        rgba(0, 229, 255, 0.03) 20px
+      );
+      z-index: -1;
+    }
+    
+    .mode-card h1 {
+      font-size: 2.2rem;
+      margin-bottom: 15px;
+      position: relative;
+      animation: glitch 5s infinite;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    .mode-card h1::before, .mode-card h1::after {
+      content: "Select Game Mode";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .mode-card h1::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00e5ff;
+      z-index: -1;
+    }
+    
+    .mode-card h1::after {
+      animation: glitch-2 0.5s infinite;
+      color: #0078d4;
+      z-index: -2;
+    }
+    
+    .mode-card p {
+      font-size: 1rem;
+      margin-bottom: 30px;
+      color: #b3e5fc;
+      animation: fadeIn 2s ease;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    
+    .mode-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .mode-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0078d4, #00e5ff);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 700;
+    }
+    
+    .mode-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .mode-btn:hover::before {
+      left: 100%;
+    }
+    
+    .mode-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 229, 255, 0.5);
+    }
+    
+    .mode-btn.offline {
+      background: linear-gradient(135deg, #4caf50, #8bc34a);
+    }
+    
+    .mode-btn.online {
+      background: linear-gradient(135deg, #2196f3, #03a9f4);
+    }
+    
     @media (max-width: 500px) {
-      .card h1 {
+      .card h1, .mode-card h1 {
         font-size: 1.7rem;
       }
-      .btn {
+      .btn, .mode-btn {
         font-size: 0.95rem;
         padding: 10px 24px;
       }
@@ -584,6 +718,18 @@
   <canvas class="digital-rain" id="digitalRain"></canvas>
   <div class="circuit-board"></div>
   <div class="particles" id="particles"></div>
+  
+  <!-- Mode Selection Screen -->
+  <div class="mode-selection" id="modeSelection">
+    <div class="mode-card">
+      <h1>Select Game Mode</h1>
+      <p>Choose how you want to experience TECHY ME</p>
+      <div class="mode-buttons">
+        <button class="mode-btn offline" onclick="selectMode('offline')">Offline Mode</button>
+        <button class="mode-btn online" onclick="selectMode('online')">Online Mode</button>
+      </div>
+    </div>
+  </div>
   
   <!-- NEW LOADING SCREEN -->
   <div class="loader" id="loader">
@@ -752,10 +898,26 @@
       circuitBg.appendChild(line);
     }
     
-    // Loading screen animations
-    window.addEventListener("load", () => {
-      const loader = document.getElementById("loader");
-      const mainCard = document.getElementById("mainCard");
+    // Global variable to store selected mode
+    let selectedMode = '';
+    
+    // Function to handle mode selection
+    function selectMode(mode) {
+      selectedMode = mode;
+      const clickSound = document.getElementById("clickSound");
+      clickSound.currentTime = 0;
+      clickSound.play().catch(() => {});
+      
+      // Hide mode selection and show loading screen
+      document.getElementById("modeSelection").style.display = "none";
+      document.getElementById("loader").style.display = "flex";
+      
+      // Start loading animations
+      startLoadingAnimations();
+    }
+    
+    // Function to start loading animations
+    function startLoadingAnimations() {
       const loadingSound = document.getElementById("loadingSound");
       const progressText = document.querySelector('.progress-text');
       
@@ -764,6 +926,13 @@
       loadingSound.play().catch(err => {
         console.warn("Autoplay blocked:", err);
       });
+      
+      // Reset progress bar
+      const progressBar = document.querySelector('.progress-bar');
+      progressBar.style.animation = 'none';
+      setTimeout(() => {
+        progressBar.style.animation = 'progress 7s linear forwards';
+      }, 10);
       
       // Animate progress text
       let progress = 0;
@@ -776,13 +945,16 @@
         }
       }, 70);
       
-      // Animate status dots
+      // Reset and animate status dots
       const dots = [
         document.getElementById('dot1'),
         document.getElementById('dot2'),
         document.getElementById('dot3'),
         document.getElementById('dot4')
       ];
+      
+      // Reset all dots
+      dots.forEach(dot => dot.classList.remove('active'));
       
       let currentDot = 0;
       const dotInterval = setInterval(() => {
@@ -798,13 +970,16 @@
         }
       }, 1750);
       
-      // Animate loading messages
+      // Reset and animate loading messages
       const messages = [
         document.getElementById('msg1'),
         document.getElementById('msg2'),
         document.getElementById('msg3'),
         document.getElementById('msg4')
       ];
+      
+      // Reset all messages
+      messages.forEach(msg => msg.classList.remove('active'));
       
       let currentMessage = 0;
       const messageInterval = setInterval(() => {
@@ -820,23 +995,30 @@
         }
       }, 1750);
       
-      // Show card after 7 seconds
+      // Show card after 7 seconds and redirect based on selected mode
       setTimeout(() => {
-        loader.style.display = "none";
-        mainCard.style.display = "block";
+        document.getElementById("loader").style.display = "none";
         loadingSound.pause();
         loadingSound.currentTime = 0;
+        
+        // Redirect based on selected mode
+        if (selectedMode === 'offline') {
+         alert("Offline mode is currently under development. Please select Online mode.");
+        } else if (selectedMode === 'online') {
+          window.location.href = "addplayers.html"; // Changed from online.html to addplayers.html
+        }
       }, 7000);
-    });
+    }
     
+    // Original function for main card (kept for compatibility)
     function playClickSoundAndStart() {
       const clickSound = document.getElementById("clickSound");
       clickSound.currentTime = 0;
-      clickSound.play().catch(() => {}); // Play click sound
+      clickSound.play().catch(() => {});
       
       setTimeout(() => {
         window.location.href = "addplayers.html";
-      }, 200); // Delay to let click sound play
+      }, 200);
     }
   </script>
 </body>
