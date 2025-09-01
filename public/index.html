@@ -725,7 +725,8 @@
       <h1>Select Game Mode</h1>
       <p>Choose how you want to experience TECHY ME</p>
       <div class="mode-buttons">
-        <button class="mode-btn offline" onclick="selectMode('offline')">Offline Mode</button>
+       <button class="mode-btn offline" onclick="alert('Offline mode is currently under development. Please select Online mode.')">Offline Mode</button>
+
         <button class="mode-btn online" onclick="selectMode('online')">Online Mode</button>
       </div>
     </div>
@@ -1002,9 +1003,7 @@
         loadingSound.currentTime = 0;
         
         // Redirect based on selected mode
-        if (selectedMode === 'offline') {
-         alert("Offline mode is currently under development. Please select Online mode.");
-        } else if (selectedMode === 'online') {
+        if (selectedMode === 'online') {
           window.location.href = "addplayers.html"; // Changed from online.html to addplayers.html
         }
       }, 7000);
