@@ -552,6 +552,7 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      padding: 20px;
     }
     
     .mode-card {
@@ -710,6 +711,30 @@
         width: 120px;
         height: 120px;
       }
+      /* Mode selection responsive adjustments */
+      .mode-selection {
+        padding: 15px;
+      }
+      .mode-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 30px 20px;
+      }
+      .mode-card h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+      .mode-card p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+      }
+      .mode-buttons {
+        gap: 12px;
+      }
+      .mode-btn {
+        padding: 14px 20px;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -725,8 +750,7 @@
       <h1>Select Game Mode</h1>
       <p>Choose how you want to experience TECHY ME</p>
       <div class="mode-buttons">
-       <button class="mode-btn offline" onclick="alert('Offline mode is currently under development. Please select Online mode.')">Offline Mode</button>
-
+        <button class="mode-btn offline" onclick="alert('Offline mode is currently under development. Please select Online mode.')">Offline Mode</button>
         <button class="mode-btn online" onclick="selectMode('online')">Online Mode</button>
       </div>
     </div>
