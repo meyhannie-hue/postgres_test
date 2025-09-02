@@ -1021,7 +1021,7 @@
     
     // Load unlocked levels from localStorage
     function loadUnlockedLevelsFromLocalStorage() {
-      const savedLevels = localStorage.getItem(`unlockedLevels_${loggedInUser}`);
+      const savedLevels = localStorage.getItem(`systemUnitUnlockedLevels_${loggedInUser}`);
       if (savedLevels) {
         return JSON.parse(savedLevels);
       }
@@ -1031,15 +1031,17 @@
     
     // Save unlocked levels to localStorage
     function saveUnlockedLevelsToLocalStorage(unlockedLevels) {
-      localStorage.setItem(`unlockedLevels_${loggedInUser}`, JSON.stringify(unlockedLevels));
+      localStorage.setItem(`systemUnitUnlockedLevels_${loggedInUser}`, JSON.stringify(unlockedLevels));
     }
     
     // Load user data from database
     async function loadUserData() {
       try {
-        // First, try to load from localStorage as a fallback
+        // Step 1: Load from localStorage and update UI immediately
         window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
+        checkUnlockedLevels(); // Update UI from localStorage
         
+        // Step 2: Fetch from database
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         if (!res.ok) throw new Error("Failed to fetch players");
         const players = await res.json();
@@ -1066,7 +1068,7 @@
           // Save merged data back to localStorage
           saveUnlockedLevelsToLocalStorage(window.unlockedLevels);
           
-          // Update UI based on unlocked status
+          // Update UI again with database data
           checkUnlockedLevels();
           
           // Update progress bars
@@ -1075,7 +1077,7 @@
           // Use localStorage values if player not found in database
           document.getElementById("coins").textContent = "💰 0";
           window.playerCoins = 0;
-          checkUnlockedLevels();
+          // We already updated the UI from localStorage, so no need to call checkUnlockedLevels again
           updateProgressBars(0);
         }
       } catch (err) {
@@ -1083,7 +1085,7 @@
         // Fallback to localStorage values if database fetch fails
         document.getElementById("coins").textContent = "💰 0";
         window.playerCoins = 0;
-        checkUnlockedLevels();
+        // We already updated the UI from localStorage, so no need to call checkUnlockedLevels again
         updateProgressBars(0);
       }
     }
@@ -1092,17 +1094,21 @@
     function checkUnlockedLevels() {
       // Update UI based on unlocked status
       if (window.unlockedLevels.medium) {
-        document.getElementById("mediumLevel").classList.remove("locked");
-        document.querySelector("#mediumLevel .level-status").classList.remove("locked");
-        document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
-        document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
+        const mediumLevel = document.getElementById("mediumLevel");
+        mediumLevel.classList.remove("locked");
+        const mediumStatus = mediumLevel.querySelector(".level-status");
+        mediumStatus.classList.remove("locked");
+        mediumStatus.classList.add("unlocked");
+        mediumStatus.textContent = "Unlocked";
       }
       
       if (window.unlockedLevels.hard) {
-        document.getElementById("hardLevel").classList.remove("locked");
-        document.querySelector("#hardLevel .level-status").classList.remove("locked");
-        document.querySelector("#hardLevel .level-status").classList.add("unlocked");
-        document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
+        const hardLevel = document.getElementById("hardLevel");
+        hardLevel.classList.remove("locked");
+        const hardStatus = hardLevel.querySelector(".level-status");
+        hardStatus.classList.remove("locked");
+        hardStatus.classList.add("unlocked");
+        hardStatus.textContent = "Unlocked";
       }
     }
     

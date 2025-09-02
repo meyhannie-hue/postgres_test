@@ -740,6 +740,11 @@
     // Load user data from database
     async function loadUserData() {
       try {
+        // First try to load from localStorage for immediate UI update
+        window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
+        checkUnlockedLevels();
+        
+        // Then fetch from database for latest data
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         if (!res.ok) throw new Error("Failed to fetch players");
         const players = await res.json();
@@ -782,16 +787,18 @@
     function checkUnlockedLevels() {
       // Update UI based on unlocked status
       if (window.unlockedLevels.medium) {
-        document.getElementById("mediumLevel").classList.remove("locked");
+        const mediumLevel = document.getElementById("mediumLevel");
+        mediumLevel.classList.remove("locked");
         // Remove coin cost badge
-        const mediumCostBadge = document.querySelector("#mediumLevel .coin-cost");
+        const mediumCostBadge = mediumLevel.querySelector(".coin-cost");
         if (mediumCostBadge) mediumCostBadge.remove();
       }
       
       if (window.unlockedLevels.hard) {
-        document.getElementById("hardLevel").classList.remove("locked");
+        const hardLevel = document.getElementById("hardLevel");
+        hardLevel.classList.remove("locked");
         // Remove coin cost badge
-        const hardCostBadge = document.querySelector("#hardLevel .coin-cost");
+        const hardCostBadge = hardLevel.querySelector(".coin-cost");
         if (hardCostBadge) hardCostBadge.remove();
       }
     }

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechLearn Academy - Techy Me Edition</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -615,6 +616,251 @@
       80% { opacity: 1; transform: translate(-50%, 0); }
       100% { opacity: 0; transform: translate(-50%, 20px); }
     }
+    
+    /* Additional styles for interactive elements */
+    .interactive-section {
+      margin: 20px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(0, 30, 60, 0.5);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .section-header {
+      padding: 15px;
+      background: rgba(0, 50, 100, 0.7);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    .section-header:hover {
+      background: rgba(0, 70, 130, 0.7);
+    }
+    
+    .section-header h3 {
+      margin: 0;
+      color: #00ffff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+    }
+    
+    .section-icon {
+      color: #00e5ff;
+      transition: transform 0.3s ease;
+    }
+    
+    .section-content {
+      padding: 0 15px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, padding 0.5s ease;
+    }
+    
+    .section-content.active {
+      padding: 15px;
+      max-height: 2000px;
+    }
+    
+    .section-icon.active {
+      transform: rotate(180deg);
+    }
+    
+    .quiz-container {
+      background: rgba(0, 40, 80, 0.6);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+    
+    .quiz-question {
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #00ccff;
+    }
+    
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .quiz-option {
+      background: rgba(0, 30, 60, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .quiz-option:hover {
+      background: rgba(0, 50, 100, 0.7);
+      transform: translateY(-3px);
+    }
+    
+    .quiz-option.correct {
+      background: rgba(0, 150, 0, 0.5);
+      border-color: #00ff00;
+    }
+    
+    .quiz-option.incorrect {
+      background: rgba(150, 0, 0, 0.5);
+      border-color: #ff0000;
+    }
+    
+    .quiz-result {
+      display: none;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    
+    .quiz-result.correct {
+      background: rgba(0, 150, 0, 0.3);
+      color: #00ff88;
+      border: 1px solid #00ff00;
+    }
+    
+    .quiz-result.incorrect {
+      background: rgba(150, 0, 0, 0.3);
+      color: #ff5555;
+      border: 1px solid #ff0000;
+    }
+    
+    .cisco-package {
+      background: rgba(0, 50, 100, 0.6);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+    
+    .package-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .package-icon {
+      font-size: 2rem;
+      margin-right: 15px;
+      color: #00e5ff;
+    }
+    
+    .package-title {
+      font-size: 1.3rem;
+      color: #00ffff;
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    .package-features {
+      margin-left: 3.5rem;
+    }
+    
+    .package-feature {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .feature-icon {
+      color: #00e5ff;
+      margin-right: 10px;
+      margin-top: 3px;
+    }
+    
+    .feature-text {
+      flex: 1;
+    }
+    
+    .interactive-demo {
+      background: rgba(0, 30, 60, 0.7);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+    
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .demo-button {
+      background: rgba(0, 70, 130, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 5px;
+      padding: 8px 15px;
+      color: #00e5ff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .demo-button:hover {
+      background: rgba(0, 90, 150, 0.7);
+      transform: translateY(-3px);
+    }
+    
+    .demo-button.active {
+      background: rgba(0, 120, 180, 0.7);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    }
+    
+    .demo-result {
+      padding: 15px;
+      background: rgba(0, 20, 40, 0.7);
+      border-radius: 5px;
+      min-height: 100px;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    
+    .network-device {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(0, 40, 80, 0.5);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .network-device:hover {
+      background: rgba(0, 60, 120, 0.5);
+      transform: translateX(5px);
+    }
+    
+    .device-icon {
+      font-size: 2rem;
+      margin-right: 15px;
+      color: #00e5ff;
+      width: 40px;
+      text-align: center;
+    }
+    
+    .device-info {
+      flex: 1;
+    }
+    
+    .device-name {
+      font-weight: 600;
+      color: #00ffff;
+      margin-bottom: 5px;
+    }
+    
+    .device-desc {
+      font-size: 0.9rem;
+      color: #b3e5fc;
+    }
   </style>
 </head>
 <body>
@@ -646,179 +892,350 @@
     <!-- Networking Section -->
     <section id="networking" class="content-section active">
       <h2>Networking Fundamentals</h2>
-      <div class="card">
-        <h3>Network Cables: Straight-Through vs Crossover</h3>
-        <p>Network cables are essential for connecting devices in local area networks (LANs). The two primary types of Ethernet cables are straight-through and crossover cables, each serving different connection purposes.</p>
+      
+      <!-- Interactive Quiz -->
+      <div class="quiz-container">
+        <div class="quiz-question">Which cable would you use to connect two computers directly?</div>
+        <div class="quiz-options">
+          <div class="quiz-option" onclick="checkAnswer(this, false)">Straight-Through Cable</div>
+          <div class="quiz-option" onclick="checkAnswer(this, true)">Crossover Cable</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false)">Coaxial Cable</div>
+          <div class="quiz-option" onclick="checkAnswer(this, false)">Fiber Optic Cable</div>
+        </div>
+        <div class="quiz-result" id="quiz-result"></div>
       </div>
       
-      <div class="explanation">
-        <h4>Understanding Network Communication</h4>
-        <p>Network cables serve as the physical medium through which data travels between devices. Think of them as highways for digital information. The type of cable needed depends on which devices are communicating with each other and how they send and receive data. This is because different devices have different pin configurations for transmitting and receiving data.</p>
-      </div>
-      
-      <div class="comparison">
-        <div class="comparison-column">
-          <h4>Straight-Through Cable</h4>
-          <ul>
-            <li>Connects <strong>dissimilar devices</strong></li>
-            <li>Wiring: T568A on both ends OR T568B on both ends</li>
-            <li>Common uses:
+      <!-- Interactive Sections -->
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Network Cables: Straight-Through vs Crossover</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>Network cables are essential for connecting devices in local area networks (LANs). The two primary types of Ethernet cables are straight-through and crossover cables, each serving different connection purposes.</p>
+          </div>
+          
+          <div class="explanation">
+            <h4>Understanding Network Communication</h4>
+            <p>Network cables serve as the physical medium through which data travels between devices. Think of them as highways for digital information. The type of cable needed depends on which devices are communicating with each other and how they send and receive data.</p>
+          </div>
+          
+          <div class="comparison">
+            <div class="comparison-column">
+              <h4>Straight-Through Cable</h4>
               <ul>
-                <li>Computer to Switch</li>
-                <li>Computer to Router</li>
-                <li>Router to Switch</li>
+                <li>Connects <strong>dissimilar devices</strong></li>
+                <li>Wiring: T568A on both ends OR T568B on both ends</li>
+                <li>Common uses:
+                  <ul>
+                    <li>Computer to Switch</li>
+                    <li>Computer to Router</li>
+                    <li>Router to Switch</li>
+                  </ul>
+                </li>
+                <li>Most common type of Ethernet cable</li>
               </ul>
-            </li>
-            <li>Most common type of Ethernet cable</li>
-          </ul>
-          <div class="image-container">
-            <img src="image/Straight-through cable.jpg" alt="Straight-Through Cable" width="200">
+              <div class="image-container">
+                <img src="image/Straight-through cable.jpg" alt="Straight-Through Cable" width="200">
+              </div>
+            </div>
+            
+            <div class="comparison-column">
+              <h4>Crossover Cable</h4>
+              <ul>
+                <li>Connects <strong>similar devices</strong></li>
+                <li>Wiring: T568A on one end, T568B on the other end</li>
+                <li>Common uses:
+                  <ul>
+                    <li>Computer to Computer</li>
+                    <li>Switch to Switch</li>
+                    <li>Router to Router</li>
+                  </ul>
+                </li>
+                <li>Largely obsolete with modern Auto-MDIX technology</li>
+              </ul>
+              <div class="image-container">
+                <img src="image/crossover cable.jpg" alt="Crossover Cable" width="200">
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="comparison-column">
-          <h4>Crossover Cable</h4>
-          <ul>
-            <li>Connects <strong>similar devices</strong></li>
-            <li>Wiring: T568A on one end, T568B on the other end</li>
-            <li>Common uses:
-              <ul>
-                <li>Computer to Computer</li>
-                <li>Switch to Switch</li>
-                <li>Router to Router</li>
-              </ul>
-            </li>
-            <li>Largely obsolete with modern Auto-MDIX technology</li>
-          </ul>
-          <div class="image-container">
-            <img src="image/crossover cable.jpg" alt="Crossover Cable" width="200">
+      </div>
+      
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Network Topologies</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <p>Network topology refers to the physical or logical arrangement of devices in a network:</p>
+            <ul>
+              <li><strong>Star Topology:</strong> All devices connect to a central hub or switch. Most common in modern LANs.</li>
+              <li><strong>Bus Topology:</strong> All devices share a single communication line. Rarely used today due to performance issues.</li>
+              <li><strong>Ring Topology:</strong> Devices are connected in a circular fashion. Used in token ring networks and some fiber optic networks.</li>
+              <li><strong>Mesh Topology:</strong> Devices are interconnected with multiple redundant connections. Provides high fault tolerance.</li>
+              <li><strong>Hybrid Topology:</strong> Combination of two or more different topologies.</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Why Network Topology Matters</h4>
+            <p>The topology of a network affects its performance, reliability, and scalability. Star topology, for example, offers better performance because each device has a dedicated connection to the central hub. If one device's connection fails, it doesn't affect other devices. However, the central hub represents a single point of failure.</p>
           </div>
         </div>
       </div>
       
-      <div class="explanation">
-        <h4>Why Different Cables for Different Connections?</h4>
-        <p>Devices like computers transmit data on one pair of wires and receive on another. Switches and routers do the opposite - they receive on the pair where computers transmit and transmit on the pair where computers receive. When connecting similar devices (like two computers), both would be trying to transmit on the same pair and receive on the same pair, causing a communication conflict. Crossover cables solve this by crossing the transmit and receive pairs between the two ends.</p>
-      </div>
-      
-      <div class="card">
-        <h4>Wiring Standards</h4>
-        <p>Both cable types use T568A or T568B wiring standards:</p>
-        <ul>
-          <li><strong>T568A:</strong> White/Green, Green, White/Orange, Blue, White/Blue, Orange, White/Brown, Brown</li>
-          <li><strong>T568B:</strong> White/Orange, Orange, White/Green, Blue, White/Blue, Green, White/Brown, Brown</li>
-        </ul>
-        <p>Straight-through cables use the same standard on both ends, while crossover cables use T568A on one end and T568B on the other.</p>
-      </div>
-      
-      <div class="explanation">
-        <h4>Understanding T568A and T568B Standards</h4>
-        <p>T568A and T568B are wiring standards for twisted pair data cables. These standards define how the eight wires (four twisted pairs) in an Ethernet cable are terminated at the RJ45 connectors. The only difference between the two standards is that the orange and green pairs are swapped. While both standards work in most situations, T568B is more commonly used in North America. The key is consistency - all connections in a network should use the same standard unless a crossover connection is specifically needed.</p>
-      </div>
-      
-      <div class="card">
-        <h4>Modern Relevance</h4>
-        <p>Most modern network devices support Auto-MDIX (Automatic Medium-Dependent Interface Crossover), which automatically detects and configures the connection type. This makes crossover cables largely unnecessary in contemporary networks, as straight-through cables can be used for all connections.</p>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Evolution to Auto-MDIX</h4>
-        <p>Auto-MDIX technology was developed to eliminate the need for crossover cables. It works by automatically detecting the type of cable connected and configuring the interface accordingly. This technology first appeared in the early 2000s and has become standard in most network equipment since 2005. This innovation simplified network setup and reduced confusion for network administrators, making it possible to use any Ethernet cable for any connection.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Network Topologies</h4>
-        <p>Network topology refers to the physical or logical arrangement of devices in a network:</p>
-        <ul>
-          <li><strong>Star Topology:</strong> All devices connect to a central hub or switch. Most common in modern LANs.</li>
-          <li><strong>Bus Topology:</strong> All devices share a single communication line. Rarely used today due to performance issues.</li>
-          <li><strong>Ring Topology:</strong> Devices are connected in a circular fashion. Used in token ring networks and some fiber optic networks.</li>
-          <li><strong>Mesh Topology:</strong> Devices are interconnected with multiple redundant connections. Provides high fault tolerance.</li>
-          <li><strong>Hybrid Topology:</strong> Combination of two or more different topologies.</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>Why Network Topology Matters</h4>
-        <p>The topology of a network affects its performance, reliability, and scalability. Star topology, for example, offers better performance because each device has a dedicated connection to the central hub. If one device's connection fails, it doesn't affect other devices. However, the central hub represents a single point of failure. Mesh topology, on the other hand, provides excellent redundancy but requires more cabling and is more complex to manage. The choice of topology depends on the specific needs of the network in terms of cost, performance, and reliability requirements.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>OSI and TCP/IP Models</h4>
-        <p>Network communication is standardized through layered models:</p>
-        <ul>
-          <li><strong>OSI Model (7 layers):</strong> Physical, Data Link, Network, Transport, Session, Presentation, Application</li>
-          <li><strong>TCP/IP Model (4 layers):</strong> Network Interface, Internet, Transport, Application</li>
-        </ul>
-        <p>These models provide a framework for protocol design and network troubleshooting. Each layer performs specific functions and communicates with adjacent layers.</p>
-      </div>
-      
-      <div class="explanation">
-        <h4>Understanding Layered Network Models</h4>
-        <p>Network models break down the complex process of network communication into manageable layers. Think of it like sending a package through the mail: the Application layer is like writing a letter, the Transport layer is like putting it in an envelope with addressing information, the Network layer is like the postal service determining the route, and the Physical layer is like the actual delivery truck. Each layer has a specific job and only needs to interact with the layers directly above and below it. This abstraction makes network design, implementation, and troubleshooting much more manageable.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>IP Addressing and Subnetting</h4>
-        <p>IP addressing is fundamental to network communication:</p>
-        <ul>
-          <li><strong>IPv4:</strong> 32-bit address (e.g., 192.168.1.1). Limited to about 4.3 billion addresses.</li>
-          <li><strong>IPv6:</strong> 128-bit address (e.g., 2001:0db8:85a3:0000:0000:8a2e:0370:7334). Provides virtually unlimited addresses.</li>
-          <li><strong>Subnetting:</strong> Dividing a network into smaller subnetworks to improve performance and security.</li>
-          <li><strong>CIDR:</strong> Classless Inter-Domain Routing notation (e.g., 192.168.1.0/24) for specifying network prefixes.</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Significance of IP Addressing</h4>
-        <p>IP addresses function like street addresses for devices on a network. They ensure that data reaches its intended destination. IPv4 addresses are running out due to the explosive growth of the internet, which is why IPv6 was developed. IPv6 not only solves the address shortage but also improves security and efficiency. Subnetting is like dividing a city into districts - it makes network management more efficient and improves security by isolating different segments of the network. CIDR provides a more flexible way to allocate IP addresses compared to the old class-based system.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Network Devices</h4>
-        <p>Various hardware devices facilitate network communication:</p>
-        <ul>
-          <li><strong>Routers:</strong> Connect different networks and direct traffic between them using IP addresses.</li>
-          <li><strong>Switches:</strong> Connect devices within a single network using MAC addresses.</li>
-          <li><strong>Hubs:</strong> Simple devices that broadcast data to all connected devices. Largely obsolete.</li>
-          <li><strong>Modems:</strong> Convert digital signals to analog for transmission over telephone or cable lines.</li>
-          <li><strong>Access Points:</strong> Allow wireless devices to connect to a wired network.</li>
-          <li><strong>Firewalls:</strong> Monitor and control incoming and outgoing network traffic based on security rules.</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>How Network Devices Work Together</h4>
-        <p>Network devices form an ecosystem that enables communication. The modem connects your local network to the internet, converting signals as needed. The router directs traffic between your local network and the internet, deciding the best path for data to travel. Switches manage traffic within your local network, ensuring data goes only to the intended device. Access points extend this capability to wireless devices. Firewalls act as security guards, inspecting traffic and blocking anything suspicious. Together, these devices create a secure, efficient network infrastructure.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Wireless Networking</h4>
-        <p>Wireless technologies enable network connections without physical cables:</p>
-        <ul>
-          <li><strong>Wi-Fi Standards:</strong>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>OSI and TCP/IP Models</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <p>Network communication is standardized through layered models:</p>
             <ul>
-              <li>802.11a/b/g: Legacy standards with limited speed and range</li>
-              <li>802.11n: Introduced MIMO technology for better performance</li>
-              <li>802.11ac: Wave 1 and Wave 2 with improved speed and capacity</li>
-              <li>802.11ax (Wi-Fi 6): Latest standard with improved efficiency and performance in crowded environments</li>
+              <li><strong>OSI Model (7 layers):</strong> Physical, Data Link, Network, Transport, Session, Presentation, Application</li>
+              <li><strong>TCP/IP Model (4 layers):</strong> Network Interface, Internet, Transport, Application</li>
             </ul>
-          </li>
-          <li><strong>Security Protocols:</strong>
-            <ul>
-              <li>WEP: Obsolete and insecure</li>
-              <li>WPA: Improved security but vulnerable</li>
-              <li>WPA2: Current standard with strong encryption</li>
-              <li>WPA3: Latest protocol with enhanced security features</li>
-            </ul>
-          </li>
-          <li><strong>Frequency Bands:</strong> 2.4 GHz (better range, more interference) and 5 GHz (faster speeds, shorter range)</li>
-        </ul>
+            <p>These models provide a framework for protocol design and network troubleshooting. Each layer performs specific functions and communicates with adjacent layers.</p>
+          </div>
+          
+          <div class="explanation">
+            <h4>Understanding Layered Network Models</h4>
+            <p>Network models break down the complex process of network communication into manageable layers. Think of it like sending a package through the mail: the Application layer is like writing a letter, the Transport layer is like putting it in an envelope with addressing information, the Network layer is like the postal service determining the route, and the Physical layer is like the actual delivery truck.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>The Evolution of Wireless Networking</h4>
-        <p>Wireless networking has evolved dramatically since its inception. Early standards like 802.11b offered speeds of just 11 Mbps, while modern Wi-Fi 6 can deliver multi-gigabit speeds. This evolution has been driven by increasing demand for wireless connectivity and bandwidth-intensive applications like video streaming and online gaming. Security has also evolved significantly, from the easily cracked WEP to the robust encryption of WPA3. The dual-band approach (2.4 GHz and 5 GHz) allows devices to choose the best frequency for their needs - 2.4 GHz for better range through walls, and 5 GHz for faster speeds with less interference.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>IP Addressing and Subnetting</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <p>IP addressing is fundamental to network communication:</p>
+            <ul>
+              <li><strong>IPv4:</strong> 32-bit address (e.g., 192.168.1.1). Limited to about 4.3 billion addresses.</li>
+              <li><strong>IPv6:</strong> 128-bit address (e.g., 2001:0db8:85a3:0000:0000:8a2e:0370:7334). Provides virtually unlimited addresses.</li>
+              <li><strong>Subnetting:</strong> Dividing a network into smaller subnetworks to improve performance and security.</li>
+              <li><strong>CIDR:</strong> Classless Inter-Domain Routing notation (e.g., 192.168.1.0/24) for specifying network prefixes.</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Significance of IP Addressing</h4>
+            <p>IP addresses function like street addresses for devices on a network. They ensure that data reaches its intended destination. IPv4 addresses are running out due to the explosive growth of the internet, which is why IPv6 was developed. IPv6 not only solves the address shortage but also improves security and efficiency.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Network Devices</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <p>Various hardware devices facilitate network communication:</p>
+            <ul>
+              <li><strong>Routers:</strong> Connect different networks and direct traffic between them using IP addresses.</li>
+              <li><strong>Switches:</strong> Connect devices within a single network using MAC addresses.</li>
+              <li><strong>Hubs:</strong> Simple devices that broadcast data to all connected devices. Largely obsolete.</li>
+              <li><strong>Modems:</strong> Convert digital signals to analog for transmission over telephone or cable lines.</li>
+              <li><strong>Access Points:</strong> Allow wireless devices to connect to a wired network.</li>
+              <li><strong>Firewalls:</strong> Monitor and control incoming and outgoing network traffic based on security rules.</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>How Network Devices Work Together</h4>
+            <p>Network devices form an ecosystem that enables communication. The modem connects your local network to the internet, converting signals as needed. The router directs traffic between your local network and the internet, deciding the best path for data to travel. Switches manage traffic within your local network, ensuring data goes only to the intended device.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Wireless Networking</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <p>Wireless technologies enable network connections without physical cables:</p>
+            <ul>
+              <li><strong>Wi-Fi Standards:</strong>
+                <ul>
+                  <li>802.11a/b/g: Legacy standards with limited speed and range</li>
+                  <li>802.11n: Introduced MIMO technology for better performance</li>
+                  <li>802.11ac: Wave 1 and Wave 2 with improved speed and capacity</li>
+                  <li>802.11ax (Wi-Fi 6): Latest standard with improved efficiency and performance in crowded environments</li>
+                </ul>
+              </li>
+              <li><strong>Security Protocols:</strong>
+                <ul>
+                  <li>WEP: Obsolete and insecure</li>
+                  <li>WPA: Improved security but vulnerable</li>
+                  <li>WPA2: Current standard with strong encryption</li>
+                  <li>WPA3: Latest protocol with enhanced security features</li>
+                </ul>
+              </li>
+              <li><strong>Frequency Bands:</strong> 2.4 GHz (better range, more interference) and 5 GHz (faster speeds, shorter range)</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Evolution of Wireless Networking</h4>
+            <p>Wireless networking has evolved dramatically since its inception. Early standards like 802.11b offered speeds of just 11 Mbps, while modern Wi-Fi 6 can deliver multi-gigabit speeds. This evolution has been driven by increasing demand for wireless connectivity and bandwidth-intensive applications like video streaming and online gaming.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- New Cisco Packages Section -->
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Cisco Networking Packages</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="cisco-package">
+            <div class="package-header">
+              <i class="fas fa-network-wired package-icon"></i>
+              <div class="package-title">Cisco CCNA (Cisco Certified Network Associate)</div>
+            </div>
+            <div class="package-features">
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Foundation-level networking certification covering network fundamentals, IP connectivity, security fundamentals, and more</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Focuses on skills needed for entry-level network engineering positions</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Covers OSI model, IP addressing, subnetting, VLANs, routing, and switching</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Validates ability to install, configure, operate, and troubleshoot medium-sized networks</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="cisco-package">
+            <div class="package-header">
+              <i class="fas fa-shield-alt package-icon"></i>
+              <div class="package-title">Cisco CCNP Security (Cisco Certified Network Professional Security)</div>
+            </div>
+            <div class="package-features">
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Advanced certification focusing on network security solutions</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Covers security concepts, secure access, VPNs, secure routing and switching, and more</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Validates skills in designing, implementing, and maintaining security solutions</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Ideal for security engineers and network security specialists</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="cisco-package">
+            <div class="package-header">
+              <i class="fas fa-cloud package-icon"></i>
+              <div class="package-title">Cisco CCIE Enterprise Infrastructure</div>
+            </div>
+            <div class="package-features">
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Expert-level certification for network engineers</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Covers complex enterprise infrastructure solutions</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Includes advanced topics like dual-stack (IPv4 and IPv6) architecture, virtualization, and infrastructure automation</div>
+              </div>
+              <div class="package-feature">
+                <i class="fas fa-check-circle feature-icon"></i>
+                <div class="feature-text">Recognized globally as one of the most prestigious networking certifications</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="explanation">
+            <h4>Why Cisco Certifications Matter</h4>
+            <p>Cisco certifications are industry-recognized credentials that validate networking skills and knowledge. They provide a structured learning path for networking professionals, from entry-level (CCNA) to expert (CCIE). These certifications demonstrate expertise in designing, implementing, and managing Cisco networks and solutions, making certified professionals highly sought after in the IT industry.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Interactive Demo -->
+      <div class="interactive-demo">
+        <h3>Network Device Simulator</h3>
+        <div class="demo-controls">
+          <div class="demo-button" onclick="showDevice('router')">Router</div>
+          <div class="demo-button" onclick="showDevice('switch')">Switch</div>
+          <div class="demo-button" onclick="showDevice('firewall')">Firewall</div>
+          <div class="demo-button" onclick="showDevice('access-point')">Access Point</div>
+        </div>
+        <div class="demo-result" id="device-demo">
+          <p style="text-align: center; color: #90caf9;">Select a network device to learn more about it</p>
+        </div>
+      </div>
+      
+      <!-- Network Devices Gallery -->
+      <h3>Common Network Devices</h3>
+      <div class="network-device">
+        <div class="device-icon"><i class="fas fa-network-wired"></i></div>
+        <div class="device-info">
+          <div class="device-name">Router</div>
+          <div class="device-desc">Connects different networks together and directs traffic between them using IP addresses</div>
+        </div>
+      </div>
+      
+      <div class="network-device">
+        <div class="device-icon"><i class="fas fa-ethernet"></i></div>
+        <div class="device-info">
+          <div class="device-name">Switch</div>
+          <div class="device-desc">Connects devices within a single network using MAC addresses to forward data</div>
+        </div>
+      </div>
+      
+      <div class="network-device">
+        <div class="device-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="device-info">
+          <div class="device-name">Firewall</div>
+          <div class="device-desc">Monitors and controls incoming and outgoing network traffic based on security rules</div>
+        </div>
+      </div>
+      
+      <div class="network-device">
+        <div class="device-icon"><i class="fas fa-wifi"></i></div>
+        <div class="device-info">
+          <div class="device-name">Access Point</div>
+          <div class="device-desc">Allows wireless devices to connect to a wired network</div>
+        </div>
+      </div>
+      
+      <div class="network-device">
+        <div class="device-icon"><i class="fas fa-server"></i></div>
+        <div class="device-info">
+          <div class="device-name">Modem</div>
+          <div class="device-desc">Converts digital signals to analog for transmission over telephone or cable lines</div>
+        </div>
       </div>
     </section>
     
@@ -1634,6 +2051,105 @@ fetch('https://api.example.com/data')
     
     // Load coins when DOM is ready
     document.addEventListener("DOMContentLoaded", loadCoins);
+    
+    // New functions for interactive elements
+    function toggleSection(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.section-icon');
+      
+      content.classList.toggle('active');
+      icon.classList.toggle('active');
+    }
+    
+    function checkAnswer(option, isCorrect) {
+      // Remove previous results
+      const result = document.getElementById('quiz-result');
+      result.style.display = 'none';
+      
+      // Reset all options
+      const options = document.querySelectorAll('.quiz-option');
+      options.forEach(opt => {
+        opt.classList.remove('correct', 'incorrect');
+      });
+      
+      // Mark selected option
+      if (isCorrect) {
+        option.classList.add('correct');
+        result.textContent = 'Correct! Crossover cables are used to connect similar devices like two computers directly.';
+        result.className = 'quiz-result correct';
+      } else {
+        option.classList.add('incorrect');
+        result.textContent = 'Incorrect. Crossover cables are used to connect similar devices like two computers directly.';
+        result.className = 'quiz-result incorrect';
+      }
+      
+      result.style.display = 'block';
+    }
+    
+    function showDevice(deviceType) {
+      const demo = document.getElementById('device-demo');
+      
+      // Reset all buttons
+      const buttons = document.querySelectorAll('.demo-button');
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Set active button
+      event.target.classList.add('active');
+      
+      // Show device information
+      switch(deviceType) {
+        case 'router':
+          demo.innerHTML = `
+            <h4 style="color: #00ffff; margin-top: 0;">Router</h4>
+            <p>A router is a networking device that forwards data packets between computer networks. Routers perform the traffic directing functions on the Internet. A data packet is typically forwarded from one router to another router through the networks that constitute an internetwork until it reaches its destination node.</p>
+            <ul>
+              <li>Connects different networks together</li>
+              <li>Uses IP addresses to direct traffic</li>
+              <li>Can be wired or wireless</li>
+              <li>Often includes firewall capabilities</li>
+            </ul>
+          `;
+          break;
+        case 'switch':
+          demo.innerHTML = `
+            <h4 style="color: #00ffff; margin-top: 0;">Switch</h4>
+            <p>A network switch is a computer networking device that connects devices together on a computer network by using packet switching to receive, process, and forward data to the destination device. Unlike less advanced network hubs, a network switch forwards data only to one or multiple devices that need to receive it.</p>
+            <ul>
+              <li>Connects devices within a single network</li>
+              <li>Uses MAC addresses to forward data</li>
+              <li>Reduces network collisions</li>
+              <li>Available in managed and unmanaged varieties</li>
+            </ul>
+          `;
+          break;
+        case 'firewall':
+          demo.innerHTML = `
+            <h4 style="color: #00ffff; margin-top: 0;">Firewall</h4>
+            <p>A firewall is a network security system that monitors and controls incoming and outgoing network traffic based on predetermined security rules. A firewall typically establishes a barrier between a trusted internal network and untrusted external network, such as the Internet.</p>
+            <ul>
+              <li>Filters network traffic based on security rules</li>
+              <li>Can be hardware or software-based</li>
+              <li>Protects against unauthorized access</li>
+              <li>Can prevent malicious software from accessing the network</li>
+            </ul>
+          `;
+          break;
+        case 'access-point':
+          demo.innerHTML = `
+            <h4 style="color: #00ffff; margin-top: 0;">Access Point</h4>
+            <p>In computer networking, a wireless access point (WAP), or more generally just access point (AP), is a networking hardware device that allows Wi-Fi-enabled devices to connect to a wired network. The AP usually connects to a router (via a wired network) as a standalone device, but it can also be an integral component of the router itself.</p>
+            <ul>
+              <li>Allows wireless devices to connect to a wired network</li>
+              <li>Acts as a central transmitter and receiver of wireless radio signals</li>
+              <li>Can support multiple wireless devices simultaneously</li>
+              <li>Essential for creating Wi-Fi networks</li>
+            </ul>
+          `;
+          break;
+      }
+    }
   </script>
 </body>
 </html>

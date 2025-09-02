@@ -1,210 +1,1398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Networking Easy Level - Straight Through</title>
-  <!-- Enhanced viewport meta tag for better mobile responsiveness -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <style>
-    body { 
-      margin: 0; 
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0a1929, #001e3c, #0a1929);
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-      padding-top: 70px;
-      color: #00ffff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cable Chaos: Network Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            overflow-y: auto; /* Changed from hidden to auto */
+            min-height: 100vh;
+            position: relative;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Changed from height to min-height */
+            padding: 10px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            flex-wrap: wrap;
+            position: sticky; /* Added to keep header visible when scrolling */
+            top: 0;
+            z-index: 100;
+        }
+        .game-title {
+            font-size: 20px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #00bbff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .stats {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 10px;
+            min-width: 60px;
+        }
+        .stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .timer {
+            color: #ff6b6b;
+        }
+        .timer.warning {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .main-game {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .devices-area {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-height: 300px;
+        }
+        .device {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            transition: all 0.3s ease;
+            user-select: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .device:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+        .device.dragging {
+            opacity: 0.8;
+            z-index: 1000;
+        }
+        .device-icon {
+            font-size: 32px;
+            margin-bottom: 3px;
+        }
+        .device-name {
+            font-size: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .port {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 5;
+        }
+        .port:hover {
+            background: #555;
+            transform: scale(1.2);
+        }
+        .port.connected {
+            background: #4caf50;
+            border-color: #81c784;
+        }
+        .port.highlight {
+            box-shadow: 0 0 15px #00ff88;
+            animation: portGlow 1s infinite;
+        }
+        @keyframes portGlow {
+            0%, 100% { box-shadow: 0 0 15px #00ff88; }
+            50% { box-shadow: 0 0 25px #00ff88, 0 0 35px #00ff88; }
+        }
+        .cables-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .cables-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .cable-item {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin-right: 10px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            width: 140px;
+            vertical-align: top;
+        }
+        .cable-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        .cable-item.dragging {
+            cursor: grabbing;
+            opacity: 0.5;
+        }
+        .cable-item.selected {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        .cable-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            margin: 0 auto 5px;
+        }
+        .ethernet { background: linear-gradient(45deg, #ff6b6b, #ff8787); }
+        .fiber { background: linear-gradient(45deg, #4ecdc4, #44a3aa); }
+        .crossover { background: linear-gradient(45deg, #ffe66d, #ffd93d); }
+        .cable-info {
+            text-align: center;
+        }
+        .cable-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+            font-size: 12px;
+        }
+        .cable-desc {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+        .connection-line {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 2000;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+        }
+        .message.show {
+            display: block;
+            animation: messageSlide 0.5s ease;
+        }
+        @keyframes messageSlide {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+        .message h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .message.success h2 { color: #4caf50; }
+        .message.error h2 { color: #ff6b6b; }
+        .message.warning h2 { color: #ff9800; }
+        .btn {
+            background: linear-gradient(45deg, #00ff88, #00bbff);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            width: 4px;
+            height: 4px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: particleFloat 1s ease-out forwards;
+        }
+        @keyframes particleFloat {
+            to {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+        .level-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .hint-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .hint-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        .hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .reset-btn {
+            background: rgba(255, 107, 107, 0.3);
+            border: 2px solid rgba(255, 107, 107, 0.5);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .reset-btn:hover {
+            background: rgba(255, 107, 107, 0.5);
+            transform: scale(1.05);
+        }
+        .instructions {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            line-height: 1.4;
+            max-height: 150px; /* Set a fixed height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #00ff88 rgba(0, 0, 0, 0.2); /* For Firefox */
+        }
+        
+        /* Custom scrollbar for Webkit browsers */
+        .instructions::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .instructions::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        
+        .instructions::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 4px;
+        }
+        
+        .instructions::-webkit-scrollbar-thumb:hover {
+            background: #00cc6a;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 8px;
+            color: #00ff88;
+            font-size: 14px;
+        }
+        .instructions ol {
+            padding-left: 15px;
+        }
+        .instructions li {
+            margin-bottom: 3px;
+        }
+        .points-display, .coins-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .points-icon, .coins-icon {
+            font-size: 16px;
+        }
+        .points-icon { color: #ffe66d; }
+        .coins-icon { color: #ffd700; }
+        .points-value, .coins-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .points-value { color: #ffe66d; }
+        .coins-value { color: #ffd700; }
+        
+        /* Back button styles */
+        .back-button {
+            font-size: 24px;
+            cursor: pointer;
+            color: #00ff88;
+            transition: transform 0.3s ease, color 0.3s ease;
+            margin-right: 15px;
+        }
+        
+        .back-button:hover {
+            transform: scale(1.2);
+            color: #00cc6a;
+        }
+        
+        /* Confirmation dialog styles */
+        .confirm-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 3000;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 80%;
+            text-align: center;
+        }
+        
+        .confirm-dialog.show {
+            display: block;
+            animation: messageSlide 0.5s ease;
+        }
+        
+        .confirm-dialog h3 {
+            color: #ff9800;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .confirm-dialog p {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .confirm-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .confirm-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .confirm-yes {
+            background: linear-gradient(45deg, #ff6b6b, #ff8787);
+            color: white;
+        }
+        
+        .confirm-yes:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .confirm-no {
+            background: linear-gradient(45deg, #00ff88, #00bbff);
+            color: white;
+        }
+        
+        .confirm-no:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 5px;
+            }
+            .header {
+                padding: 8px 10px;
+                margin-bottom: 8px;
+            }
+            .game-title {
+                font-size: 18px;
+            }
+            .stats {
+                gap: 5px;
+            }
+            .stat-item {
+                min-width: 50px;
+                padding: 3px 8px;
+            }
+            .stat-value {
+                font-size: 14px;
+            }
+            .stat-label {
+                font-size: 9px;
+            }
+            .main-game {
+                gap: 8px;
+            }
+            .devices-area {
+                padding: 15px;
+                min-height: 250px;
+            }
+            .device {
+                width: 70px;
+                height: 70px;
+            }
+            .device-icon {
+                font-size: 28px;
+            }
+            .device-name {
+                font-size: 9px;
+            }
+            .port {
+                width: 16px;
+                height: 16px;
+            }
+            .cables-panel {
+                padding: 10px;
+            }
+            .cables-title {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            .cable-item {
+                width: 120px;
+                padding: 8px;
+                margin-right: 8px;
+            }
+            .cable-color {
+                width: 25px;
+                height: 25px;
+                margin-bottom: 3px;
+            }
+            .cable-name {
+                font-size: 11px;
+            }
+            .cable-desc {
+                font-size: 9px;
+            }
+            .message {
+                padding: 15px 20px;
+            }
+            .message h2 {
+                font-size: 20px;
+            }
+            .btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+            .level-indicator {
+                padding: 4px 12px;
+                font-size: 12px;
+            }
+            .hint-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            .reset-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            .instructions {
+                font-size: 11px;
+                padding: 8px;
+                max-height: 120px; /* Adjusted for mobile */
+            }
+            .instructions h3 {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            .points-display, .coins-display {
+                padding: 3px 8px;
+            }
+            .points-icon, .coins-icon {
+                font-size: 14px;
+            }
+            .points-value, .coins-value {
+                font-size: 14px;
+            }
+            .back-button {
+                font-size: 20px;
+                margin-right: 10px;
+            }
+            .confirm-dialog {
+                padding: 15px;
+                max-width: 90%;
+            }
+            .confirm-dialog h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            .confirm-dialog p {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            .confirm-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="back-button" onclick="showConfirmDialog()">⤺</div>
+            <h1 class="game-title">Cable Chaos: Network Puzzle</h1>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="points-display">
+                    <span class="points-icon">⭐</span>
+                    <span class="points-value" id="points">0</span>
+                </div>
+                <div class="coins-display">
+                    <span class="coins-icon">🪙</span>
+                    <span class="coins-value" id="coins">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time</span>
+                    <span class="stat-value timer" id="timer">60</span>
+                </div>
+            </div>
+        </div>
+        <div class="main-game">
+            <div class="devices-area" id="devicesArea">
+                <div class="level-indicator">Level <span id="level">1</span></div>
+                <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Hint (3)</button>
+            </div>
+            <div class="cables-panel">
+                <h2 class="cables-title">Available Cables</h2>
+                <div style="display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <div class="cable-item" draggable="true" data-cable-type="ethernet">
+                        <div class="cable-color ethernet"></div>
+                        <div class="cable-info">
+                            <div class="cable-name">Ethernet</div>
+                            <div class="cable-desc">PC to Switch</div>
+                        </div>
+                    </div>
+                    <div class="cable-item" draggable="true" data-cable-type="fiber">
+                        <div class="cable-color fiber"></div>
+                        <div class="cable-info">
+                            <div class="cable-name">Fiber Optic</div>
+                            <div class="cable-desc">Router to Router</div>
+                        </div>
+                    </div>
+                    <div class="cable-item" draggable="true" data-cable-type="crossover">
+                        <div class="cable-color crossover"></div>
+                        <div class="cable-info">
+                            <div class="cable-name">Crossover</div>
+                            <div class="cable-desc">PC to PC</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="reset-btn" onclick="resetLevel()">🔄 Reset Level</button>
+                <div class="instructions">
+                    <h3>How to Play:</h3>
+                    <ol>
+                        <li>Tap a cable type to select</li>
+                        <li>Tap a device port</li>
+                        <li>Tap another port to connect</li>
+                        <li>Complete before time runs out!</li>
+                        <li>Connect devices using the correct cable types</li>
+                        <li>Earn points for each correct connection</li>
+                        <li>Use hints if you get stuck</li>
+                        <li>Complete all levels to win the game</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    /* Circuit Board Background */
-    .circuit-board {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.05;
-      pointer-events: none;
-      background-image: 
-        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
+    <div class="message" id="message">
+        <h2 id="messageTitle"></h2>
+        <p id="messageText"></p>
+        <button class="btn" onclick="hideMessage()">Continue</button>
+    </div>
     
-    /* Animated Circuit Traces */
-    .circuit-traces {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.2;
-      pointer-events: none;
-    }
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <h3>Quit Game?</h3>
+        <p>Are you sure you want to quit? Your progress will be lost.</p>
+        <div class="confirm-buttons">
+            <button class="confirm-btn confirm-yes" onclick="quitGame()">Yes, Quit</button>
+            <button class="confirm-btn confirm-no" onclick="hideConfirmDialog()">No, Continue</button>
+        </div>
+    </div>
     
-    .circuit-trace {
-      position: absolute;
-      background: linear-gradient(90deg, transparent, #00d4ff, transparent);
-      height: 2px;
-      animation: traceFlow 8s linear infinite;
-    }
-    
-    @keyframes traceFlow {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    
-    /* Digital Rain Background */
-    .digital-rain {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.05;
-      pointer-events: none;
-    }
-    
-    /* Floating Particles */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
-    
-    .particle {
-      position: absolute;
-      background: #00e5ff;
-      border-radius: 50%;
-      opacity: 0.3;
-      animation: float 15s infinite linear;
-    }
-    
-    @keyframes float {
-      0% {
-        transform: translateY(100vh) translateX(0);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.3;
-      }
-      90% {
-        opacity: 0.3;
-      }
-      100% {
-        transform: translateY(-100vh) translateX(100px);
-        opacity: 0;
-      }
-    }
-    
-    /* Header Styles */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: rgba(74, 44, 80, 0.8);
-      color: #fff;
-      padding: 15px 20px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0, 86, 179, 0.5);
-    }
-    
-    .header-title {
-      font-size: 20px;
-      flex-grow: 1;
-      text-align: center;
-      font-weight: bold;
-      color: #00ffff;
-      text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
-      animation: glow 2s infinite alternate;
-      position: relative;
-    }
-    
-    /* Simplified glitch effect to reduce visual artifacts */
-    .header-title::before, .header-title::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.7;
-    }
-    
-    .header-title::before {
-      animation: glitch-1 3s infinite;
-      color: #00e5ff;
-    }
-    
-    .header-title::after {
-      animation: glitch-2 3s infinite;
-      color: #0078d4;
-    }
-    
-    @keyframes glow {
-      from { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
-      to { text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); }
-    }
-    
-    @keyframes glitch-1 {
-      0%, 100% { 
-        clip-path: inset(0 0 0 0); 
-        transform: translate(0); 
-        opacity: 0;
-      }
-      10% { 
-        opacity: 0.7;
-      }
-      20% { 
-        clip-path: inset(20% 0 30% 0); 
-        transform: translate(-2px); 
-        opacity: 0.7;
-      }
-      30% {
-        opacity: 0;
-      }
-      40% { 
-        clip-path: inset(50% 0 20% 0); 
-        transform: translate(2px); 
-        opacity: 0.7;
-      }
-      50% {
-        opacity: 0;
-      }
-      60% { 
-        clip-path: inset(10% 0 60% 0); 
-        transform: translate(0); 
-        opacity: 0.7;
-      }
-      70% {
-        opacity: 0;
-      }
-      80% { 
-        clip-path: inset(80% 0 5% 0); 
-        transform: translate(-2px); 
-        opacity: 0.7;
-      }
-      90% {
-        opacity: 0;
-      }
-    }
-    
+    <script>
+        // Game state
+        let gameState = {
+            score: 0,
+            points: 0,
+            coins: 0,
+            connections: 0,
+            timeLeft: 60,
+            level: 1,
+            hints: 3,
+            isPlaying: true,
+            currentCable: null,
+            connectionsMade: []
+        };
+        
+        // Device configurations
+        const deviceTypes = {
+            pc: { icon: '💻', ports: 1, connections: ['ethernet', 'crossover'] },
+            switch: { icon: '🔀', ports: 4, connections: ['ethernet'] },
+            router: { icon: '📡', ports: 2, connections: ['ethernet', 'fiber'] }
+        };
+        
+        // Level configurations
+        const levels = [
+            { devices: [{ type: 'pc', count: 2 }, { type: 'switch', count: 1 }], targetConnections: 2 },
+            { devices: [{ type: 'pc', count: 3 }, { type: 'switch', count: 1 }, { type: 'router', count: 1 }], targetConnections: 4 },
+            { devices: [{ type: 'pc', count: 4 }, { type: 'switch', count: 2 }, { type: 'router', count: 1 }], targetConnections: 6 },
+            { devices: [{ type: 'pc', count: 5 }, { type: 'switch', count: 2 }, { type: 'router', count: 2 }], targetConnections: 8 },
+            { devices: [{ type: 'pc', count: 6 }, { type: 'switch', count: 3 }, { type: 'router', count: 2 }], targetConnections: 10 }
+        ];
+        
+        // Initialize game
+        function initGame() {
+            setupDragAndDrop();
+            createDevices();
+            startTimer();
+            updateUI();
+        }
+        
+        // Create devices based on current level
+        function createDevices() {
+            const devicesArea = document.getElementById('devicesArea');
+            const levelConfig = levels[gameState.level - 1];
+            
+            // Clear existing devices
+            const existingDevices = devicesArea.querySelectorAll('.device');
+            existingDevices.forEach(d => d.remove());
+            
+            // Clear existing connection lines
+            const existingLines = devicesArea.querySelectorAll('.connection-line');
+            existingLines.forEach(l => l.remove());
+            
+            let deviceCount = 0;
+            const totalDevices = levelConfig.devices.reduce((sum, config) => sum + config.count, 0);
+            
+            // Responsive device positioning
+            const isMobile = window.innerWidth <= 768;
+            const devicesPerRow = isMobile ? Math.min(3, totalDevices) : Math.ceil(Math.sqrt(totalDevices));
+            const rows = Math.ceil(totalDevices / devicesPerRow);
+            
+            const areaRect = devicesArea.getBoundingClientRect();
+            const rowHeight = (areaRect.height - 100) / (rows + 1);
+            const colWidth = areaRect.width / (devicesPerRow + 1);
+            
+            levelConfig.devices.forEach(config => {
+                for (let i = 0; i < config.count; i++) {
+                    const row = Math.floor(deviceCount / devicesPerRow);
+                    const col = deviceCount % devicesPerRow;
+                    
+                    const x = col * colWidth + colWidth/2;
+                    const y = row * rowHeight + rowHeight/2 + 50; // Add offset for level indicator
+                    
+                    createDevice(config.type, deviceCount++, x, y);
+                }
+            });
+            
+            // Re-setup drag and drop for new ports
+            setupPortsEventListeners();
+        }
+        
+        // Create a single device
+        function createDevice(type, id, x, y) {
+            const devicesArea = document.getElementById('devicesArea');
+            const deviceInfo = deviceTypes[type];
+            
+            const device = document.createElement('div');
+            device.className = 'device';
+            device.dataset.deviceType = type;
+            device.dataset.deviceId = id;
+            
+            // Responsive device sizing
+            const isMobile = window.innerWidth <= 768;
+            const deviceSize = isMobile ? 70 : 80;
+            const portSize = isMobile ? 16 : 18;
+            
+            // Position device
+            device.style.left = (x - deviceSize/2) + 'px';
+            device.style.top = (y - deviceSize/2) + 'px';
+            device.style.width = deviceSize + 'px';
+            device.style.height = deviceSize + 'px';
+            
+            device.innerHTML = `
+                <div class="device-icon">${deviceInfo.icon}</div>
+                <div class="device-name">${type.charAt(0).toUpperCase() + type.slice(1)} ${id + 1}</div>
+            `;
+            
+            // Add ports
+            for (let i = 0; i < deviceInfo.ports; i++) {
+                const port = document.createElement('div');
+                port.className = 'port';
+                port.dataset.portId = i;
+                port.dataset.deviceId = id;
+                port.dataset.deviceType = type;
+                port.style.width = portSize + 'px';
+                port.style.height = portSize + 'px';
+                
+                // Position ports around the device
+                const angle = (i / deviceInfo.ports) * Math.PI * 2;
+                const radius = deviceSize * 0.4;
+                const centerX = deviceSize / 2;
+                const centerY = deviceSize / 2;
+                
+                const portX = Math.cos(angle) * radius + centerX - portSize/2;
+                const portY = Math.sin(angle) * radius + centerY - portSize/2;
+                
+                port.style.left = portX + 'px';
+                port.style.top = portY + 'px';
+                
+                device.appendChild(port);
+            }
+            
+            devicesArea.appendChild(device);
+        }
+        
+        // Setup drag and drop
+        function setupDragAndDrop() {
+            // Cable drag
+            const cables = document.querySelectorAll('.cable-item');
+            cables.forEach(cable => {
+                cable.addEventListener('dragstart', handleCableDragStart);
+                cable.addEventListener('dragend', handleCableDragEnd);
+                
+                // Touch events for mobile
+                cable.addEventListener('touchstart', handleCableTouchStart, {passive: false});
+                cable.addEventListener('touchmove', handleCableTouchMove, {passive: false});
+                cable.addEventListener('touchend', handleCableTouchEnd);
+                
+                // Click events for mobile
+                cable.addEventListener('click', handleCableClick);
+            });
+            
+            // Setup port event listeners
+            setupPortsEventListeners();
+        }
+        
+        // Setup event listeners for ports
+        function setupPortsEventListeners() {
+            const ports = document.querySelectorAll('.port');
+            ports.forEach(port => {
+                // Remove existing event listeners to avoid duplicates
+                port.removeEventListener('dragover', handlePortDragOver);
+                port.removeEventListener('drop', handlePortDrop);
+                port.removeEventListener('dragleave', handlePortDragLeave);
+                port.removeEventListener('click', handlePortClick);
+                port.removeEventListener('touchstart', handlePortTouchStart, {passive: false});
+                
+                // Add new event listeners
+                port.addEventListener('dragover', handlePortDragOver);
+                port.addEventListener('drop', handlePortDrop);
+                port.addEventListener('dragleave', handlePortDragLeave);
+                port.addEventListener('click', handlePortClick);
+                port.addEventListener('touchstart', handlePortTouchStart, {passive: false});
+            });
+        }
+        
+        let draggedCable = null;
+        let selectedPort = null;
+        let touchItem = null;
+        
+        function handleCableDragStart(e) {
+            draggedCable = e.target.dataset.cableType;
+            e.target.classList.add('dragging');
+        }
+        
+        function handleCableDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+        
+        // Handle cable click for mobile
+        function handleCableClick(e) {
+            const cableItem = e.target.closest('.cable-item');
+            if (!cableItem) return;
+            
+            // Remove selected class from all cables
+            document.querySelectorAll('.cable-item').forEach(cable => {
+                cable.classList.remove('selected');
+            });
+            
+            // Set this cable as selected
+            cableItem.classList.add('selected');
+            draggedCable = cableItem.dataset.cableType;
+            
+            showMessage('Cable selected!', 'info', 'Now tap on a device port to connect');
+        }
+        
+        // Touch events for cables
+        function handleCableTouchStart(e) {
+            e.preventDefault();
+            touchItem = e.target.closest('.cable-item');
+            draggedCable = touchItem.dataset.cableType;
+            
+            // Remove selected class from all cables
+            document.querySelectorAll('.cable-item').forEach(cable => {
+                cable.classList.remove('selected');
+            });
+            
+            // Set this cable as selected
+            touchItem.classList.add('selected');
+            touchItem.style.opacity = '0.5';
+        }
+        
+        function handleCableTouchMove(e) {
+            e.preventDefault();
+        }
+        
+        function handleCableTouchEnd(e) {
+            e.preventDefault();
+            if (touchItem) {
+                touchItem.style.opacity = '';
+            }
+        }
+        
+        function handlePortDragOver(e) {
+            e.preventDefault();
+            e.target.classList.add('highlight');
+        }
+        
+        function handlePortDragLeave(e) {
+            e.target.classList.remove('highlight');
+        }
+        
+        function handlePortDrop(e) {
+            e.preventDefault();
+            e.target.classList.remove('highlight');
+            
+            if (!selectedPort) {
+                selectedPort = e.target;
+                selectedPort.classList.add('highlight');
+                showMessage('Select another port to connect', 'info', 'Choose the second port for the connection');
+            } else {
+                // Make connection
+                const connection = {
+                    cable: draggedCable,
+                    port1: selectedPort,
+                    port2: e.target
+                };
+                
+                if (isValidConnection(connection)) {
+                    makeConnection(connection);
+                } else {
+                    wrongConnection();
+                }
+                
+                selectedPort.classList.remove('highlight');
+                selectedPort = null;
+            }
+        }
+        
+        function handlePortClick(e) {
+            if (!draggedCable) {
+                showMessage('Select a cable first', 'warning', 'Tap a cable type from the panel');
+                return;
+            }
+            
+            e.target.classList.add('highlight');
+            
+            if (!selectedPort) {
+                selectedPort = e.target;
+                showMessage('Select another port to connect', 'info', 'Choose the second port for the connection');
+            } else {
+                // Make connection
+                const connection = {
+                    cable: draggedCable,
+                    port1: selectedPort,
+                    port2: e.target
+                };
+                
+                if (isValidConnection(connection)) {
+                    makeConnection(connection);
+                } else {
+                    wrongConnection();
+                }
+                
+                selectedPort.classList.remove('highlight');
+                e.target.classList.remove('highlight');
+                selectedPort = null;
+            }
+        }
+        
+        function handlePortTouchStart(e) {
+            e.preventDefault();
+            handlePortClick(e);
+        }
+        
+        // Validate connection
+        function isValidConnection(connection) {
+            const device1 = connection.port1.dataset.deviceType;
+            const device2 = connection.port2.dataset.deviceType;
+            const cable = connection.cable;
+            
+            // Check if devices are different
+            if (connection.port1.dataset.deviceId === connection.port2.dataset.deviceId) {
+                return false;
+            }
+            
+            // Check if connection already exists
+            const connectionKey = `${connection.port1.dataset.deviceId}-${connection.port2.dataset.deviceId}`;
+            const reverseConnectionKey = `${connection.port2.dataset.deviceId}-${connection.port1.dataset.deviceId}`;
+            if (gameState.connectionsMade.includes(connectionKey) || gameState.connectionsMade.includes(reverseConnectionKey)) {
+                return false;
+            }
+            
+            // Check cable compatibility
+            const device1Info = deviceTypes[device1];
+            const device2Info = deviceTypes[device2];
+            
+            if (!device1Info.connections.includes(cable) || !device2Info.connections.includes(cable)) {
+                return false;
+            }
+            
+            // Special rules
+            if (cable === 'crossover' && (device1 !== 'pc' || device2 !== 'pc')) {
+                return false;
+            }
+            
+            if (cable === 'fiber' && (device1 !== 'router' || device2 !== 'router')) {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Make valid connection
+        function makeConnection(connection) {
+            connection.port1.classList.add('connected');
+            connection.port2.classList.add('connected');
+            
+            // Create visual connection line
+            createConnectionLine(connection.port1, connection.port2, connection.cable);
+            
+            // Update game state
+            gameState.connections++;
+            const pointsEarned = 50 * gameState.level;
+            const coinsEarned = 25 * gameState.level;
+            gameState.score += 100 * gameState.level;
+            gameState.points += pointsEarned;
+            gameState.coins += coinsEarned;
+            gameState.connectionsMade.push(
+                `${connection.port1.dataset.deviceId}-${connection.port2.dataset.deviceId}`
+            );
+            
+            // Create particles
+            createParticles(connection.port1);
+            createParticles(connection.port2);
+            
+            updateUI();
+            
+            // Check win condition
+            if (gameState.connections >= levels[gameState.level - 1].targetConnections) {
+                levelComplete();
+            }
+        }
+        
+        // Create visual connection line
+        function createConnectionLine(port1, port2, cableType) {
+            const devicesArea = document.getElementById('devicesArea');
+            const line = document.createElement('div');
+            line.className = 'connection-line';
+            
+            const rect1 = port1.getBoundingClientRect();
+            const rect2 = port2.getBoundingClientRect();
+            const areaRect = devicesArea.getBoundingClientRect();
+            
+            const x1 = rect1.left + rect1.width / 2 - areaRect.left;
+            const y1 = rect1.top + rect1.height / 2 - areaRect.top;
+            const x2 = rect2.left + rect2.width / 2 - areaRect.left;
+            const y2 = rect2.top + rect2.height / 2 - areaRect.top;
+            
+            const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+            
+            line.style.width = length + 'px';
+            line.style.height = '4px';
+            line.style.left = x1 + 'px';
+            line.style.top = y1 + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.transformOrigin = '0 50%';
+            
+            // Set cable color
+            if (cableType === 'ethernet') line.style.background = '#ff6b6b';
+            else if (cableType === 'fiber') line.style.background = '#4ecdc4';
+            else if (cableType === 'crossover') line.style.background = '#ffe66d';
+            
+            devicesArea.appendChild(line);
+        }
+        
+        // Handle wrong connection
+        function wrongConnection() {
+            gameState.timeLeft -= 5;
+            gameState.score = Math.max(0, gameState.score - 50);
+            gameState.points = Math.max(0, gameState.points - 25);
+            gameState.coins = Math.max(0, gameState.coins - 10);
+            updateUI();
+            showMessage('Wrong Connection!', 'error', 'Time penalty! -5 seconds');
+            
+            // Shake effect
+            const devicesArea = document.getElementById('devicesArea');
+            devicesArea.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                devicesArea.style.animation = '';
+            }, 500);
+        }
+        
+        // Create particle effects
+        function createParticles(element) {
+            const rect = element.getBoundingClientRect();
+            const devicesArea = document.getElementById('devicesArea');
+            const areaRect = devicesArea.getBoundingClientRect();
+            
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = (rect.left - areaRect.left + rect.width / 2) + 'px';
+                particle.style.top = (rect.top - areaRect.top + rect.height / 2) + 'px';
+                particle.style.transform = `rotate(${Math.random() * 360}deg)`;
+                devicesArea.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+        
+        // Timer
+        let timerInterval;
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (gameState.isPlaying && gameState.timeLeft > 0) {
+                    gameState.timeLeft--;
+                    updateUI();
+                    
+                    if (gameState.timeLeft <= 10) {
+                        document.getElementById('timer').classList.add('warning');
+                    }
+                    
+                    if (gameState.timeLeft === 0) {
+                        gameOver();
+                    }
+                }
+            }, 1000);
+        }
+        
+        // Show hint
+        function showHint() {
+            if (gameState.hints > 0) {
+                gameState.hints--;
+                document.getElementById('hintBtn').textContent = `💡 Hint (${gameState.hints})`;
+                
+                // Find a valid connection and highlight ports
+                const ports = document.querySelectorAll('.port:not(.connected)');
+                for (let i = 0; i < ports.length; i++) {
+                    for (let j = i + 1; j < ports.length; j++) {
+                        const connection = {
+                            cable: 'ethernet', // Default to ethernet for hint
+                            port1: ports[i],
+                            port2: ports[j]
+                        };
+                        
+                        if (isValidConnection(connection)) {
+                            ports[i].classList.add('highlight');
+                            ports[j].classList.add('highlight');
+                            setTimeout(() => {
+                                ports[i].classList.remove('highlight');
+                                ports[j].classList.remove('highlight');
+                            }, 3000);
+                            return;
+                        }
+                    }
+                }
+                
+                showMessage('No valid connections found!', 'warning', 'Check your cable types');
+            }
+        }
+        
+        // Reset level
+        function resetLevel() {
+            clearInterval(timerInterval);
+            gameState.connections = 0;
+            gameState.connectionsMade = [];
+            gameState.timeLeft = 60 + (gameState.level * 10);
+            gameState.isPlaying = true;
+            selectedPort = null;
+            
+            // Clear selected cable
+            document.querySelectorAll('.cable-item').forEach(cable => {
+                cable.classList.remove('selected');
+            });
+            draggedCable = null;
+            
+            createDevices();
+            startTimer();
+            updateUI();
+        }
+        
+        // Record reward to database
+        async function recordReward(points, coins, reason) {
+            const username = localStorage.getItem("loggedInUser");
+            if (!username) {
+                console.log("No username found in localStorage. Cannot record reward.");
+                return;
+            }
+            try {
+                const response = await fetch("https://postgres-test-p05s.onrender.com/api/reward", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username,
+                        points,
+                        coins,
+                        reason
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    console.log(`Reward recorded: +${points} Points, +${coins} Coins`);
+                } else {
+                    console.error("Reward API failed:", data);
+                }
+            } catch (err) {
+                console.error("Reward API Error:", err);
+            }
+        }
+        
+        // Level complete
+        function levelComplete() {
+            clearInterval(timerInterval);
+            gameState.isPlaying = false;
+            
+            const bonus = gameState.timeLeft * 10;
+            const pointsBonus = gameState.timeLeft * 5;
+            const coinsBonus = gameState.timeLeft * 3;
+            gameState.score += bonus;
+            gameState.points += pointsBonus;
+            gameState.coins += coinsBonus;
+            
+            // Record level completion reward to database
+            recordReward(pointsBonus, coinsBonus, `Completed Level ${gameState.level}`);
+            
+            showMessage('Level Complete!', 'success', `Bonus: +${bonus} points! +${pointsBonus} stars! +${coinsBonus} coins!`);
+            
+            setTimeout(() => {
+                if (gameState.level < levels.length) {
+                    gameState.level++;
+                    gameState.timeLeft = 60 + (gameState.level * 10);
+                    gameState.connections = 0;
+                    gameState.connectionsMade = [];
+                    gameState.isPlaying = true;
+                    selectedPort = null;
+                    
+                    // Clear selected cable
+                    document.querySelectorAll('.cable-item').forEach(cable => {
+                        cable.classList.remove('selected');
+                    });
+                    draggedCable = null;
+                    
+                    createDevices();
+                    startTimer();
+                    updateUI();
+                } else {
+                    gameWin();
+                }
+            }, 2000);
+        }
+        
+        // Game over
+        function gameOver() {
+            clearInterval(timerInterval);
+            gameState.isPlaying = false;
+            showMessage('Game Over!', 'error', `Final Score: ${gameState.score} | Stars: ${gameState.points} | Coins: ${gameState.coins}`);
+        }
+        
+        // Game win
+        function gameWin() {
+            // Record game completion reward to database
+            recordReward(gameState.points, gameState.coins, "Completed all levels");
+            
+            showMessage('Congratulations!', 'success', `You completed all levels! Final Score: ${gameState.score} | Stars: ${gameState.points} | Coins: ${gameState.coins}`);
+        }
+        
+        // Show message
+        function showMessage(title, type, text) {
+            const message = document.getElementById('message');
+            const messageTitle = document.getElementById('messageTitle');
+            const messageText = document.getElementById('messageText');
+            
+            message.className = `message ${type} show`;
+            messageTitle.textContent = title;
+            messageText.textContent = text;
+        }
+        
+        // Hide message
+        function hideMessage() {
+            const message = document.getElementById('message');
+            message.classList.remove('show');
+        }
+        
+        // Update UI
+        function updateUI() {
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('points').textContent = gameState.points;
+            document.getElementById('coins').textContent = gameState.coins;
+            document.getElementById('timer').textContent = gameState.timeLeft;
+            document.getElementById('level').textContent = gameState.level;
+            
+            // Update hint button
+            document.getElementById('hintBtn').disabled = gameState.hints === 0;
+        }
+        
+        // Show confirmation dialog
+        function showConfirmDialog() {
+            const dialog = document.getElementById('confirmDialog');
+            dialog.classList.add('show');
+        }
+        
+        // Hide confirmation dialog
+        function hideConfirmDialog() {
+            const dialog = document.getElementById('confirmDialog');
+            dialog.classList.remove('show');
+        }
+        
+        // Quit game and redirect
+        function quitGame() {
+            // Stop the timer
+            clearInterval(timerInterval);
+            
+            // Redirect to the levels page
+            window.location.href = '../levels/networkinglevels.html';
+        }
+        
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            createDevices();
+        });
+        
+        // Initialize game when page loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>
     @keyframes glitch-2 {
       0%, 100% { 
         clip-path: inset(0 0 0 0); 

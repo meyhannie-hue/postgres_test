@@ -887,6 +887,11 @@
     // Load user data from database
     async function loadUserData() {
       try {
+        // First, load from localStorage for immediate UI update
+        window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
+        checkUnlockedLevels();
+        
+        // Then fetch from database for latest data
         const res = await fetch("https://postgres-test-p05s.onrender.com/get-players");
         if (!res.ok) throw new Error("Failed to fetch players");
         const players = await res.json();
@@ -935,17 +940,21 @@
     function checkUnlockedLevels() {
       // Update UI based on unlocked status
       if (window.unlockedLevels.medium) {
-        document.getElementById("mediumLevel").classList.remove("locked");
-        document.querySelector("#mediumLevel .level-status").classList.remove("locked");
-        document.querySelector("#mediumLevel .level-status").classList.add("unlocked");
-        document.querySelector("#mediumLevel .level-status").textContent = "Unlocked";
+        const mediumLevel = document.getElementById("mediumLevel");
+        mediumLevel.classList.remove("locked");
+        const mediumStatus = mediumLevel.querySelector(".level-status");
+        mediumStatus.classList.remove("locked");
+        mediumStatus.classList.add("unlocked");
+        mediumStatus.textContent = "Unlocked";
       }
       
       if (window.unlockedLevels.hard) {
-        document.getElementById("hardLevel").classList.remove("locked");
-        document.querySelector("#hardLevel .level-status").classList.remove("locked");
-        document.querySelector("#hardLevel .level-status").classList.add("unlocked");
-        document.querySelector("#hardLevel .level-status").textContent = "Unlocked";
+        const hardLevel = document.getElementById("hardLevel");
+        hardLevel.classList.remove("locked");
+        const hardStatus = hardLevel.querySelector(".level-status");
+        hardStatus.classList.remove("locked");
+        hardStatus.classList.add("unlocked");
+        hardStatus.textContent = "Unlocked";
       }
     }
     
