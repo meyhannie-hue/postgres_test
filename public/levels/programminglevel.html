@@ -872,22 +872,39 @@
     
     // Function to save unlocked levels to localStorage
     function saveUnlockedLevelsToLocalStorage() {
-      localStorage.setItem('programmingUnlockedLevels', JSON.stringify(window.unlockedLevels));
+      try {
+        localStorage.setItem('programmingUnlockedLevels', JSON.stringify(window.unlockedLevels));
+        console.log("Programming unlocked levels saved to localStorage:", window.unlockedLevels);
+      } catch (err) {
+        console.error("Error saving programming unlocked levels to localStorage:", err);
+      }
     }
     
     // Function to load unlocked levels from localStorage
     function loadUnlockedLevelsFromLocalStorage() {
-      const savedLevels = localStorage.getItem('programmingUnlockedLevels');
-      if (savedLevels) {
-        return JSON.parse(savedLevels);
+      try {
+        const savedLevels = localStorage.getItem('programmingUnlockedLevels');
+        if (savedLevels) {
+          const parsedLevels = JSON.parse(savedLevels);
+          console.log("Programming unlocked levels loaded from localStorage:", parsedLevels);
+          return parsedLevels;
+        }
+      } catch (err) {
+        console.error("Error loading programming unlocked levels from localStorage:", err);
       }
-      return { easy: true, medium: false, hard: false }; // Default values
+      
+      // Default values if nothing is saved or error occurs
+      const defaultLevels = { easy: true, medium: false, hard: false };
+      console.log("Using default programming unlocked levels:", defaultLevels);
+      return defaultLevels;
     }
     
     // Load user data from database
     async function loadUserData() {
       try {
-        // First, load from localStorage for immediate UI update
+        console.log("Loading programming user data...");
+        
+        // First try to load from localStorage for immediate UI update
         window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
         checkUnlockedLevels();
         
@@ -898,17 +915,35 @@
         const loggedInPlayer = players.find(p => p.username === loggedInUser);
         
         if (loggedInPlayer) {
+          console.log("Player found in database:", loggedInPlayer);
+          
           // Get coins from database
           const coins = loggedInPlayer.coins || 0;
-          document.getElementById("coins").innerText = `💰 ${coins}`;
+          document.getElementById("coins").textContent = `💰 ${coins}`;
           window.playerCoins = coins;
           
           // Get unlocked levels from database
-          const unlockedLevels = loggedInPlayer.unlocked_levels || 
-            JSON.stringify({ easy: true, medium: false, hard: false });
-          window.unlockedLevels = JSON.parse(unlockedLevels);
+          let dbUnlockedLevels;
+          try {
+            // Check if player has programming specific unlocked levels
+            if (loggedInPlayer.programming_unlocked_levels) {
+              dbUnlockedLevels = JSON.parse(loggedInPlayer.programming_unlocked_levels);
+            } else if (loggedInPlayer.unlocked_levels) {
+              // Fallback to general unlocked levels
+              dbUnlockedLevels = JSON.parse(loggedInPlayer.unlocked_levels);
+            } else {
+              // Default values
+              dbUnlockedLevels = { easy: true, medium: false, hard: false };
+            }
+          } catch (e) {
+            console.error("Error parsing unlocked_levels from database:", e);
+            dbUnlockedLevels = { easy: true, medium: false, hard: false };
+          }
           
-          // Save to localStorage for persistence
+          // Merge with localStorage data (prioritize database)
+          window.unlockedLevels = { ...window.unlockedLevels, ...dbUnlockedLevels };
+          
+          // Save merged data back to localStorage
           saveUnlockedLevelsToLocalStorage();
           
           // Update UI based on unlocked status
@@ -917,10 +952,10 @@
           // Update progress bars based on coins
           updateProgressBars(coins);
         } else {
+          console.log("Player not found in database, using localStorage data");
           // Default values if player not found
-          document.getElementById("coins").innerText = "💰 0";
+          document.getElementById("coins").textContent = "💰 0";
           window.playerCoins = 0;
-          // Try to load from localStorage
           window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
           checkUnlockedLevels();
           updateProgressBars(0);
@@ -928,7 +963,7 @@
       } catch (err) {
         console.error("Error loading user data:", err);
         // Fallback to localStorage if database fetch fails
-        document.getElementById("coins").innerText = "💰 0";
+        document.getElementById("coins").textContent = "💰 0";
         window.playerCoins = 0;
         window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
         checkUnlockedLevels();
@@ -938,6 +973,8 @@
     
     // Check which levels are unlocked from database
     function checkUnlockedLevels() {
+      console.log("Checking programming unlocked levels:", window.unlockedLevels);
+      
       // Update UI based on unlocked status
       if (window.unlockedLevels.medium) {
         const mediumLevel = document.getElementById("mediumLevel");
@@ -946,6 +983,7 @@
         mediumStatus.classList.remove("locked");
         mediumStatus.classList.add("unlocked");
         mediumStatus.textContent = "Unlocked";
+        console.log("Medium programming level unlocked");
       }
       
       if (window.unlockedLevels.hard) {
@@ -955,6 +993,7 @@
         hardStatus.classList.remove("locked");
         hardStatus.classList.add("unlocked");
         hardStatus.textContent = "Unlocked";
+        console.log("Hard programming level unlocked");
       }
     }
     
@@ -1053,6 +1092,8 @@
     
     // Purchase level function
     async function purchaseLevel(level, cost) {
+      console.log(`Purchasing programming ${level} level for ${cost} coins`);
+      
       // Deduct coins
       const newCoins = window.playerCoins - cost;
       
@@ -1072,7 +1113,8 @@
           body: JSON.stringify({ 
             username: loggedInUser, 
             coins: newCoins,
-            unlocked_levels: JSON.stringify(window.unlockedLevels)
+            // Save programming specific unlocked levels
+            programming_unlocked_levels: JSON.stringify(window.unlockedLevels)
           })
         });
         
