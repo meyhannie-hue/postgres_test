@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Networking Levels - Cyber Theme</title>
   <style>
+    /* All existing CSS styles remain the same */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -725,21 +726,38 @@
     
     // Function to save unlocked levels to localStorage
     function saveUnlockedLevelsToLocalStorage() {
-      localStorage.setItem('unlockedLevels', JSON.stringify(window.unlockedLevels));
+      try {
+        localStorage.setItem('unlockedLevels', JSON.stringify(window.unlockedLevels));
+        console.log("Unlocked levels saved to localStorage:", window.unlockedLevels);
+      } catch (err) {
+        console.error("Error saving unlocked levels to localStorage:", err);
+      }
     }
     
     // Function to load unlocked levels from localStorage
     function loadUnlockedLevelsFromLocalStorage() {
-      const savedLevels = localStorage.getItem('unlockedLevels');
-      if (savedLevels) {
-        return JSON.parse(savedLevels);
+      try {
+        const savedLevels = localStorage.getItem('unlockedLevels');
+        if (savedLevels) {
+          const parsedLevels = JSON.parse(savedLevels);
+          console.log("Unlocked levels loaded from localStorage:", parsedLevels);
+          return parsedLevels;
+        }
+      } catch (err) {
+        console.error("Error loading unlocked levels from localStorage:", err);
       }
-      return { easy: true, medium: false, hard: false }; // Default values
+      
+      // Default values if nothing is saved or error occurs
+      const defaultLevels = { easy: true, medium: false, hard: false };
+      console.log("Using default unlocked levels:", defaultLevels);
+      return defaultLevels;
     }
     
     // Load user data from database
     async function loadUserData() {
       try {
+        console.log("Loading user data...");
+        
         // First try to load from localStorage for immediate UI update
         window.unlockedLevels = loadUnlockedLevelsFromLocalStorage();
         checkUnlockedLevels();
@@ -751,22 +769,34 @@
         const loggedInPlayer = players.find(p => p.username === loggedInUser);
         
         if (loggedInPlayer) {
+          console.log("Player found in database:", loggedInPlayer);
+          
           // Get coins from database
           const coins = loggedInPlayer.coins || 0;
           document.getElementById("coins").textContent = `💰 ${coins}`;
           window.playerCoins = coins;
           
           // Get unlocked levels from database
-          const unlockedLevels = loggedInPlayer.unlocked_levels || 
-            JSON.stringify({ easy: true, medium: false, hard: false });
-          window.unlockedLevels = JSON.parse(unlockedLevels);
+          let unlockedLevels;
+          try {
+            unlockedLevels = loggedInPlayer.unlocked_levels ? 
+              JSON.parse(loggedInPlayer.unlocked_levels) : 
+              { easy: true, medium: false, hard: false };
+          } catch (e) {
+            console.error("Error parsing unlocked_levels from database:", e);
+            unlockedLevels = { easy: true, medium: false, hard: false };
+          }
           
-          // Save to localStorage for persistence
+          // Merge with localStorage data (prioritize database)
+          window.unlockedLevels = { ...window.unlockedLevels, ...unlockedLevels };
+          
+          // Save merged data back to localStorage
           saveUnlockedLevelsToLocalStorage();
           
           // Update UI based on unlocked status
           checkUnlockedLevels();
         } else {
+          console.log("Player not found in database, using localStorage data");
           // Default values if player not found
           document.getElementById("coins").textContent = "💰 0";
           window.playerCoins = 0;
@@ -785,6 +815,8 @@
     
     // Check which levels are unlocked from database
     function checkUnlockedLevels() {
+      console.log("Checking unlocked levels:", window.unlockedLevels);
+      
       // Update UI based on unlocked status
       if (window.unlockedLevels.medium) {
         const mediumLevel = document.getElementById("mediumLevel");
@@ -792,6 +824,7 @@
         // Remove coin cost badge
         const mediumCostBadge = mediumLevel.querySelector(".coin-cost");
         if (mediumCostBadge) mediumCostBadge.remove();
+        console.log("Medium level unlocked");
       }
       
       if (window.unlockedLevels.hard) {
@@ -800,6 +833,7 @@
         // Remove coin cost badge
         const hardCostBadge = hardLevel.querySelector(".coin-cost");
         if (hardCostBadge) hardCostBadge.remove();
+        console.log("Hard level unlocked");
       }
     }
     
@@ -927,6 +961,8 @@
     
     // Purchase level function
     async function purchaseLevel(level, cost) {
+      console.log(`Purchasing ${level} level for ${cost} coins`);
+      
       // Deduct coins
       const newCoins = window.playerCoins - cost;
       
