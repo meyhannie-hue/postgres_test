@@ -288,7 +288,7 @@
       80% { clip-path: inset(5% 0 80% 0); transform: translate(2px); }
     }
     
-    /* NEW LOADING SCREEN - FUTURISTIC TECH STYLE */
+    /* AUTO LOADING SCREEN - NO BUTTONS */
     .loader {
       position: fixed;
       top: 0;
@@ -307,182 +307,431 @@
       overflow: hidden;
     }
     
-    /* Animated Circuit Background */
-    .circuit-bg {
+    /* Loading Header */
+    .loading-header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .loading-title {
+      font-size: 2.5rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 15px rgba(0, 229, 255, 0.7);
+      animation: pulse-text 2s infinite alternate;
+    }
+    
+    @keyframes pulse-text {
+      0% { opacity: 0.8; }
+      100% { opacity: 1; text-shadow: 0 0 20px rgba(0, 229, 255, 0.9); }
+    }
+    
+    .loading-subtitle {
+      font-size: 1rem;
+      color: #b3e5fc;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    
+    /* Module Indicator */
+    .module-indicator {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .module-name {
+      padding: 8px 16px;
+      background: rgba(0, 30, 60, 0.6);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 20px;
+      color: #b3e5fc;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.5s ease;
+    }
+    
+    .module-name.active {
+      background: rgba(0, 120, 212, 0.7);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+    
+    /* Animation Container */
+    .animation-container {
+      width: 90%;
+      max-width: 500px;
+      height: 300px;
+      position: relative;
+      margin-bottom: 30px;
+      border-radius: 15px;
+      overflow: hidden;
+      background: rgba(0, 30, 60, 0.4);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+    
+    /* Module Content */
+    .module-content {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
-      opacity: 0.1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
     
-    .circuit-line {
-      position: absolute;
-      background: linear-gradient(90deg, transparent, #00e5ff, transparent);
-      height: 2px;
-      transform-origin: left center;
-      animation: circuit-flow 3s linear infinite;
+    .module-content.active {
+      opacity: 1;
     }
     
-    @keyframes circuit-flow {
-      0% {
-        transform: scaleX(0);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        transform: scaleX(1);
-        opacity: 0;
-      }
-    }
-    
-    /* Central Tech Hub */
-    .tech-hub {
+    /* Enhanced Networking Animation */
+    .networking-animation {
       position: relative;
-      width: 200px;
-      height: 200px;
-      margin-bottom: 40px;
-    }
-    
-    /* Rotating Rings */
-    .ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      border: 2px solid rgba(0, 229, 255, 0.5);
-    }
-    
-    .ring-1 {
-      width: 200px;
-      height: 200px;
-      animation: rotate-clockwise 10s linear infinite;
-    }
-    
-    .ring-2 {
-      width: 160px;
-      height: 160px;
-      border-color: rgba(0, 120, 212, 0.7);
-      animation: rotate-counter 8s linear infinite;
-    }
-    
-    .ring-3 {
-      width: 120px;
-      height: 120px;
-      border-color: rgba(0, 229, 255, 0.9);
-      animation: rotate-clockwise 6s linear infinite;
-    }
-    
-    /* Central Core */
-    .core {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, #00e5ff, #0078d4);
-      border-radius: 50%;
-      box-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
-      animation: pulse-core 2s infinite alternate;
-    }
-    
-    @keyframes rotate-clockwise {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    
-    @keyframes rotate-counter {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to { transform: translate(-50%, -50%) rotate(-360deg); }
-    }
-    
-    @keyframes pulse-core {
-      0% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.8); }
-      100% { box-shadow: 0 0 40px rgba(0, 229, 255, 1); }
-    }
-    
-    /* Scanning Text Effect */
-    .scanning-text {
-      font-size: 1.5rem;
-      margin-bottom: 30px;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 600;
-      letter-spacing: 2px;
-      position: relative;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
     }
     
-    .scanning-text::after {
-      content: '';
+    .network-node {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #00e5ff;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
+      z-index: 2;
+      animation: node-pulse 3s infinite alternate;
+    }
+    
+    @keyframes node-pulse {
+      0% { box-shadow: 0 0 15px rgba(0, 229, 255, 0.8); }
+      50% { box-shadow: 0 0 25px rgba(0, 229, 255, 1); }
+      100% { box-shadow: 0 0 15px rgba(0, 229, 255, 0.8); }
+    }
+    
+    .network-connection {
+      position: absolute;
+      background: rgba(0, 229, 255, 0.4);
+      height: 3px;
+      transform-origin: left center;
+      z-index: 1;
+    }
+    
+    .data-packet {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #00ff88;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+      z-index: 3;
+    }
+    
+    .data-trail {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(0, 255, 136, 0.4);
+      z-index: 1;
+    }
+    
+    /* Enhanced Web Development Animation */
+    .webdev-animation {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .browser-window {
+      width: 80%;
+      height: 70%;
+      border: 2px solid #00e5ff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+    }
+    
+    .browser-header {
+      height: 25px;
+      background: rgba(0, 229, 255, 0.2);
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+    }
+    
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .browser-dot:nth-child(1) { background: #ff5f56; }
+    .browser-dot:nth-child(2) { background: #ffbd2e; }
+    .browser-dot:nth-child(3) { background: #27c93f; }
+    
+    .browser-address-bar {
+      flex: 1;
+      height: 18px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 10px;
+      color: #b3e5fc;
+    }
+    
+    .browser-content {
+      height: calc(100% - 25px);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: #e0f7fa;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .code-line {
+      margin: 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      opacity: 0;
+      animation: code-reveal 0.5s forwards;
+    }
+    
+    .code-line.html { color: #ff6b6b; }
+    .code-line.css { color: #4dabf7; }
+    .code-line.js { color: #feca57; }
+    .code-line.comment { color: #95afc0; }
+    
+    @keyframes code-reveal {
+      from { width: 0; opacity: 0; }
+      to { width: 100%; opacity: 1; }
+    }
+    
+    .preview-box {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 120px;
+      height: 80px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 229, 255, 0.5);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      color: #e0f7fa;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .preview-box.visible {
+      opacity: 1;
+    }
+    
+    .preview-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .preview-element {
+      margin: 2px 0;
+    }
+    
+    .preview-button {
+      padding: 2px 8px;
+      background: #0078d4;
+      border-radius: 3px;
+      color: white;
+      font-size: 8px;
+    }
+    
+    /* Enhanced System Unit Animation */
+    .system-animation {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .computer-case {
+      width: 60%;
+      height: 80%;
+      background: rgba(0, 30, 60, 0.8);
+      border: 2px solid #00e5ff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+      position: relative;
+    }
+    
+    .case-fan {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #00e5ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
+    
+    .fan-blade {
+      position: absolute;
+      width: 80%;
+      height: 3px;
+      background: #00e5ff;
+      transform-origin: center;
+    }
+    
+    .fan-blade:nth-child(1) { transform: rotate(0deg); }
+    .fan-blade:nth-child(2) { transform: rotate(45deg); }
+    .fan-blade:nth-child(3) { transform: rotate(90deg); }
+    .fan-blade:nth-child(4) { transform: rotate(135deg); }
+    
+    .fan-normal {
+      animation: fan-spin 2s linear infinite;
+    }
+    
+    .fan-fast {
+      animation: fan-spin 0.5s linear infinite;
+    }
+    
+    @keyframes fan-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .motherboard {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 40%;
+      background: rgba(0, 50, 100, 0.6);
+      border-radius: 5px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 8px;
+      padding: 10px;
+    }
+    
+    .component {
+      background: #00e5ff;
+      border-radius: 3px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 8px;
+      color: #0a1929;
+      font-weight: bold;
+    }
+    
+    .component-led {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #00ff88;
+      box-shadow: 0 0 5px rgba(0, 255, 136, 0.8);
+    }
+    
+    .led-blink {
+      animation: led-blink 1.5s infinite alternate;
+    }
+    
+    @keyframes led-blink {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+    
+    .heat-map {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
-      animation: scan 2s linear infinite;
+      background: radial-gradient(circle at center, rgba(255, 100, 0, 0.2), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
     }
     
-    @keyframes scan {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+    .heat-map.visible {
+      opacity: 1;
     }
     
-    /* Circular Progress Bar */
+    /* Progress Container */
     .progress-container {
-      position: relative;
-      width: 150px;
-      height: 150px;
-      margin-bottom: 30px;
+      width: 90%;
+      max-width: 500px;
+      margin-bottom: 20px;
     }
     
-    .progress-circle {
-      transform: rotate(-90deg);
-    }
-    
-    .progress-background {
-      fill: none;
-      stroke: rgba(0, 229, 255, 0.2);
-      stroke-width: 8;
+    .progress-bar-container {
+      width: 100%;
+      height: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
     }
     
     .progress-bar {
-      fill: none;
-      stroke: url(#gradient);
-      stroke-width: 8;
-      stroke-linecap: round;
-      stroke-dasharray: 440;
-      stroke-dashoffset: 440;
-      animation: progress 7s linear forwards;
-    }
-    
-    @keyframes progress {
-      to { stroke-dashoffset: 0; }
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0078d4, #00e5ff);
+      border-radius: 6px;
+      transition: width 0.3s ease;
     }
     
     .progress-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    
+    .progress-percentage {
       font-weight: bold;
     }
     
-    /* Tech Status Dots */
+    /* Status Dots */
     .status-dots {
       display: flex;
       justify-content: center;
-      margin-top: 20px;
+      margin-bottom: 20px;
     }
     
     .dot {
@@ -490,7 +739,7 @@
       height: 12px;
       border-radius: 50%;
       background: rgba(0, 229, 255, 0.3);
-      margin: 0 5px;
+      margin: 0 8px;
       position: relative;
     }
     
@@ -522,9 +771,8 @@
       100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
     }
     
-    /* Tech Loading Messages */
+    /* Loading Messages */
     .loading-messages {
-      margin-top: 30px;
       height: 30px;
       display: flex;
       justify-content: center;
@@ -541,40 +789,40 @@
       opacity: 1;
     }
     
-    @media (max-width: 500px) {
-      .card h1 {
-        font-size: 1.7rem;
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .loading-title {
+        font-size: 2rem;
       }
-      .btn {
-        font-size: 0.95rem;
-        padding: 10px 24px;
+      
+      .animation-container {
+        height: 250px;
       }
-      .tech-hub {
-        width: 150px;
-        height: 150px;
+      
+      .browser-window {
+        width: 90%;
       }
-      .ring-1 {
-        width: 150px;
-        height: 150px;
+      
+      .computer-case {
+        width: 70%;
       }
-      .ring-2 {
-        width: 120px;
-        height: 120px;
+    }
+    
+    @media (max-width: 480px) {
+      .loading-title {
+        font-size: 1.8rem;
       }
-      .ring-3 {
-        width: 90px;
-        height: 90px;
+      
+      .animation-container {
+        height: 200px;
       }
-      .core {
-        width: 60px;
-        height: 60px;
+      
+      .browser-content {
+        font-size: 10px;
       }
-      .scanning-text {
-        font-size: 1.2rem;
-      }
-      .progress-container {
-        width: 120px;
-        height: 120px;
+      
+      .component {
+        font-size: 7px;
       }
     }
   </style>
@@ -585,45 +833,87 @@
   <div class="circuit-board"></div>
   <div class="particles" id="particles"></div>
   
-  <!-- NEW LOADING SCREEN -->
+  <!-- AUTO LOADING SCREEN -->
   <div class="loader" id="loader">
-    <div class="circuit-bg" id="circuitBg"></div>
-    
-    <div class="tech-hub">
-      <div class="ring ring-1"></div>
-      <div class="ring ring-2"></div>
-      <div class="ring ring-3"></div>
-      <div class="core"></div>
+    <div class="loading-header">
+      <h1 class="loading-title">TECHY ME</h1>
+      <p class="loading-subtitle">INITIALIZING SYSTEM MODULES</p>
     </div>
     
-    <div class="scanning-text">INITIALIZING TECHY ME</div>
+    <div class="module-indicator">
+      <div class="module-name active" id="moduleName">NETWORKING</div>
+    </div>
+    
+    <div class="animation-container">
+      <!-- Networking Module -->
+      <div class="module-content active" id="networking-content">
+        <div class="networking-animation" id="networking-animation">
+          <!-- Nodes and connections will be generated by JavaScript -->
+        </div>
+      </div>
+      
+      <!-- Web Development Module -->
+      <div class="module-content" id="webdev-content">
+        <div class="webdev-animation">
+          <div class="browser-window">
+            <div class="browser-header">
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+              <div class="browser-address-bar">techyme.app</div>
+            </div>
+            <div class="browser-content" id="browser-content">
+              <!-- Code lines will be generated by JavaScript -->
+            </div>
+          </div>
+          <div class="preview-box" id="preview-box">
+            <div class="preview-content">
+              <div class="preview-element">Hello World!</div>
+              <div class="preview-element preview-button">Click Me</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- System Unit Module -->
+      <div class="module-content" id="system-content">
+        <div class="system-animation">
+          <div class="computer-case" id="computer-case">
+            <div class="case-fan">
+              <div class="fan-blade fan-normal"></div>
+              <div class="fan-blade fan-normal"></div>
+              <div class="fan-blade fan-normal"></div>
+              <div class="fan-blade fan-normal"></div>
+            </div>
+            <div class="motherboard" id="motherboard">
+              <!-- Components will be generated by JavaScript -->
+            </div>
+            <div class="heat-map" id="heat-map"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <div class="progress-container">
-      <svg class="progress-circle" width="150" height="150">
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#0078d4" />
-            <stop offset="100%" stop-color="#00e5ff" />
-          </linearGradient>
-        </defs>
-        <circle class="progress-background" cx="75" cy="75" r="70"></circle>
-        <circle class="progress-bar" cx="75" cy="75" r="70"></circle>
-      </svg>
-      <div class="progress-text">0%</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-text">
+        <span id="progressStatus">Initializing networking module...</span>
+        <span class="progress-percentage" id="progressPercentage">0%</span>
+      </div>
     </div>
     
     <div class="status-dots">
-      <div class="dot" id="dot1"></div>
+      <div class="dot active" id="dot1"></div>
       <div class="dot" id="dot2"></div>
       <div class="dot" id="dot3"></div>
-      <div class="dot" id="dot4"></div>
     </div>
     
     <div class="loading-messages">
-      <div class="message active" id="msg1">Booting system...</div>
-      <div class="message" id="msg2">Loading modules...</div>
-      <div class="message" id="msg3">Connecting to network...</div>
-      <div class="message" id="msg4">System ready!</div>
+      <div class="message active" id="msg1">Initializing networking module...</div>
+      <div class="message" id="msg2">Loading web development resources...</div>
+      <div class="message" id="msg3">Configuring system hardware...</div>
     </div>
   </div>
   
@@ -638,6 +928,7 @@
   <!-- Sounds -->
   <audio id="loadingSound" src="sounds/loading_1.mp3" preload="auto"></audio>
   <audio id="clickSound" src="sounds/Button_Click_-_Sound_Effect(256k).mp3" preload="auto"></audio>
+  <audio id="successSound" src="sounds/success.mp3" preload="auto"></audio>
   
   <script>
     // Digital Rain Effect for Main Screen
@@ -730,26 +1021,214 @@
       binaryContainer.appendChild(binaryChar);
     }
     
-    // Create circuit lines for loading screen
-    const circuitBg = document.getElementById('circuitBg');
-    const lineCount = 15;
+    // Initialize networking animation
+    function initializeNetworkingAnimation() {
+      const container = document.getElementById('networking-animation');
+      const width = container.offsetWidth;
+      const height = container.offsetHeight;
+      
+      // Create nodes
+      const nodeCount = 6;
+      const nodes = [];
+      
+      for (let i = 0; i < nodeCount; i++) {
+        const node = document.createElement('div');
+        node.className = 'network-node';
+        
+        // Position nodes in a circular pattern
+        const angle = (i / nodeCount) * Math.PI * 2;
+        const radius = Math.min(width, height) * 0.35;
+        const x = width / 2 + Math.cos(angle) * radius - 8;
+        const y = height / 2 + Math.sin(angle) * radius - 8;
+        
+        node.style.left = `${x}px`;
+        node.style.top = `${y}px`;
+        
+        container.appendChild(node);
+        nodes.push({ element: node, x: x + 8, y: y + 8 });
+      }
+      
+      // Create connections
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          // Only connect some nodes to avoid clutter
+          if (Math.random() > 0.5) {
+            const connection = document.createElement('div');
+            connection.className = 'network-connection';
+            
+            const node1 = nodes[i];
+            const node2 = nodes[j];
+            
+            const dx = node2.x - node1.x;
+            const dy = node2.y - node1.y;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            connection.style.width = `${length}px`;
+            connection.style.left = `${node1.x}px`;
+            connection.style.top = `${node1.y}px`;
+            connection.style.transform = `rotate(${angle}deg)`;
+            
+            container.appendChild(connection);
+          }
+        }
+      }
+      
+      // Create data packets with trails
+      for (let i = 0; i < 3; i++) {
+        const packet = document.createElement('div');
+        packet.className = 'data-packet';
+        
+        const trail = document.createElement('div');
+        trail.className = 'data-trail';
+        
+        // Random starting node
+        const startNode = Math.floor(Math.random() * nodeCount);
+        const endNode = (startNode + Math.floor(Math.random() * (nodeCount - 1) + 1)) % nodeCount;
+        
+        packet.style.left = `${nodes[startNode].x - 5}px`;
+        packet.style.top = `${nodes[startNode].y - 5}px`;
+        
+        trail.style.left = `${nodes[startNode].x - 3}px`;
+        trail.style.top = `${nodes[startNode].y - 3}px`;
+        
+        container.appendChild(packet);
+        container.appendChild(trail);
+        
+        // Animate packet movement
+        animatePacketWithTrail(packet, trail, nodes[startNode], nodes[endNode]);
+      }
+    }
     
-    for (let i = 0; i < lineCount; i++) {
-      const line = document.createElement('div');
-      line.className = 'circuit-line';
+    // Animate data packet with trail
+    function animatePacketWithTrail(packet, trail, startNode, endNode) {
+      const dx = endNode.x - startNode.x;
+      const dy = endNode.y - startNode.y;
+      const duration = 2000 + Math.random() * 1000;
       
-      // Random position
-      line.style.top = `${Math.random() * 100}%`;
-      line.style.left = '0';
-      line.style.width = `${Math.random() * 30 + 20}%`;
+      // Animate packet
+      packet.animate([
+        { transform: `translate(0, 0)` },
+        { transform: `translate(${dx}px, ${dy}px)` }
+      ], {
+        duration: duration,
+        iterations: Infinity,
+        direction: 'alternate',
+        easing: 'ease-in-out'
+      });
       
-      // Random animation delay and duration
-      const delay = Math.random() * 3;
-      const duration = Math.random() * 2 + 2;
-      line.style.animationDelay = `${delay}s`;
-      line.style.animationDuration = `${duration}s`;
+      // Animate trail with delay
+      trail.animate([
+        { transform: `translate(0, 0)`, opacity: 0.3 },
+        { transform: `translate(${dx}px, ${dy}px)`, opacity: 0.3 }
+      ], {
+        duration: duration,
+        iterations: Infinity,
+        direction: 'alternate',
+        easing: 'ease-in-out',
+        delay: 100
+      });
+    }
+    
+    // Initialize web development animation
+    function initializeWebDevAnimation() {
+      const browserContent = document.getElementById('browser-content');
+      const previewBox = document.getElementById('preview-box');
       
-      circuitBg.appendChild(line);
+      // Code snippets
+      const codeSnippets = [
+        { text: '<!DOCTYPE html>', class: 'html' },
+        { text: '<html>', class: 'html' },
+        { text: '<head>', class: 'html' },
+        { text: '  <title>TECHY ME</title>', class: 'html' },
+        { text: '</head>', class: 'html' },
+        { text: '<body>', class: 'html' },
+        { text: '  <h1>Welcome!</h1>', class: 'html' },
+        { text: '</body>', class: 'html' },
+        { text: '</html>', class: 'html' },
+        { text: '/* CSS Styles */', class: 'comment' },
+        { text: 'body {', class: 'css' },
+        { text: '  font-family: Arial;', class: 'css' },
+        { text: '  margin: 0;', class: 'css' },
+        { text: '}', class: 'css' },
+        { text: '// JavaScript', class: 'comment' },
+        { text: 'function init() {', class: 'js' },
+        { text: '  console.log("Ready!");', class: 'js' },
+        { text: '}', class: 'js' }
+      ];
+      
+      // Create code lines
+      codeSnippets.forEach((snippet, index) => {
+        const line = document.createElement('div');
+        line.className = `code-line ${snippet.class}`;
+        line.textContent = snippet.text;
+        line.style.animationDelay = `${index * 0.1}s`;
+        browserContent.appendChild(line);
+      });
+      
+      // Auto show preview
+      setTimeout(() => {
+        previewBox.classList.add('visible');
+        setTimeout(() => {
+          previewBox.classList.remove('visible');
+        }, 3000);
+      }, 3000);
+    }
+    
+    // Initialize system unit animation
+    function initializeSystemAnimation() {
+      const motherboard = document.getElementById('motherboard');
+      const computerCase = document.getElementById('computer-case');
+      const heatMap = document.getElementById('heat-map');
+      const fanBlades = document.querySelectorAll('.fan-blade');
+      
+      // Components data
+      const components = [
+        { name: 'CPU', blink: true },
+        { name: 'RAM', blink: true },
+        { name: 'GPU', blink: true },
+        { name: 'SSD', blink: false },
+        { name: 'PWR', blink: true },
+        { name: 'SND', blink: false },
+        { name: 'NET', blink: true },
+        { name: 'USB', blink: false }
+      ];
+      
+      // Create components
+      components.forEach((comp, index) => {
+        const component = document.createElement('div');
+        component.className = 'component';
+        component.textContent = comp.name;
+        
+        // Add LED if needed
+        if (comp.blink) {
+          const led = document.createElement('div');
+          led.className = 'component-led led-blink';
+          component.appendChild(led);
+        }
+        
+        motherboard.appendChild(component);
+      });
+      
+      // Auto speed up fan
+      setTimeout(() => {
+        fanBlades.forEach(blade => {
+          blade.classList.remove('fan-normal');
+          blade.classList.add('fan-fast');
+        });
+        
+        heatMap.classList.add('visible');
+        
+        // Reset after delay
+        setTimeout(() => {
+          fanBlades.forEach(blade => {
+            blade.classList.remove('fan-fast');
+            blade.classList.add('fan-normal');
+          });
+          
+          heatMap.classList.remove('visible');
+        }, 3000);
+      }, 2000);
     }
     
     // Loading screen animations
@@ -757,7 +1236,9 @@
       const loader = document.getElementById("loader");
       const mainCard = document.getElementById("mainCard");
       const loadingSound = document.getElementById("loadingSound");
-      const progressText = document.querySelector('.progress-text');
+      
+      // Initialize animations
+      initializeNetworkingAnimation();
       
       // Play loading sound
       loadingSound.muted = false;
@@ -765,68 +1246,120 @@
         console.warn("Autoplay blocked:", err);
       });
       
-      // Animate progress text
-      let progress = 0;
-      const progressInterval = setInterval(() => {
-        progress += 1;
-        progressText.textContent = `${progress}%`;
-        
-        if (progress >= 100) {
-          clearInterval(progressInterval);
-        }
-      }, 70);
+      // Get elements
+      const progressBar = document.getElementById("progressBar");
+      const progressPercentage = document.getElementById("progressPercentage");
+      const progressStatus = document.getElementById("progressStatus");
+      const moduleName = document.getElementById("moduleName");
       
-      // Animate status dots
+      const moduleContents = [
+        document.getElementById('networking-content'),
+        document.getElementById('webdev-content'),
+        document.getElementById('system-content')
+      ];
+      
       const dots = [
         document.getElementById('dot1'),
         document.getElementById('dot2'),
-        document.getElementById('dot3'),
-        document.getElementById('dot4')
+        document.getElementById('dot3')
       ];
       
-      let currentDot = 0;
-      const dotInterval = setInterval(() => {
-        if (currentDot > 0) {
-          dots[currentDot - 1].classList.remove('active');
-        }
-        
-        if (currentDot < dots.length) {
-          dots[currentDot].classList.add('active');
-          currentDot++;
-        } else {
-          clearInterval(dotInterval);
-        }
-      }, 1750);
-      
-      // Animate loading messages
       const messages = [
         document.getElementById('msg1'),
         document.getElementById('msg2'),
-        document.getElementById('msg3'),
-        document.getElementById('msg4')
+        document.getElementById('msg3')
       ];
       
-      let currentMessage = 0;
-      const messageInterval = setInterval(() => {
-        if (currentMessage > 0) {
-          messages[currentMessage - 1].classList.remove('active');
+      const moduleNames = [
+        "NETWORKING",
+        "WEB DEVELOPMENT",
+        "SYSTEM UNIT"
+      ];
+      
+      const statusTexts = [
+        "Initializing networking module...",
+        "Loading web development resources...",
+        "Configuring system hardware..."
+      ];
+      
+      // Animate progress
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += 1;
+        progressBar.style.width = `${progress}%`;
+        progressPercentage.textContent = `${progress}%`;
+        
+        // Update status text based on progress
+        if (progress < 33) {
+          progressStatus.textContent = statusTexts[0];
+        } else if (progress < 66) {
+          progressStatus.textContent = statusTexts[1];
+        } else {
+          progressStatus.textContent = statusTexts[2];
         }
         
-        if (currentMessage < messages.length) {
-          messages[currentMessage].classList.add('active');
-          currentMessage++;
-        } else {
-          clearInterval(messageInterval);
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+          completeLoading();
         }
-      }, 1750);
+      }, 70);
       
-      // Show card after 7 seconds
-      setTimeout(() => {
-        loader.style.display = "none";
-        mainCard.style.display = "block";
-        loadingSound.pause();
-        loadingSound.currentTime = 0;
-      }, 7000);
+      // Animate status dots and messages
+      let currentStatus = 0;
+      const statusInterval = setInterval(() => {
+        if (currentStatus > 0) {
+          dots[currentStatus - 1].classList.remove('active');
+          messages[currentStatus - 1].classList.remove('active');
+        }
+        
+        if (currentStatus < dots.length) {
+          dots[currentStatus].classList.add('active');
+          messages[currentStatus].classList.add('active');
+          currentStatus++;
+        } else {
+          clearInterval(statusInterval);
+        }
+      }, 2300);
+      
+      // Switch modules automatically
+      let currentModule = 0;
+      const moduleInterval = setInterval(() => {
+        // Hide current module
+        moduleContents[currentModule].classList.remove('active');
+        
+        // Move to next module
+        currentModule = (currentModule + 1) % moduleContents.length;
+        
+        // Show next module
+        moduleContents[currentModule].classList.add('active');
+        moduleName.textContent = moduleNames[currentModule];
+        
+        // Initialize module-specific animations when switching
+        if (currentModule === 1) {
+          initializeWebDevAnimation();
+        } else if (currentModule === 2) {
+          initializeSystemAnimation();
+        }
+        
+        // Stop switching modules when loading is complete
+        if (progress >= 100) {
+          clearInterval(moduleInterval);
+        }
+      }, 2300);
+      
+      // Complete loading
+      function completeLoading() {
+        setTimeout(() => {
+          loader.style.display = "none";
+          mainCard.style.display = "block";
+          loadingSound.pause();
+          loadingSound.currentTime = 0;
+          
+          // Play success sound
+          const successSound = document.getElementById("successSound");
+          successSound.play().catch(() => {});
+        }, 1000);
+      }
     });
     
     function playClickSoundAndStart() {
