@@ -870,13 +870,19 @@
       HARD: 7500     // Coins needed to unlock Hard level
     };
     
+    // Initialize global variables
+    window.unlockedLevels = { easy: true, medium: false, hard: false };
+    window.playerCoins = 0;
+    
     // Function to save unlocked levels to localStorage
     function saveUnlockedLevelsToLocalStorage() {
       try {
         localStorage.setItem('programmingUnlockedLevels', JSON.stringify(window.unlockedLevels));
         console.log("Programming unlocked levels saved to localStorage:", window.unlockedLevels);
+        return true;
       } catch (err) {
         console.error("Error saving programming unlocked levels to localStorage:", err);
+        return false;
       }
     }
     
@@ -897,6 +903,37 @@
       const defaultLevels = { easy: true, medium: false, hard: false };
       console.log("Using default programming unlocked levels:", defaultLevels);
       return defaultLevels;
+    }
+    
+    // Function to save player data to database
+    async function savePlayerDataToDatabase() {
+      try {
+        console.log("Saving player data to database...");
+        
+        const response = await fetch("https://postgres-test-p05s.onrender.com/update-player-data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ 
+            username: loggedInUser, 
+            coins: window.playerCoins,
+            // Save programming specific unlocked levels
+            programming_unlocked_levels: JSON.stringify(window.unlockedLevels)
+          })
+        });
+        
+        if (response.ok) {
+          console.log("Player data updated in database successfully");
+          return true;
+        } else {
+          console.error("Failed to update player data in database");
+          return false;
+        }
+      } catch (err) {
+        console.error("Error updating player data in database:", err);
+        return false;
+      }
     }
     
     // Load user data from database
@@ -928,22 +965,21 @@
             // Check if player has programming specific unlocked levels
             if (loggedInPlayer.programming_unlocked_levels) {
               dbUnlockedLevels = JSON.parse(loggedInPlayer.programming_unlocked_levels);
-            } else if (loggedInPlayer.unlocked_levels) {
-              // Fallback to general unlocked levels
-              dbUnlockedLevels = JSON.parse(loggedInPlayer.unlocked_levels);
+              console.log("Loaded programming_unlocked_levels from database:", dbUnlockedLevels);
             } else {
-              // Default values
+              // Default values if no programming levels exist
               dbUnlockedLevels = { easy: true, medium: false, hard: false };
+              console.log("No programming_unlocked_levels found, using defaults");
             }
           } catch (e) {
-            console.error("Error parsing unlocked_levels from database:", e);
+            console.error("Error parsing programming_unlocked_levels from database:", e);
             dbUnlockedLevels = { easy: true, medium: false, hard: false };
           }
           
-          // Merge with localStorage data (prioritize database)
-          window.unlockedLevels = { ...window.unlockedLevels, ...dbUnlockedLevels };
+          // Update global variable with database data
+          window.unlockedLevels = dbUnlockedLevels;
           
-          // Save merged data back to localStorage
+          // Save to localStorage for future use
           saveUnlockedLevelsToLocalStorage();
           
           // Update UI based on unlocked status
@@ -1103,30 +1139,6 @@
       // Save to localStorage immediately
       saveUnlockedLevelsToLocalStorage();
       
-      // Try to update the database
-      try {
-        const response = await fetch("https://postgres-test-p05s.onrender.com/update-player-data", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ 
-            username: loggedInUser, 
-            coins: newCoins,
-            // Save programming specific unlocked levels
-            programming_unlocked_levels: JSON.stringify(window.unlockedLevels)
-          })
-        });
-        
-        if (response.ok) {
-          console.log("Player data updated in database successfully");
-        } else {
-          console.error("Failed to update player data in database");
-        }
-      } catch (err) {
-        console.error("Error updating player data in database:", err);
-      }
-      
       // Update the UI for the level card
       const levelElement = document.getElementById(level + "Level");
       levelElement.classList.remove("locked");
@@ -1142,6 +1154,28 @@
       // Update coins display
       window.playerCoins = newCoins;
       document.getElementById("coins").innerText = `💰 ${newCoins}`;
+      
+      // Try to update the database
+      const dbUpdateSuccess = await savePlayerDataToDatabase();
+      
+      if (dbUpdateSuccess) {
+        console.log("Level purchase saved to database successfully");
+      } else {
+        console.error("Failed to save level purchase to database");
+        // Show error notification
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.color = "#ff5555";
+        notification.style.borderColor = "#ff5555";
+        notification.style.boxShadow = "0 0 15px rgba(255, 85, 85, 0.5)";
+        notification.textContent = "Warning: Level unlocked but failed to save to server. Changes may not persist after logout.";
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 5000);
+      }
       
       // Show success notification
       const notification = document.createElement('div');
