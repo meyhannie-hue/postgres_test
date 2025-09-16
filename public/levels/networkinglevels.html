@@ -724,13 +724,19 @@
       HARD: 3000     // Coins needed to unlock Hard level
     };
     
+    // Initialize global variables for unlocked levels and coins
+    window.unlockedLevels = { easy: true, medium: false, hard: false };
+    window.playerCoins = 0;
+    
     // Function to save unlocked levels to localStorage
     function saveUnlockedLevelsToLocalStorage() {
       try {
         localStorage.setItem('unlockedLevels', JSON.stringify(window.unlockedLevels));
         console.log("Unlocked levels saved to localStorage:", window.unlockedLevels);
+        return true;
       } catch (err) {
         console.error("Error saving unlocked levels to localStorage:", err);
+        return false;
       }
     }
     
@@ -751,6 +757,36 @@
       const defaultLevels = { easy: true, medium: false, hard: false };
       console.log("Using default unlocked levels:", defaultLevels);
       return defaultLevels;
+    }
+    
+    // Function to save player data to database
+    async function savePlayerDataToDatabase() {
+      try {
+        console.log("Saving player data to database...");
+        
+        const response = await fetch("https://postgres-test-p05s.onrender.com/update-player-data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ 
+            username: loggedInUser, 
+            coins: window.playerCoins,
+            unlocked_levels: JSON.stringify(window.unlockedLevels)
+          })
+        });
+        
+        if (response.ok) {
+          console.log("Player data updated in database successfully");
+          return true;
+        } else {
+          console.error("Failed to update player data in database");
+          return false;
+        }
+      } catch (err) {
+        console.error("Error updating player data in database:", err);
+        return false;
+      }
     }
     
     // Load user data from database
@@ -787,10 +823,10 @@
             unlockedLevels = { easy: true, medium: false, hard: false };
           }
           
-          // Merge with localStorage data (prioritize database)
-          window.unlockedLevels = { ...window.unlockedLevels, ...unlockedLevels };
+          // Update global variable with database data
+          window.unlockedLevels = unlockedLevels;
           
-          // Save merged data back to localStorage
+          // Save to localStorage for future use
           saveUnlockedLevelsToLocalStorage();
           
           // Update UI based on unlocked status
@@ -972,29 +1008,6 @@
       // Save to localStorage immediately
       saveUnlockedLevelsToLocalStorage();
       
-      // Try to update the database
-      try {
-        const response = await fetch("https://postgres-test-p05s.onrender.com/update-player-data", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ 
-            username: loggedInUser, 
-            coins: newCoins,
-            unlocked_levels: JSON.stringify(window.unlockedLevels)
-          })
-        });
-        
-        if (response.ok) {
-          console.log("Player data updated in database successfully");
-        } else {
-          console.error("Failed to update player data in database");
-        }
-      } catch (err) {
-        console.error("Error updating player data in database:", err);
-      }
-      
       // Update the UI for the level card
       const levelElement = document.getElementById(level + "Level");
       levelElement.classList.remove("locked");
@@ -1006,6 +1019,28 @@
       // Update coins display
       window.playerCoins = newCoins;
       document.getElementById("coins").innerText = `💰 ${newCoins}`;
+      
+      // Try to update the database
+      const dbUpdateSuccess = await savePlayerDataToDatabase();
+      
+      if (dbUpdateSuccess) {
+        console.log("Level purchase saved to database successfully");
+      } else {
+        console.error("Failed to save level purchase to database");
+        // Show error notification
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.color = "#ff5555";
+        notification.style.borderColor = "#ff5555";
+        notification.style.boxShadow = "0 0 15px rgba(255, 85, 85, 0.5)";
+        notification.textContent = "Warning: Level unlocked but failed to save to server. Changes may not persist after logout.";
+        document.body.appendChild(notification);
+        
+        // Remove notification after animation
+        setTimeout(() => {
+          notification.remove();
+        }, 5000);
+      }
       
       // Show success notification
       const notification = document.createElement('div');
