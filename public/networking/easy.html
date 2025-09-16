@@ -1309,7 +1309,63 @@
         function gameOver() {
             clearInterval(timerInterval);
             gameState.isPlaying = false;
-            showMessage('Game Over!', 'error', `Final Score: ${gameState.score} | Stars: ${gameState.points} | Coins: ${gameState.coins}`);
+            
+            // Show confirmation dialog instead of alert
+            const dialog = document.getElementById('confirmDialog');
+            const title = dialog.querySelector('h3');
+            const message = dialog.querySelector('p');
+            const yesBtn = dialog.querySelector('.confirm-yes');
+            const noBtn = dialog.querySelector('.confirm-no');
+            
+            title.textContent = "Time's up!";
+            message.textContent = `Your final score: ${gameState.score} | Stars: ${gameState.points} | Coins: ${gameState.coins}. Try again?`;
+            yesBtn.textContent = "Yes, Try Again";
+            noBtn.textContent = "No, Go to Levels";
+            
+            // Remove existing event listeners
+            yesBtn.removeEventListener('click', quitGame);
+            noBtn.removeEventListener('click', hideConfirmDialog);
+            
+            // Add new event listeners for timeout
+            yesBtn.addEventListener('click', function() {
+                hideConfirmDialog();
+                resetGame(); // Reset the game instead of reloading
+            });
+            
+            noBtn.addEventListener('click', function() {
+                hideConfirmDialog();
+                window.location.href = '../levels/networkinglevels.html';
+            });
+            
+            dialog.classList.add('show');
+        }
+        
+        // Reset game function
+        function resetGame() {
+            // Reset game state
+            gameState.score = 0;
+            gameState.points = 0;
+            gameState.coins = 0;
+            gameState.connections = 0;
+            gameState.timeLeft = 60;
+            gameState.level = 1;
+            gameState.hints = 3;
+            gameState.isPlaying = true;
+            gameState.currentCable = null;
+            gameState.connectionsMade = [];
+            
+            // Reset UI
+            document.getElementById('timer').classList.remove('warning');
+            document.querySelectorAll('.cable-item').forEach(cable => {
+                cable.classList.remove('selected');
+            });
+            draggedCable = null;
+            selectedPort = null;
+            
+            // Recreate devices and restart timer
+            createDevices();
+            startTimer();
+            updateUI();
         }
         
         // Game win
@@ -1352,6 +1408,27 @@
         // Show confirmation dialog
         function showConfirmDialog() {
             const dialog = document.getElementById('confirmDialog');
+            const title = dialog.querySelector('h3');
+            const message = dialog.querySelector('p');
+            const yesBtn = dialog.querySelector('.confirm-yes');
+            const noBtn = dialog.querySelector('.confirm-no');
+            
+            title.textContent = "Quit Game?";
+            message.textContent = "Are you sure you want to quit? Your progress will be lost.";
+            yesBtn.textContent = "Yes, Quit";
+            noBtn.textContent = "No, Continue";
+            
+            // Remove existing event listeners
+            yesBtn.removeEventListener('click', resetGame);
+            noBtn.removeEventListener('click', function() {
+                hideConfirmDialog();
+                window.location.href = '../levels/networkinglevels.html';
+            });
+            
+            // Add original event listeners
+            yesBtn.addEventListener('click', quitGame);
+            noBtn.addEventListener('click', hideConfirmDialog);
+            
             dialog.classList.add('show');
         }
         
@@ -2043,6 +2120,16 @@
     <div id="result"></div>
   </div>
   
+  <!-- Confirmation Dialog -->
+  <div class="confirm-dialog" id="confirmDialog">
+    <h3 id="confirmTitle">Time's up!</h3>
+    <p id="confirmMessage">Your time has run out. Would you like to try again?</p>
+    <div class="confirm-buttons">
+      <button class="confirm-btn confirm-yes" id="confirmYes">Yes, Try Again</button>
+      <button class="confirm-btn confirm-no" id="confirmNo">No, Go to Levels</button>
+    </div>
+  </div>
+  
   <script>
     // Create floating particles
     const particlesContainer = document.getElementById('particles');
@@ -2218,10 +2305,73 @@
         countdownEl.textContent = formatTime(timeLeft);
         if (timeLeft <= 0) {
           clearInterval(timer);
-          alert("⏰ Time's up! Try again.");
-          location.reload();
+          // Show confirmation dialog instead of alert
+          showTimeoutDialog();
         }
       }, 1000);
+    }
+    
+    // Show timeout confirmation dialog
+    function showTimeoutDialog() {
+      const dialog = document.getElementById('confirmDialog');
+      const title = document.getElementById('confirmTitle');
+      const message = document.getElementById('confirmMessage');
+      const yesBtn = document.getElementById('confirmYes');
+      const noBtn = document.getElementById('confirmNo');
+      
+      title.textContent = "Time's up!";
+      message.textContent = "Your time has run out. Would you like to try again?";
+      
+      // Remove existing event listeners
+      yesBtn.removeEventListener('click', resetGame);
+      noBtn.removeEventListener('click', goToLevels);
+      
+      // Add event listeners
+      yesBtn.addEventListener('click', resetGame);
+      noBtn.addEventListener('click', goToLevels);
+      
+      dialog.classList.add('show');
+    }
+    
+    // Reset the game
+    function resetGame() {
+      // Hide the dialog
+      const dialog = document.getElementById('confirmDialog');
+      dialog.classList.remove('show');
+      
+      // Reset game state
+      timeLeft = 120;
+      timerStarted = false;
+      connections = [];
+      
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Reset UI elements
+      countdownEl.textContent = formatTime(timeLeft);
+      resultEl.textContent = '';
+      
+      // Reset pins and wires
+      const pins = document.querySelectorAll('.slot');
+      const wires = document.querySelectorAll('.wire');
+      
+      pins.forEach(pin => {
+        pin.classList.remove('active');
+      });
+      
+      wires.forEach(wire => {
+        wire.classList.remove('placed', 'correct', 'incorrect');
+        wire.draggable = true;
+        wire.style.cursor = 'grab';
+      });
+      
+      // Restart the timer
+      startTimer();
+    }
+    
+    // Go to levels page
+    function goToLevels() {
+      window.location.href = '../levels/networkinglevels.html';
     }
     
     // Build pin slots (Original Backend Logic)
