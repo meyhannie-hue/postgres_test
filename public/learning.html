@@ -1242,17 +1242,23 @@
     <!-- Programming Section -->
     <section id="programming" class="content-section">
       <h2>Web Programming Fundamentals</h2>
-      <div class="card">
-        <h3>HTML: Structure of the Web</h3>
-        <p>HTML (HyperText Markup Language) is the standard markup language for creating web pages. It describes the structure of a web page using elements and tags.</p>
-      </div>
       
-      <div class="explanation">
-        <h4>Understanding HTML's Role</h4>
-        <p>HTML serves as the skeleton of a web page. Just as a building needs a framework before adding walls, paint, and furniture, a web page needs HTML structure before adding styling and interactivity. HTML uses a system of tags and elements to define different parts of a page, such as headings, paragraphs, links, and images. This structure not only organizes content for human readers but also provides important information for browsers and assistive technologies like screen readers used by visually impaired users.</p>
-      </div>
-      
-      <div class="code-block">
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>HTML: Structure of the Web</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>HTML (HyperText Markup Language) is the standard markup language for creating web pages. It describes the structure of a web page using elements and tags.</p>
+          </div>
+          
+          <div class="explanation">
+            <h4>Understanding HTML's Role</h4>
+            <p>HTML serves as the skeleton of a web page. Just as a building needs a framework before adding walls, paint, and furniture, a web page needs HTML structure before adding styling and interactivity. HTML uses a system of tags and elements to define different parts of a page, such as headings, paragraphs, links, and images. This structure not only organizes content for human readers but also provides important information for browsers and assistive technologies like screen readers used by visually impaired users.</p>
+          </div>
+          
+          <div class="code-block">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -1265,42 +1271,49 @@
 &lt;img src="image.jpg" alt="Description"&gt;
 &lt;/body&gt;
 &lt;/html&gt;
+          </div>
+          
+          <div class="explanation">
+            <h4>Analyzing the HTML Structure</h4>
+            <p>This example shows the basic anatomy of an HTML document. The <!DOCTYPE html> declaration tells the browser which version of HTML is being used. The <html> element is the root element that wraps all content on the page. The <head> section contains meta-information about the page, including the title that appears in the browser tab. The <body> section contains all the visible content: headings, paragraphs, links, and images. Each element has a specific purpose and helps create a meaningful structure for the content.</p>
+          </div>
+          
+          <div class="card">
+            <h4>Key HTML Elements</h4>
+            <ul>
+              <li><strong>Headings:</strong> &lt;h1&gt; to &lt;h6&gt; for section titles</li>
+              <li><strong>Paragraphs:</strong> &lt;p&gt; for text blocks</li>
+              <li><strong>Links:</strong> &lt;a&gt; with href attribute</li>
+              <li><strong>Images:</strong> &lt;img&gt; with src and alt attributes</li>
+              <li><strong>Lists:</strong> &lt;ul&gt; (unordered), &lt;ol&gt; (ordered), &lt;li&gt; (list item)</li>
+              <li><strong>Divisions:</strong> &lt;div&gt; for container elements</li>
+              <li><strong>Semantic Elements:</strong> &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;section&gt;, &lt;footer&gt;</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Importance of Semantic HTML</h4>
+            <p>While HTML elements define structure, semantic HTML provides meaning to that structure. Semantic elements like <header>, <nav>, <main>, <section>, and <footer> clearly describe their content to both browsers and developers. This improves accessibility for users with disabilities, enhances search engine optimization (SEO), and makes code more maintainable. For example, using <nav> for navigation menus helps screen readers identify and skip to navigation sections, and tells search engines that this content is important for site navigation.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>Analyzing the HTML Structure</h4>
-        <p>This example shows the basic anatomy of an HTML document. The <!DOCTYPE html> declaration tells the browser which version of HTML is being used. The <html> element is the root element that wraps all content on the page. The <head> section contains meta-information about the page, including the title that appears in the browser tab. The <body> section contains all the visible content: headings, paragraphs, links, and images. Each element has a specific purpose and helps create a meaningful structure for the content.</p>
-      </div>
-      
-      <div class="card">
-        <h4>Key HTML Elements</h4>
-        <ul>
-          <li><strong>Headings:</strong> &lt;h1&gt; to &lt;h6&gt; for section titles</li>
-          <li><strong>Paragraphs:</strong> &lt;p&gt; for text blocks</li>
-          <li><strong>Links:</strong> &lt;a&gt; with href attribute</li>
-          <li><strong>Images:</strong> &lt;img&gt; with src and alt attributes</li>
-          <li><strong>Lists:</strong> &lt;ul&gt; (unordered), &lt;ol&gt; (ordered), &lt;li&gt; (list item)</li>
-          <li><strong>Divisions:</strong> &lt;div&gt; for container elements</li>
-          <li><strong>Semantic Elements:</strong> &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;section&gt;, &lt;footer&gt;</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Importance of Semantic HTML</h4>
-        <p>While HTML elements define structure, semantic HTML provides meaning to that structure. Semantic elements like <header>, <nav>, <main>, <section>, and <footer> clearly describe their content to both browsers and developers. This improves accessibility for users with disabilities, enhances search engine optimization (SEO), and makes code more maintainable. For example, using <nav> for navigation menus helps screen readers identify and skip to navigation sections, and tells search engines that this content is important for site navigation.</p>
-      </div>
-      
-      <div class="card">
-        <h3>CSS: Styling the Web</h3>
-        <p>CSS (Cascading Style Sheets) is used to style and layout web pages. It controls colors, fonts, spacing, positioning, and responsive design.</p>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Role of CSS in Web Development</h4>
-        <p>If HTML is the skeleton of a web page, CSS is the clothing, makeup, and overall appearance. CSS allows developers to separate content from presentation, making it easier to maintain and update websites. The "cascading" in CSS refers to the way styles are applied - when multiple style rules could apply to the same element, the browser determines which rule takes precedence based on specificity, importance, and source order. This cascading nature allows for flexible and powerful styling systems.</p>
-      </div>
-      
-      <div class="code-block">
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>CSS: Styling the Web</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>CSS (Cascading Style Sheets) is used to style and layout web pages. It controls colors, fonts, spacing, positioning, and responsive design.</p>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Role of CSS in Web Development</h4>
+            <p>If HTML is the skeleton of a web page, CSS is the clothing, makeup, and overall appearance. CSS allows developers to separate content from presentation, making it easier to maintain and update websites. The "cascading" in CSS refers to the way styles are applied - when multiple style rules could apply to the same element, the browser determines which rule takes precedence based on specificity, importance, and source order. This cascading nature allows for flexible and powerful styling systems.</p>
+          </div>
+          
+          <div class="code-block">
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #f0f0f0;
@@ -1337,40 +1350,47 @@ h1 {
     padding: 10px;
   }
 }
+          </div>
+          
+          <div class="explanation">
+            <h4>Understanding CSS Concepts in the Example</h4>
+            <p>This CSS example demonstrates several key concepts. The body selector styles the entire page, setting a default font and background. The .container class creates a centered content area with a white background and subtle shadow - a common pattern for modern websites. The .button class styles interactive elements with a blue background that darkens on hover, providing visual feedback to users. The media query at the end shows responsive design in action - when the screen width is 768px or less (typical for tablets and phones), the container padding is reduced to make better use of limited screen space.</p>
+          </div>
+          
+          <div class="card">
+            <h4>Key CSS Concepts</h4>
+            <ul>
+              <li><strong>Selectors:</strong> Target HTML elements (element, class, ID, attribute)</li>
+              <li><strong>Box Model:</strong> Content, padding, border, margin</li>
+              <li><strong>Layout:</strong> Flexbox, Grid, Positioning</li>
+              <li><strong>Responsive Design:</strong> Media queries for different screen sizes</li>
+              <li><strong>Transitions & Animations:</strong> Enhance user experience</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The CSS Box Model and Layout Systems</h4>
+            <p>The CSS Box Model is fundamental to understanding web layout. Every element on a page is essentially a box with content, padding, border, and margin. Understanding how these components interact is crucial for precise layout control. Modern CSS offers powerful layout systems like Flexbox and Grid that make it much easier to create complex, responsive layouts compared to older methods like floats and positioning. Flexbox excels at one-dimensional layouts (either rows or columns), while Grid is designed for two-dimensional layouts (rows and columns together). These tools, combined with media queries, enable developers to create websites that work well on devices of all sizes.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>Understanding CSS Concepts in the Example</h4>
-        <p>This CSS example demonstrates several key concepts. The body selector styles the entire page, setting a default font and background. The .container class creates a centered content area with a white background and subtle shadow - a common pattern for modern websites. The .button class styles interactive elements with a blue background that darkens on hover, providing visual feedback to users. The media query at the end shows responsive design in action - when the screen width is 768px or less (typical for tablets and phones), the container padding is reduced to make better use of limited screen space.</p>
-      </div>
-      
-      <div class="card">
-        <h4>Key CSS Concepts</h4>
-        <ul>
-          <li><strong>Selectors:</strong> Target HTML elements (element, class, ID, attribute)</li>
-          <li><strong>Box Model:</strong> Content, padding, border, margin</li>
-          <li><strong>Layout:</strong> Flexbox, Grid, Positioning</li>
-          <li><strong>Responsive Design:</strong> Media queries for different screen sizes</li>
-          <li><strong>Transitions & Animations:</strong> Enhance user experience</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The CSS Box Model and Layout Systems</h4>
-        <p>The CSS Box Model is fundamental to understanding web layout. Every element on a page is essentially a box with content, padding, border, and margin. Understanding how these components interact is crucial for precise layout control. Modern CSS offers powerful layout systems like Flexbox and Grid that make it much easier to create complex, responsive layouts compared to older methods like floats and positioning. Flexbox excels at one-dimensional layouts (either rows or columns), while Grid is designed for two-dimensional layouts (rows and columns together). These tools, combined with media queries, enable developers to create websites that work well on devices of all sizes.</p>
-      </div>
-      
-      <div class="card">
-        <h3>JavaScript: Interactive Web Functionality</h3>
-        <p>JavaScript is a programming language that enables interactive web pages. It's an essential part of web applications, alongside HTML and CSS.</p>
-      </div>
-      
-      <div class="explanation">
-        <h4>JavaScript's Role in Modern Web Development</h4>
-        <p>While HTML provides structure and CSS provides styling, JavaScript brings web pages to life with interactivity and dynamic behavior. Originally created to add simple interactive elements to web pages, JavaScript has evolved into a powerful programming language capable of building complex applications. Unlike many programming languages, JavaScript runs directly in the user's browser, enabling immediate response to user actions without needing to communicate with a server. This client-side execution makes JavaScript ideal for creating responsive user interfaces and rich web applications.</p>
-      </div>
-      
-      <div class="code-block">
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>JavaScript: Interactive Web Functionality</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>JavaScript is a programming language that enables interactive web pages. It's an essential part of web applications, alongside HTML and CSS.</p>
+          </div>
+          
+          <div class="explanation">
+            <h4>JavaScript's Role in Modern Web Development</h4>
+            <p>While HTML provides structure and CSS provides styling, JavaScript brings web pages to life with interactivity and dynamic behavior. Originally created to add simple interactive elements to web pages, JavaScript has evolved into a powerful programming language capable of building complex applications. Unlike many programming languages, JavaScript runs directly in the user's browser, enabling immediate response to user actions without needing to communicate with a server. This client-side execution makes JavaScript ideal for creating responsive user interfaces and rich web applications.</p>
+          </div>
+          
+          <div class="code-block">
 // DOM Manipulation
 document.getElementById('myButton').addEventListener('click', function() {
   document.getElementById('message').textContent = 'Button clicked!';
@@ -1400,445 +1420,583 @@ fetch('https://api.example.com/data')
 .then(response => response.json())
 .then(data => console.log(data))
 .catch(error => console.error('Error:', error));
+          </div>
+          
+          <div class="explanation">
+            <h4>Breaking Down the JavaScript Example</h4>
+            <p>This JavaScript code demonstrates several core concepts. The first section shows DOM (Document Object Model) manipulation - changing HTML content in response to user actions. The variables section shows different ways to declare variables (let, const, var) and different data types (string, number, boolean, array). The function example shows how to create reusable blocks of code. The conditional statement demonstrates decision-making logic, while the loop shows how to perform repetitive actions efficiently. Finally, the fetch API example shows how modern JavaScript can communicate with servers to retrieve or send data, enabling dynamic content updates without page reloads.</p>
+          </div>
+          
+          <div class="card">
+            <h4>Key JavaScript Concepts</h4>
+            <ul>
+              <li><strong>DOM Manipulation:</strong> Interacting with HTML elements</li>
+              <li><strong>Event Handling:</strong> Responding to user actions</li>
+              <li><strong>Asynchronous Programming:</strong> Promises, async/await</li>
+              <li><strong>API Integration:</strong> Fetching data from servers</li>
+              <li><strong>Form Validation:</strong> Ensuring user input is correct</li>
+              <li><strong>Local Storage:</strong> Saving data in the browser</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>JavaScript's Asynchronous Nature</h4>
+            <p>One of JavaScript's most powerful features is its ability to handle asynchronous operations. Unlike many programming languages that execute code sequentially, JavaScript can perform tasks in the background without blocking the main execution thread. This is crucial for web applications, where waiting for a server response would otherwise freeze the user interface. Modern JavaScript provides several ways to handle asynchronous code: callbacks (the traditional approach), Promises (a more structured approach), and async/await (syntax that makes asynchronous code look and behave more like synchronous code). These features enable developers to create responsive, non-blocking applications that provide smooth user experiences.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>Breaking Down the JavaScript Example</h4>
-        <p>This JavaScript code demonstrates several core concepts. The first section shows DOM (Document Object Model) manipulation - changing HTML content in response to user actions. The variables section shows different ways to declare variables (let, const, var) and different data types (string, number, boolean, array). The function example shows how to create reusable blocks of code. The conditional statement demonstrates decision-making logic, while the loop shows how to perform repetitive actions efficiently. Finally, the fetch API example shows how modern JavaScript can communicate with servers to retrieve or send data, enabling dynamic content updates without page reloads.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>How Web Technologies Work Together</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <h4>The Synergy of HTML, CSS, and JavaScript</h4>
+            <p>HTML provides the structure, CSS adds styling, and JavaScript brings interactivity. For example:</p>
+            <ol>
+              <li>HTML creates a button element</li>
+              <li>CSS styles the button with colors and spacing</li>
+              <li>JavaScript adds a click event to the button that changes content on the page</li>
+            </ol>
+            <p>This combination allows developers to create dynamic, responsive, and interactive web experiences.</p>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Power of Separation of Concerns</h4>
+            <p>The true power of modern web development comes from how HTML, CSS, and JavaScript work together. This separation of concerns - structure, presentation, and behavior - makes web development more manageable and maintainable. For instance, a designer can work on CSS without touching the HTML structure, while a JavaScript developer can add functionality without altering the design. This modular approach also enables progressive enhancement - a website can work with just HTML, be enhanced with CSS, and further improved with JavaScript, ensuring accessibility even for users with limited browser capabilities or assistive technologies.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>Key JavaScript Concepts</h4>
-        <ul>
-          <li><strong>DOM Manipulation:</strong> Interacting with HTML elements</li>
-          <li><strong>Event Handling:</strong> Responding to user actions</li>
-          <li><strong>Asynchronous Programming:</strong> Promises, async/await</li>
-          <li><strong>API Integration:</strong> Fetching data from servers</li>
-          <li><strong>Form Validation:</strong> Ensuring user input is correct</li>
-          <li><strong>Local Storage:</strong> Saving data in the browser</li>
-        </ul>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Advanced Web Technologies</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <h4>Advanced HTML Features</h4>
+            <ul>
+              <li><strong>HTML5 Semantic Elements:</strong> &lt;article&gt;, &lt;aside&gt;, &lt;details&gt;, &lt;summary&gt;, &lt;figure&gt;, &lt;figcaption&gt;, &lt;mark&gt;, &lt;time&gt;</li>
+              <li><strong>Forms:</strong> Advanced input types (email, url, tel, date, time), form validation, and attributes</li>
+              <li><strong>Graphics:</strong> &lt;canvas&gt; for drawing graphics with JavaScript, &lt;svg&gt; for scalable vector graphics</li>
+              <li><strong>Multimedia:</strong> &lt;audio&gt; and &lt;video&gt; elements with built-in controls</li>
+              <li><strong>Web APIs:</strong> Geolocation, Web Storage, Web Workers, Server-Sent Events</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Power of HTML5 and Web APIs</h4>
+            <p>HTML5 revolutionized web development by introducing features that were previously only available through plugins or complex workarounds. Semantic elements provide better document structure and accessibility. Advanced form inputs and validation improve user experience and reduce the need for JavaScript validation. The canvas and SVG elements enable powerful graphics capabilities directly in the browser. Native multimedia support eliminates the need for plugins like Flash. Web APIs give web applications access to device features like location, storage, and background processing, blurring the line between web and native applications.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Advanced CSS Techniques</h4>
+            <ul>
+              <li><strong>CSS Preprocessors:</strong> Sass, Less, and Stylus for variables, functions, and mixins</li>
+              <li><strong>CSS Frameworks:</strong> Bootstrap, Tailwind CSS, Foundation for rapid development</li>
+              <li><strong>CSS Custom Properties:</strong> Variables for theming and dynamic styling</li>
+              <li><strong>Advanced Layouts:</strong> CSS Grid for two-dimensional layouts, Flexbox for one-dimensional layouts</li>
+              <li><strong>Responsive Images:</strong> srcset and sizes attributes for serving appropriate images</li>
+              <li><strong>Animation:</strong> Keyframe animations, transitions, and transforms</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Evolution of CSS Development</h4>
+            <p>CSS has evolved from a simple styling language to a powerful tool for complex layouts and interactions. CSS preprocessors like Sass introduced programming concepts like variables, functions, and mixins to CSS, making stylesheets more maintainable and efficient. CSS frameworks provide pre-built components and design systems, accelerating development. CSS Custom Properties (variables) enable dynamic theming and more maintainable code. Modern layout systems like Grid and Flexbox solve longstanding layout challenges. Responsive images ensure optimal performance across devices. Animations and transforms enable rich, performant interactions without JavaScript.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Modern JavaScript Features</h4>
+            <ul>
+              <li><strong>ES6+ Features:</strong> Arrow functions, template literals, destructuring, spread/rest operators, classes, modules</li>
+              <li><strong>Asynchronous JavaScript:</strong> Promises, async/await, fetch API</li>
+              <li><strong>DOM Manipulation:</strong> Event delegation, performance optimization</li>
+              <li><strong>JavaScript Frameworks:</strong> React, Angular, Vue.js for building complex applications</li>
+              <li><strong>TypeScript:</strong> Superset of JavaScript that adds static typing</li>
+              <li><strong>Testing:</strong> Unit testing with Jest, end-to-end testing with Cypress</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Modern JavaScript Ecosystem</h4>
+            <p>JavaScript has undergone a remarkable transformation since its creation. ES6 (ECMAScript 2015) and subsequent versions have introduced numerous features that make the language more powerful and expressive. Arrow functions and template literals simplify common patterns. Destructuring and spread operators make data manipulation more concise. Classes provide a more familiar syntax for object-oriented programming. Modules enable better code organization. JavaScript frameworks like React, Angular, and Vue.js provide structured approaches to building complex applications. TypeScript adds static typing to catch errors early and improve code maintainability. Modern testing tools ensure reliability as applications grow in complexity.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>JavaScript's Asynchronous Nature</h4>
-        <p>One of JavaScript's most powerful features is its ability to handle asynchronous operations. Unlike many programming languages that execute code sequentially, JavaScript can perform tasks in the background without blocking the main execution thread. This is crucial for web applications, where waiting for a server response would otherwise freeze the user interface. Modern JavaScript provides several ways to handle asynchronous code: callbacks (the traditional approach), Promises (a more structured approach), and async/await (syntax that makes asynchronous code look and behave more like synchronous code). These features enable developers to create responsive, non-blocking applications that provide smooth user experiences.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Backend Development</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <h4>Server-Side Programming</h4>
+            <ul>
+              <li><strong>Server-Side Languages:</strong> Node.js (JavaScript), Python (Django, Flask), Ruby (Rails), PHP (Laravel), Java (Spring)</li>
+              <li><strong>RESTful APIs:</strong> Design principles for web services</li>
+              <li><strong>Authentication:</strong> JWT, OAuth, session-based authentication</li>
+              <li><strong>WebSockets:</strong> Real-time bidirectional communication</li>
+              <li><strong>Serverless Computing:</strong> AWS Lambda, Azure Functions, Google Cloud Functions</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Full-Stack Development</h4>
+            <p>While JavaScript is often associated with frontend development, it's also a powerful backend language through Node.js. This enables developers to use the same language for both frontend and backend, simplifying the development process. RESTful APIs provide a standardized way for applications to communicate with each other, using HTTP methods to perform operations on resources. Authentication mechanisms ensure that only authorized users can access certain features or data. WebSockets enable real-time communication, essential for applications like chat systems or live updates. Serverless computing abstracts away server management, allowing developers to focus on code rather than infrastructure.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Databases</h4>
+            <ul>
+              <li><strong>SQL Databases:</strong> MySQL, PostgreSQL, SQL Server, Oracle</li>
+              <li><strong>NoSQL Databases:</strong> MongoDB, Cassandra, Redis, Firebase</li>
+              <li><strong>Database Concepts:</strong> ACID properties, normalization, indexing, transactions</li>
+              <li><strong>ORMs:</strong> Object-Relational Mapping tools like Sequelize, Hibernate, Mongoose</li>
+              <li><strong>Database Management:</strong> Backups, scaling, security</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Data Persistence in Web Applications</h4>
+            <p>Databases are essential for storing and retrieving data in web applications. SQL databases use structured query language and are ideal for applications with complex relationships between data entities. They follow ACID properties (Atomicity, Consistency, Isolation, Durability) to ensure reliable transactions. NoSQL databases offer more flexibility for unstructured data and are often easier to scale horizontally. ORMs (Object-Relational Mapping) tools bridge the gap between object-oriented programming languages and relational databases, allowing developers to work with objects rather than writing SQL queries directly. Database management involves ensuring data is backed up, secure, and can scale as the application grows.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>How They Work Together</h4>
-        <p>HTML provides the structure, CSS adds styling, and JavaScript brings interactivity. For example:</p>
-        <ol>
-          <li>HTML creates a button element</li>
-          <li>CSS styles the button with colors and spacing</li>
-          <li>JavaScript adds a click event to the button that changes content on the page</li>
-        </ol>
-        <p>This combination allows developers to create dynamic, responsive, and interactive web experiences.</p>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Synergy of Web Technologies</h4>
-        <p>The true power of modern web development comes from how HTML, CSS, and JavaScript work together. This separation of concerns - structure, presentation, and behavior - makes web development more manageable and maintainable. For instance, a designer can work on CSS without touching the HTML structure, while a JavaScript developer can add functionality without altering the design. This modular approach also enables progressive enhancement - a website can work with just HTML, be enhanced with CSS, and further improved with JavaScript, ensuring accessibility even for users with limited browser capabilities or assistive technologies.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Advanced HTML Features</h4>
-        <ul>
-          <li><strong>HTML5 Semantic Elements:</strong> &lt;article&gt;, &lt;aside&gt;, &lt;details&gt;, &lt;summary&gt;, &lt;figure&gt;, &lt;figcaption&gt;, &lt;mark&gt;, &lt;time&gt;</li>
-          <li><strong>Forms:</strong> Advanced input types (email, url, tel, date, time), form validation, and attributes</li>
-          <li><strong>Graphics:</strong> &lt;canvas&gt; for drawing graphics with JavaScript, &lt;svg&gt; for scalable vector graphics</li>
-          <li><strong>Multimedia:</strong> &lt;audio&gt; and &lt;video&gt; elements with built-in controls</li>
-          <li><strong>Web APIs:</strong> Geolocation, Web Storage, Web Workers, Server-Sent Events</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Power of HTML5 and Web APIs</h4>
-        <p>HTML5 revolutionized web development by introducing features that were previously only available through plugins or complex workarounds. Semantic elements provide better document structure and accessibility. Advanced form inputs and validation improve user experience and reduce the need for JavaScript validation. The canvas and SVG elements enable powerful graphics capabilities directly in the browser. Native multimedia support eliminates the need for plugins like Flash. Web APIs give web applications access to device features like location, storage, and background processing, blurring the line between web and native applications.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Advanced CSS Techniques</h4>
-        <ul>
-          <li><strong>CSS Preprocessors:</strong> Sass, Less, and Stylus for variables, functions, and mixins</li>
-          <li><strong>CSS Frameworks:</strong> Bootstrap, Tailwind CSS, Foundation for rapid development</li>
-          <li><strong>CSS Custom Properties:</strong> Variables for theming and dynamic styling</li>
-          <li><strong>Advanced Layouts:</strong> CSS Grid for two-dimensional layouts, Flexbox for one-dimensional layouts</li>
-          <li><strong>Responsive Images:</strong> srcset and sizes attributes for serving appropriate images</li>
-          <li><strong>Animation:</strong> Keyframe animations, transitions, and transforms</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Evolution of CSS Development</h4>
-        <p>CSS has evolved from a simple styling language to a powerful tool for complex layouts and interactions. CSS preprocessors like Sass introduced programming concepts like variables, functions, and mixins to CSS, making stylesheets more maintainable and efficient. CSS frameworks provide pre-built components and design systems, accelerating development. CSS Custom Properties (variables) enable dynamic theming and more maintainable code. Modern layout systems like Grid and Flexbox solve longstanding layout challenges. Responsive images ensure optimal performance across devices. Animations and transforms enable rich, performant interactions without JavaScript.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Modern JavaScript Features</h4>
-        <ul>
-          <li><strong>ES6+ Features:</strong> Arrow functions, template literals, destructuring, spread/rest operators, classes, modules</li>
-          <li><strong>Asynchronous JavaScript:</strong> Promises, async/await, fetch API</li>
-          <li><strong>DOM Manipulation:</strong> Event delegation, performance optimization</li>
-          <li><strong>JavaScript Frameworks:</strong> React, Angular, Vue.js for building complex applications</li>
-          <li><strong>TypeScript:</strong> Superset of JavaScript that adds static typing</li>
-          <li><strong>Testing:</strong> Unit testing with Jest, end-to-end testing with Cypress</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Modern JavaScript Ecosystem</h4>
-        <p>JavaScript has undergone a remarkable transformation since its creation. ES6 (ECMAScript 2015) and subsequent versions have introduced numerous features that make the language more powerful and expressive. Arrow functions and template literals simplify common patterns. Destructuring and spread operators make data manipulation more concise. Classes provide a more familiar syntax for object-oriented programming. Modules enable better code organization. JavaScript frameworks like React, Angular, and Vue.js provide structured approaches to building complex applications. TypeScript adds static typing to catch errors early and improve code maintainability. Modern testing tools ensure reliability as applications grow in complexity.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Backend Programming</h4>
-        <ul>
-          <li><strong>Server-Side Languages:</strong> Node.js (JavaScript), Python (Django, Flask), Ruby (Rails), PHP (Laravel), Java (Spring)</li>
-          <li><strong>RESTful APIs:</strong> Design principles for web services</li>
-          <li><strong>Authentication:</strong> JWT, OAuth, session-based authentication</li>
-          <li><strong>WebSockets:</strong> Real-time bidirectional communication</li>
-          <li><strong>Serverless Computing:</strong> AWS Lambda, Azure Functions, Google Cloud Functions</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>Full-Stack Development</h4>
-        <p>While JavaScript is often associated with frontend development, it's also a powerful backend language through Node.js. This enables developers to use the same language for both frontend and backend, simplifying the development process. RESTful APIs provide a standardized way for applications to communicate with each other, using HTTP methods to perform operations on resources. Authentication mechanisms ensure that only authorized users can access certain features or data. WebSockets enable real-time communication, essential for applications like chat systems or live updates. Serverless computing abstracts away server management, allowing developers to focus on code rather than infrastructure.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Databases</h4>
-        <ul>
-          <li><strong>SQL Databases:</strong> MySQL, PostgreSQL, SQL Server, Oracle</li>
-          <li><strong>NoSQL Databases:</strong> MongoDB, Cassandra, Redis, Firebase</li>
-          <li><strong>Database Concepts:</strong> ACID properties, normalization, indexing, transactions</li>
-          <li><strong>ORMs:</strong> Object-Relational Mapping tools like Sequelize, Hibernate, Mongoose</li>
-          <li><strong>Database Management:</strong> Backups, scaling, security</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>Data Persistence in Web Applications</h4>
-        <p>Databases are essential for storing and retrieving data in web applications. SQL databases use structured query language and are ideal for applications with complex relationships between data entities. They follow ACID properties (Atomicity, Consistency, Isolation, Durability) to ensure reliable transactions. NoSQL databases offer more flexibility for unstructured data and are often easier to scale horizontally. ORMs (Object-Relational Mapping) tools bridge the gap between object-oriented programming languages and relational databases, allowing developers to work with objects rather than writing SQL queries directly. Database management involves ensuring data is backed up, secure, and can scale as the application grows.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Version Control with Git</h4>
-        <ul>
-          <li><strong>Basic Git Commands:</strong> init, add, commit, push, pull, branch, merge</li>
-          <li><strong>Git Workflows:</strong> Feature branching, Gitflow, Forking Workflow</li>
-          <li><strong>Collaboration:</strong> Pull requests, code reviews, conflict resolution</li>
-          <li><strong>Hosting Platforms:</strong> GitHub, GitLab, Bitbucket</li>
-          <li><strong>Advanced Git:</strong> Rebasing, stashing, cherry-picking, hooks</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Importance of Version Control</h4>
-        <p>Version control is the backbone of modern software development, enabling teams to collaborate effectively and manage changes to code over time. Git, the most widely used version control system, tracks changes to files, allows developers to work on different features simultaneously through branching, and provides mechanisms to merge changes back together. Workflows like Gitflow provide structured approaches to managing releases and features. Hosting platforms like GitHub offer additional collaboration tools like pull requests for code review and issue tracking. Version control not only facilitates collaboration but also serves as a backup of project history, allowing developers to revert to previous states if needed.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Development Tools and Practices</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <h4>Version Control with Git</h4>
+            <ul>
+              <li><strong>Basic Git Commands:</strong> init, add, commit, push, pull, branch, merge</li>
+              <li><strong>Git Workflows:</strong> Feature branching, Gitflow, Forking Workflow</li>
+              <li><strong>Collaboration:</strong> Pull requests, code reviews, conflict resolution</li>
+              <li><strong>Hosting Platforms:</strong> GitHub, GitLab, Bitbucket</li>
+              <li><strong>Advanced Git:</strong> Rebasing, stashing, cherry-picking, hooks</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Importance of Version Control</h4>
+            <p>Version control is the backbone of modern software development, enabling teams to collaborate effectively and manage changes to code over time. Git, the most widely used version control system, tracks changes to files, allows developers to work on different features simultaneously through branching, and provides mechanisms to merge changes back together. Workflows like Gitflow provide structured approaches to managing releases and features. Hosting platforms like GitHub offer additional collaboration tools like pull requests for code review and issue tracking. Version control not only facilitates collaboration but also serves as a backup of project history, allowing developers to revert to previous states if needed.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Development Environments and Tools</h4>
+            <ul>
+              <li><strong>Code Editors:</strong> Visual Studio Code, Sublime Text, Atom</li>
+              <li><strong>IDEs:</strong> WebStorm, IntelliJ IDEA, Visual Studio</li>
+              <li><strong>Package Managers:</strong> npm, yarn, pip, composer</li>
+              <li><strong>Build Tools:</strong> Webpack, Parcel, Vite</li>
+              <li><strong>Testing Tools:</strong> Jest, Mocha, Cypress, Selenium</li>
+              <li><strong>DevOps:</strong> CI/CD pipelines, Docker, Kubernetes</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Modern Development Toolkit</h4>
+            <p>Modern web development relies on a sophisticated ecosystem of tools that streamline the development process. Code editors and IDEs provide features like syntax highlighting, code completion, and debugging that make writing code more efficient. Package managers simplify dependency management, allowing developers to easily include and update libraries and frameworks. Build tools automate tasks like bundling, minification, and transpilation, optimizing code for production. Testing tools ensure code quality and functionality through automated tests. DevOps practices and tools like CI/CD pipelines automate testing and deployment, while containerization technologies like Docker ensure consistent environments across development, testing, and production.</p>
+          </div>
+        </div>
       </div>
     </section>
     
     <!-- System Unit Section -->
     <section id="system-unit" class="content-section">
       <h2>Computer System Unit Components</h2>
-      <div class="card">
-        <h3>Understanding the System Unit</h3>
-        <p>The system unit, also known as the computer case or tower, is the main enclosure that contains most of the components of a personal computer. It houses the hardware that processes data and executes instructions.</p>
+      
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Understanding the System Unit</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>The system unit, also known as the computer case or tower, is the main enclosure that contains most of the components of a personal computer. It houses the hardware that processes data and executes instructions.</p>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Role of the System Unit</h4>
+            <p>The system unit serves as both a protective shell and an organized framework for computer components. It protects sensitive electronics from dust, moisture, and physical damage while providing proper airflow to prevent overheating. The design of the system unit also affects the computer's expandability and accessibility for upgrades. Different form factors (sizes) exist to accommodate various needs, from compact mini-towers for space-constrained environments to full-tower cases for high-performance systems with multiple components. The system unit is essentially the foundation upon which all other computer hardware is built and connected.</p>
+          </div>
+          
+          <div class="image-container">
+            <img src="image/computer system unit.jpg" alt="Computer System Unit" width="250">
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>The Role of the System Unit</h4>
-        <p>The system unit serves as both a protective shell and an organized framework for computer components. It protects sensitive electronics from dust, moisture, and physical damage while providing proper airflow to prevent overheating. The design of the system unit also affects the computer's expandability and accessibility for upgrades. Different form factors (sizes) exist to accommodate various needs, from compact mini-towers for space-constrained environments to full-tower cases for high-performance systems with multiple components. The system unit is essentially the foundation upon which all other computer hardware is built and connected.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Central Processing Unit (CPU)</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>The CPU is the "brain" of the computer that performs most of the processing inside the computer. It interprets and executes instructions from computer programs.</p>
+            <ul>
+              <li>Manufacturers: Intel, AMD, Apple</li>
+              <li>Key specifications: Clock speed (GHz), number of cores, cache size</li>
+              <li>Functions: Arithmetic calculations, logic operations, data movement</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Understanding CPU Functionality</h4>
+            <p>The CPU performs billions of calculations per second, making it the most critical component for determining a computer's performance. Clock speed, measured in gigahertz (GHz), indicates how many cycles a CPU can execute per second - higher generally means faster processing. Modern CPUs contain multiple cores, essentially multiple processing units on a single chip, allowing them to handle multiple tasks simultaneously. Cache memory is a small amount of very fast memory built into the CPU that stores frequently accessed data, reducing the need to access slower main memory. The CPU's performance affects everything from basic system responsiveness to complex tasks like video editing and gaming.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="image-container">
-        <img src="image/computer system unit.jpg" alt="Computer System Unit" width="250">
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Motherboard</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>The motherboard is the main circuit board that connects all components together. It provides connectivity between the CPU, RAM, storage, and other hardware.</p>
+            <ul>
+              <li>Key components: Chipset, BIOS/UEFI, expansion slots, connectors</li>
+              <li>Form factors: ATX, Micro-ATX, Mini-ITX</li>
+              <li>Function: Communication pathway for all components</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Central Hub of the Computer</h4>
+            <p>The motherboard functions as the central nervous system of the computer, facilitating communication between all components. The chipset determines which components are compatible and how they interact. BIOS/UEFI is firmware that initializes hardware during the boot process and provides low-level control over devices. Expansion slots allow for adding functionality through cards like graphics cards or sound cards. Various connectors provide interfaces for peripherals, storage devices, and power. The form factor determines the motherboard's size, shape, and layout, which must be compatible with the case. A quality motherboard ensures stable operation and provides room for future upgrades.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>Central Processing Unit (CPU)</h4>
-        <p>The CPU is the "brain" of the computer that performs most of the processing inside the computer. It interprets and executes instructions from computer programs.</p>
-        <ul>
-          <li>Manufacturers: Intel, AMD, Apple</li>
-          <li>Key specifications: Clock speed (GHz), number of cores, cache size</li>
-          <li>Functions: Arithmetic calculations, logic operations, data movement</li>
-        </ul>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Memory (RAM)</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>Random Access Memory (RAM) is the computer's short-term memory that stores data the CPU needs quick access to while performing tasks.</p>
+            <ul>
+              <li>Types: DDR3, DDR4, DDR5</li>
+              <li>Characteristics: Volatile (loses data when power off), high speed</li>
+              <li>Capacity: Typically 4GB to 64GB in consumer systems</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Understanding RAM's Role in Performance</h4>
+            <p>RAM acts as a workspace for the computer, holding data that the CPU is actively using. Unlike storage, RAM is volatile - it loses its contents when the power is turned off. This volatility is offset by its speed, which is much faster than even the fastest storage devices. When you open a program, it's loaded from storage into RAM for quick access by the CPU. Insufficient RAM forces the system to use slower storage as virtual memory, significantly degrading performance. The type of RAM (DDR3, DDR4, DDR5) determines speed and efficiency, with each generation offering improvements. More RAM allows more programs to run simultaneously and improves performance in memory-intensive tasks like video editing or virtual machines.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>Understanding CPU Functionality</h4>
-        <p>The CPU performs billions of calculations per second, making it the most critical component for determining a computer's performance. Clock speed, measured in gigahertz (GHz), indicates how many cycles a CPU can execute per second - higher generally means faster processing. Modern CPUs contain multiple cores, essentially multiple processing units on a single chip, allowing them to handle multiple tasks simultaneously. Cache memory is a small amount of very fast memory built into the CPU that stores frequently accessed data, reducing the need to access slower main memory. The CPU's performance affects everything from basic system responsiveness to complex tasks like video editing and gaming.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Storage Devices</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>Storage devices hold data permanently, even when the computer is turned off.</p>
+            <ul>
+              <li><strong>HDD (Hard Disk Drive):</strong> Uses magnetic storage, larger capacity, slower speed</li>
+              <li><strong>SSD (Solid State Drive):</strong> Uses flash memory, faster, more durable, less capacity</li>
+              <li><strong>Hybrid Drives:</strong> Combine HDD and SSD technologies</li>
+              <li>Interfaces: SATA, NVMe (for SSDs)</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Evolution of Storage Technology</h4>
+            <p>Storage technology has evolved dramatically, balancing capacity, speed, and cost. Traditional HDDs use spinning magnetic platters and read/write heads, offering large capacities at low cost but with slower speeds and mechanical parts that can fail. SSDs use flash memory with no moving parts, resulting in much faster speeds, better durability, and lower power consumption, though at a higher cost per gigabyte. Hybrid drives attempt to offer the best of both worlds by combining a small SSD cache with a larger HDD. The interface also affects performance, with SATA being common for both HDDs and SSDs, while NVMe provides even faster speeds for modern SSDs by connecting directly to the PCIe bus.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>Motherboard</h4>
-        <p>The motherboard is the main circuit board that connects all components together. It provides connectivity between the CPU, RAM, storage, and other hardware.</p>
-        <ul>
-          <li>Key components: Chipset, BIOS/UEFI, expansion slots, connectors</li>
-          <li>Form factors: ATX, Micro-ATX, Mini-ITX</li>
-          <li>Function: Communication pathway for all components</li>
-        </ul>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Power Supply Unit (PSU)</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>The PSU converts AC power from the wall outlet to DC power that the computer components can use.</p>
+            <ul>
+              <li>Wattage: Typically 300W to 1000W+ depending on system requirements</li>
+              <li>Efficiency ratings: 80 Plus (Bronze, Silver, Gold, Platinum, Titanium)</li>
+              <li>Connectors: ATX, PCIe, SATA, Molex</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Importance of a Quality Power Supply</h4>
+            <p>The power supply is often overlooked but is critical to system stability and longevity. It converts high-voltage AC power from the wall to the low-voltage DC power required by computer components. Wattage indicates how much power the PSU can deliver, with high-performance systems requiring more power. Efficiency ratings (80 Plus) indicate how much AC power is converted to DC power, with higher ratings meaning less wasted energy as heat and lower electricity bills. A quality PSU provides stable, clean power with protection against voltage spikes and short circuits. Insufficient or poor-quality power can cause system instability, component damage, and data loss. The various connectors ensure compatibility with different components.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>The Central Hub of the Computer</h4>
-        <p>The motherboard functions as the central nervous system of the computer, facilitating communication between all components. The chipset determines which components are compatible and how they interact. BIOS/UEFI is firmware that initializes hardware during the boot process and provides low-level control over devices. Expansion slots allow for adding functionality through cards like graphics cards or sound cards. Various connectors provide interfaces for peripherals, storage devices, and power. The form factor determines the motherboard's size, shape, and layout, which must be compatible with the case. A quality motherboard ensures stable operation and provides room for future upgrades.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Graphics Processing Unit (GPU)</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>The GPU handles rendering images, videos, and animations. It's essential for gaming, video editing, and graphic design.</p>
+            <ul>
+              <li>Manufacturers: NVIDIA, AMD, Intel</li>
+              <li>Types: Integrated (part of CPU), Discrete (separate card)</li>
+              <li>Key specs: VRAM, CUDA cores (NVIDIA), Stream processors (AMD)</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Specialized Processor for Graphics</h4>
+            <p>While the CPU is a general-purpose processor, the GPU is specialized for parallel processing, making it exceptionally good at handling the complex calculations required for rendering graphics. Integrated GPUs share system memory and are sufficient for basic tasks, while discrete GPUs have their own dedicated memory (VRAM) and are significantly more powerful. The amount of VRAM affects how much texture and frame buffer data can be stored, impacting performance at high resolutions. CUDA cores (NVIDIA) and Stream processors (AMD) are the processing units within the GPU, with more cores generally indicating better performance. Beyond gaming and graphics, modern GPUs are increasingly used for general-purpose computing (GPGPU) in fields like scientific research and machine learning.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>Memory (RAM)</h4>
-        <p>Random Access Memory (RAM) is the computer's short-term memory that stores data the CPU needs quick access to while performing tasks.</p>
-        <ul>
-          <li>Types: DDR3, DDR4, DDR5</li>
-          <li>Characteristics: Volatile (loses data when power off), high speed</li>
-          <li>Capacity: Typically 4GB to 64GB in consumer systems</li>
-        </ul>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Cooling System</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>Cooling systems prevent components from overheating, which can cause damage or performance issues.</p>
+            <ul>
+              <li><strong>Air Cooling:</strong> Fans and heat sinks</li>
+              <li><strong>Liquid Cooling:</strong> Uses liquid to transfer heat away from components</li>
+              <li>Components: CPU cooler, case fans, thermal paste</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Critical Role of Thermal Management</h4>
+            <p>As computer components process data, they generate heat. Without proper cooling, this heat can build up and cause components to throttle (reduce performance to prevent damage) or even fail permanently. Air cooling uses fans to move air over heat sinks, which are metal structures with fins that dissipate heat. Liquid cooling is more efficient, using a pump to circulate liquid through a closed loop that absorbs heat from components and releases it through a radiator. Thermal paste is a thermally conductive material that fills microscopic gaps between a component (like the CPU) and its cooler, improving heat transfer. Effective cooling maintains performance, extends component lifespan, and allows for overclocking (running components at higher speeds than rated).</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>Understanding RAM's Role in Performance</h4>
-        <p>RAM acts as a workspace for the computer, holding data that the CPU is actively using. Unlike storage, RAM is volatile - it loses its contents when the power is turned off. This volatility is offset by its speed, which is much faster than even the fastest storage devices. When you open a program, it's loaded from storage into RAM for quick access by the CPU. Insufficient RAM forces the system to use slower storage as virtual memory, significantly degrading performance. The type of RAM (DDR3, DDR4, DDR5) determines speed and efficiency, with each generation offering improvements. More RAM allows more programs to run simultaneously and improves performance in memory-intensive tasks like video editing or virtual machines.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Expansion Cards</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>These cards add functionality to the computer through expansion slots on the motherboard.</p>
+            <ul>
+              <li><strong>Sound Cards:</strong> Enhance audio capabilities</li>
+              <li><strong>Network Cards:</strong> Provide Ethernet or Wi-Fi connectivity</li>
+              <li><strong>USB Expansion Cards:</strong> Add more USB ports</li>
+              <li><strong>Capture Cards:</strong> Allow video input from external sources</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Extending Computer Capabilities</h4>
+            <p>Expansion cards allow users to customize and enhance their computers beyond the capabilities provided by the motherboard's built-in features. Sound cards offer higher quality audio processing and more audio channels than integrated audio solutions. Network cards can provide faster Ethernet speeds or better Wi-Fi performance than built-in options. USB expansion cards add more ports when the motherboard's built-in ports are insufficient. Capture cards enable video recording from external sources like game consoles or cameras. Other types of expansion cards include RAID controllers for advanced storage configurations, specialized I/O cards for professional applications, and additional graphics cards for multi-monitor setups or improved performance.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>Storage Devices</h4>
-        <p>Storage devices hold data permanently, even when the computer is turned off.</p>
-        <ul>
-          <li><strong>HDD (Hard Disk Drive):</strong> Uses magnetic storage, larger capacity, slower speed</li>
-          <li><strong>SSD (Solid State Drive):</strong> Uses flash memory, faster, more durable, less capacity</li>
-          <li><strong>Hybrid Drives:</strong> Combine HDD and SSD technologies</li>
-          <li>Interfaces: SATA, NVMe (for SSDs)</li>
-        </ul>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>How Components Work Together</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="card">
+            <p>When you perform an action on your computer:</p>
+            <ol>
+              <li>Input devices (keyboard, mouse) send signals to the CPU</li>
+              <li>The CPU processes the instructions using data from RAM</li>
+              <li>The GPU renders visual output to the monitor</li>
+              <li>Data is temporarily stored in RAM and permanently saved to storage devices</li>
+              <li>The PSU provides power to all components</li>
+              <li>The motherboard facilitates communication between all components</li>
+            </ol>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Symphony of Computer Components</h4>
+            <p>A computer is a complex system where each component plays a specific role, and all must work in harmony. When you type on a keyboard, the keyboard controller sends signals to the CPU via the motherboard. The CPU processes these inputs, executing instructions that may involve retrieving data from RAM or storage. The GPU takes rendering instructions from the CPU and converts them into the images you see on your monitor. RAM provides fast temporary storage for active data, while storage devices hold data long-term. The PSU supplies the precise electrical power each component needs, and the motherboard's circuitry and connectors ensure all parts can communicate efficiently. This coordinated effort happens billions of times per second, enabling the seamless computing experience we rely on.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>The Evolution of Storage Technology</h4>
-        <p>Storage technology has evolved dramatically, balancing capacity, speed, and cost. Traditional HDDs use spinning magnetic platters and read/write heads, offering large capacities at low cost but with slower speeds and mechanical parts that can fail. SSDs use flash memory with no moving parts, resulting in much faster speeds, better durability, and lower power consumption, though at a higher cost per gigabyte. Hybrid drives attempt to offer the best of both worlds by combining a small SSD cache with a larger HDD. The interface also affects performance, with SATA being common for both HDDs and SSDs, while NVMe provides even faster speeds for modern SSDs by connecting directly to the PCIe bus.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Advanced Computer Technologies</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <h4>CPU Architecture and Performance</h4>
+            <ul>
+              <li><strong>Instruction Sets:</strong> x86 (Intel, AMD), ARM (mobile devices), RISC-V</li>
+              <li><strong>Multi-core Processing:</strong> Dual-core, quad-core, hexa-core, octa-core CPUs</li>
+              <li><strong>Hyper-threading:</strong> Allows each physical core to handle two threads simultaneously</li>
+              <li><strong>Cache Memory:</strong> L1, L2, L3 cache for storing frequently accessed data</li>
+              <li><strong>Overclocking:</strong> Running CPU at higher clock speeds for improved performance</li>
+              <li><strong>Thermal Design Power (TDP):</strong> Maximum heat generated by CPU that cooling system must dissipate</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Intricacies of CPU Design</h4>
+            <p>CPU architecture is a complex field that balances performance, power efficiency, and cost. Instruction sets define the fundamental operations a CPU can perform, with x86 dominating desktop and server markets while ARM powers most mobile devices due to its efficiency. Multi-core processors allow parallel processing, significantly improving performance for multi-threaded applications. Hyper-threading further enhances this by enabling each physical core to handle two instruction streams simultaneously. Cache memory hierarchy (L1, L2, L3) provides increasingly larger but slower memory closer to the CPU cores, reducing the need to access slower main memory. Overclocking pushes CPUs beyond their rated speeds for better performance but requires better cooling and can reduce lifespan. TDP indicates the cooling solution needed to maintain optimal performance.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Advanced Memory Technologies</h4>
+            <ul>
+              <li><strong>DDR Evolution:</strong> DDR3 (1066-2133 MT/s), DDR4 (2133-3200 MT/s), DDR5 (4800-8400 MT/s)</li>
+              <li><strong>Dual/Triple/Quad Channel:</strong> Memory architecture for increased bandwidth</li>
+              <li><strong>ECC Memory:</strong> Error-correcting code memory for servers and workstations</li>
+              <li><strong>Virtual Memory:</strong> Using storage as temporary memory when RAM is insufficient</li>
+              <li><strong>Memory Timings:</strong> CAS latency, RAS to CAS delay, RAS precharge, active precharge</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Science of Memory Performance</h4>
+            <p>Memory technology has evolved to keep pace with increasing processor speeds. Each DDR generation has brought significant improvements in data transfer rates (measured in megatransfers per second). Multi-channel memory architectures (dual, triple, or quad channel) effectively widen the data path between the CPU and memory, doubling, tripling, or quadrupling bandwidth. ECC memory includes additional bits that can detect and correct single-bit errors, crucial for systems where data integrity is paramount, like servers. Virtual memory allows systems to use storage as an extension of RAM when physical memory is exhausted, though at a significant performance cost. Memory timings measure latency in clock cycles for various operations, with lower numbers generally indicating better performance, though they must be balanced against transfer rates.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Storage Technologies</h4>
+            <ul>
+              <li><strong>SSD Types:</strong> SATA SSDs, NVMe SSDs, M.2 SSDs, PCIe SSDs</li>
+              <li><strong>NAND Flash Types:</strong> SLC, MLC, TLC, QLC (differing in endurance and cost)</li>
+              <li><strong>RAID:</strong> Redundant Array of Independent Disks for performance and reliability</li>
+              <li><strong>3D XPoint:</strong> Non-volatile memory technology between DRAM and NAND flash</li>
+              <li><strong>Storage Interfaces:</strong> SATA III (6 Gbps), PCIe 3.0/4.0/5.0 (up to 64 GT/s)</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Storage Technology Landscape</h4>
+            <p>Modern storage offers a range of options balancing speed, capacity, and cost. SATA SSDs connect via the SATA interface, offering significant speed improvements over HDDs but limited by the interface's bandwidth. NVMe SSDs connect directly to the PCIe bus, bypassing SATA limitations for dramatically faster speeds. M.2 is a form factor that can accommodate both SATA and NVMe SSDs in a compact package. NAND flash types vary in how many bits are stored per cell: SLC (1 bit) offers the best endurance and performance but at the highest cost, while QLC (4 bits) provides better density at the cost of endurance and speed. RAID configurations combine multiple drives for improved performance, redundancy, or both. 3D XPoint is an emerging memory technology that bridges the gap between DRAM and NAND flash, offering near-DRAM speeds with persistence.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Advanced GPU Technologies</h4>
+            <ul>
+              <li><strong>Ray Tracing:</strong> Technique for rendering realistic lighting, shadows, and reflections</li>
+              <li><strong>DLSS (Deep Learning Super Sampling):</strong> AI-powered upscaling for improved performance</li>
+              <li><strong>FidelityFX Super Resolution:</strong> AMD's alternative to DLSS</li>
+              <li><strong>GPU Computing:</strong> Using GPUs for general-purpose computation (GPGPU)</li>
+              <li><strong>Multi-GPU Setups:</strong> SLI (NVIDIA) and CrossFire (AMD) for combining multiple GPUs</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Modern Graphics Rendering Techniques</h4>
+            <p>GPU technology has evolved beyond simple rasterization to more sophisticated rendering techniques. Ray tracing simulates the physical behavior of light to produce incredibly realistic images with accurate shadows, reflections, and refractions, though it requires significant computational power. DLSS uses AI to render games at lower resolutions and then intelligently upscale them, offering performance comparable to lower resolutions with image quality approaching higher resolutions. FidelityFX Super Resolution is AMD's open-source alternative that provides similar benefits. Beyond graphics, GPUs are increasingly used for general-purpose computing (GPGPU) in scientific simulations, machine learning, and data analysis due to their parallel processing capabilities. Multi-GPU setups allow combining the power of multiple graphics cards, though support has become less common in recent generations.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>Power Supply Unit (PSU)</h4>
-        <p>The PSU converts AC power from the wall outlet to DC power that the computer components can use.</p>
-        <ul>
-          <li>Wattage: Typically 300W to 1000W+ depending on system requirements</li>
-          <li>Efficiency ratings: 80 Plus (Bronze, Silver, Gold, Platinum, Titanium)</li>
-          <li>Connectors: ATX, PCIe, SATA, Molex</li>
-        </ul>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Peripherals and I/O Devices</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <h4>Human-Computer Interface</h4>
+            <ul>
+              <li><strong>Input Devices:</strong> Keyboards, mice, scanners, microphones, webcams, game controllers</li>
+              <li><strong>Output Devices:</strong> Monitors, printers, speakers, projectors, headphones</li>
+              <li><strong>Input/Output Devices:</strong> Touchscreens, multifunction printers, VR headsets</li>
+              <li><strong>Connection Interfaces:</strong> USB (2.0, 3.x, 4), Thunderbolt, HDMI, DisplayPort, Bluetooth</li>
+              <li><strong>Ergonomics:</strong> Design principles for comfortable and efficient use of peripherals</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Human-Computer Interface</h4>
+            <p>Peripherals bridge the gap between users and computers, translating human actions into digital signals and vice versa. Input devices convert user actions into data the computer can process, with modern devices offering increasing precision and features like mechanical keyboards with customizable switches or gaming mice with adjustable DPI. Output devices present computer-generated information in forms humans can perceive, with monitors evolving from basic CRTs to high-resolution displays with high refresh rates and HDR support. Connection interfaces have evolved to meet increasing bandwidth demands, with USB4/Thunderbolt offering 40Gbps speeds and the ability to carry video, data, and power over a single cable. Ergonomics considers how to design peripherals that minimize discomfort and strain during extended use, preventing repetitive stress injuries and improving productivity.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="explanation">
-        <h4>The Importance of a Quality Power Supply</h4>
-        <p>The power supply is often overlooked but is critical to system stability and longevity. It converts high-voltage AC power from the wall to the low-voltage DC power required by computer components. Wattage indicates how much power the PSU can deliver, with high-performance systems requiring more power. Efficiency ratings (80 Plus) indicate how much AC power is converted to DC power, with higher ratings meaning less wasted energy as heat and lower electricity bills. A quality PSU provides stable, clean power with protection against voltage spikes and short circuits. Insufficient or poor-quality power can cause system instability, component damage, and data loss. The various connectors ensure compatibility with different components.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>System Performance and Troubleshooting</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <h4>Optimizing and Diagnosing Computer Systems</h4>
+            <ul>
+              <li><strong>Bottlenecks:</strong> Identifying components that limit system performance</li>
+              <li><strong>Benchmarking:</strong> Tools and methods for measuring system performance</li>
+              <li><strong>Overclocking:</strong> Running components at higher speeds than rated for improved performance</li>
+              <li><strong>System Optimization:</strong> Software and hardware tweaks for better performance</li>
+              <li><strong>Thermal Management:</strong> Monitoring and controlling system temperatures</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>Maximizing Computer Performance</h4>
+            <p>System performance is determined by the slowest component in any given task, known as the bottleneck. Identifying and addressing bottlenecks is key to improving performance - for example, a fast CPU paired with insufficient RAM will be limited by memory capacity. Benchmarking provides objective measurements of performance through standardized tests that simulate real-world workloads. Overclocking pushes components beyond their rated specifications for better performance, though it requires adequate cooling and can reduce component lifespan. System optimization involves both hardware adjustments (like ensuring proper airflow) and software tweaks (like updating drivers or disabling unnecessary startup programs). Thermal management is crucial as modern components automatically reduce performance (thermal throttling) when temperatures get too high to prevent damage.</p>
+          </div>
+          
+          <div class="advanced-topic">
+            <h4>Troubleshooting Common Issues</h4>
+            <ul>
+              <li><strong>Boot Problems:</strong> No power, beep codes, no display</li>
+              <li><strong>System Instability:</strong> Blue screens, random restarts, freezing</li>
+              <li><strong>Performance Issues:</strong> Slow system, high resource usage</li>
+              <li><strong>Hardware Failures:</strong> Diagnosing faulty components</li>
+              <li><strong>Driver Issues:</strong> Updating, rolling back, and troubleshooting drivers</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Art of Diagnosing Computer Problems</h4>
+            <p>Effective troubleshooting requires a systematic approach to identify and resolve issues. Boot problems often indicate fundamental hardware or configuration issues, with beep codes providing diagnostic information through speaker patterns. System instability can be caused by failing hardware, overheating, driver conflicts, or software issues, requiring careful isolation of variables. Performance issues often result from insufficient resources, malware, or excessive background processes. Hardware failures can be diagnosed through observation, testing components in known-working systems, or using specialized diagnostic tools. Driver issues are common sources of problems, as drivers are complex software that can have bugs or conflicts - updating to the latest version or rolling back to a previous stable version often resolves these issues.</p>
+          </div>
+        </div>
       </div>
       
-      <div class="card">
-        <h4>Graphics Processing Unit (GPU)</h4>
-        <p>The GPU handles rendering images, videos, and animations. It's essential for gaming, video editing, and graphic design.</p>
-        <ul>
-          <li>Manufacturers: NVIDIA, AMD, Intel</li>
-          <li>Types: Integrated (part of CPU), Discrete (separate card)</li>
-          <li>Key specs: VRAM, CUDA cores (NVIDIA), Stream processors (AMD)</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Specialized Processor for Graphics</h4>
-        <p>While the CPU is a general-purpose processor, the GPU is specialized for parallel processing, making it exceptionally good at handling the complex calculations required for rendering graphics. Integrated GPUs share system memory and are sufficient for basic tasks, while discrete GPUs have their own dedicated memory (VRAM) and are significantly more powerful. The amount of VRAM affects how much texture and frame buffer data can be stored, impacting performance at high resolutions. CUDA cores (NVIDIA) and Stream processors (AMD) are the processing units within the GPU, with more cores generally indicating better performance. Beyond gaming and graphics, modern GPUs are increasingly used for general-purpose computing (GPGPU) in fields like scientific research and machine learning.</p>
-      </div>
-      
-      <div class="card">
-        <h4>Cooling System</h4>
-        <p>Cooling systems prevent components from overheating, which can cause damage or performance issues.</p>
-        <ul>
-          <li><strong>Air Cooling:</strong> Fans and heat sinks</li>
-          <li><strong>Liquid Cooling:</strong> Uses liquid to transfer heat away from components</li>
-          <li>Components: CPU cooler, case fans, thermal paste</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Critical Role of Thermal Management</h4>
-        <p>As computer components process data, they generate heat. Without proper cooling, this heat can build up and cause components to throttle (reduce performance to prevent damage) or even fail permanently. Air cooling uses fans to move air over heat sinks, which are metal structures with fins that dissipate heat. Liquid cooling is more efficient, using a pump to circulate liquid through a closed loop that absorbs heat from components and releases it through a radiator. Thermal paste is a thermally conductive material that fills microscopic gaps between a component (like the CPU) and its cooler, improving heat transfer. Effective cooling maintains performance, extends component lifespan, and allows for overclocking (running components at higher speeds than rated).</p>
-      </div>
-      
-      <div class="card">
-        <h4>Expansion Cards</h4>
-        <p>These cards add functionality to the computer through expansion slots on the motherboard.</p>
-        <ul>
-          <li><strong>Sound Cards:</strong> Enhance audio capabilities</li>
-          <li><strong>Network Cards:</strong> Provide Ethernet or Wi-Fi connectivity</li>
-          <li><strong>USB Expansion Cards:</strong> Add more USB ports</li>
-          <li><strong>Capture Cards:</strong> Allow video input from external sources</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>Extending Computer Capabilities</h4>
-        <p>Expansion cards allow users to customize and enhance their computers beyond the capabilities provided by the motherboard's built-in features. Sound cards offer higher quality audio processing and more audio channels than integrated audio solutions. Network cards can provide faster Ethernet speeds or better Wi-Fi performance than built-in options. USB expansion cards add more ports when the motherboard's built-in ports are insufficient. Capture cards enable video recording from external sources like game consoles or cameras. Other types of expansion cards include RAID controllers for advanced storage configurations, specialized I/O cards for professional applications, and additional graphics cards for multi-monitor setups or improved performance.</p>
-      </div>
-      
-      <div class="card">
-        <h4>How Components Work Together</h4>
-        <p>When you perform an action on your computer:</p>
-        <ol>
-          <li>Input devices (keyboard, mouse) send signals to the CPU</li>
-          <li>The CPU processes the instructions using data from RAM</li>
-          <li>The GPU renders visual output to the monitor</li>
-          <li>Data is temporarily stored in RAM and permanently saved to storage devices</li>
-          <li>The PSU provides power to all components</li>
-          <li>The motherboard facilitates communication between all components</li>
-        </ol>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Symphony of Computer Components</h4>
-        <p>A computer is a complex system where each component plays a specific role, and all must work in harmony. When you type on a keyboard, the keyboard controller sends signals to the CPU via the motherboard. The CPU processes these inputs, executing instructions that may involve retrieving data from RAM or storage. The GPU takes rendering instructions from the CPU and converts them into the images you see on your monitor. RAM provides fast temporary storage for active data, while storage devices hold data long-term. The PSU supplies the precise electrical power each component needs, and the motherboard's circuitry and connectors ensure all parts can communicate efficiently. This coordinated effort happens billions of times per second, enabling the seamless computing experience we rely on.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>CPU Architecture and Performance</h4>
-        <ul>
-          <li><strong>Instruction Sets:</strong> x86 (Intel, AMD), ARM (mobile devices), RISC-V</li>
-          <li><strong>Multi-core Processing:</strong> Dual-core, quad-core, hexa-core, octa-core CPUs</li>
-          <li><strong>Hyper-threading:</strong> Allows each physical core to handle two threads simultaneously</li>
-          <li><strong>Cache Memory:</strong> L1, L2, L3 cache for storing frequently accessed data</li>
-          <li><strong>Overclocking:</strong> Running CPU at higher clock speeds for improved performance</li>
-          <li><strong>Thermal Design Power (TDP):</strong> Maximum heat generated by CPU that cooling system must dissipate</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Intricacies of CPU Design</h4>
-        <p>CPU architecture is a complex field that balances performance, power efficiency, and cost. Instruction sets define the fundamental operations a CPU can perform, with x86 dominating desktop and server markets while ARM powers most mobile devices due to its efficiency. Multi-core processors allow parallel processing, significantly improving performance for multi-threaded applications. Hyper-threading further enhances this by enabling each physical core to handle two instruction streams simultaneously. Cache memory hierarchy (L1, L2, L3) provides increasingly larger but slower memory closer to the CPU cores, reducing the need to access slower main memory. Overclocking pushes CPUs beyond their rated speeds for better performance but requires better cooling and can reduce lifespan. TDP indicates the cooling solution needed to maintain optimal performance.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Advanced Memory Technologies</h4>
-        <ul>
-          <li><strong>DDR Evolution:</strong> DDR3 (1066-2133 MT/s), DDR4 (2133-3200 MT/s), DDR5 (4800-8400 MT/s)</li>
-          <li><strong>Dual/Triple/Quad Channel:</strong> Memory architecture for increased bandwidth</li>
-          <li><strong>ECC Memory:</strong> Error-correcting code memory for servers and workstations</li>
-          <li><strong>Virtual Memory:</strong> Using storage as temporary memory when RAM is insufficient</li>
-          <li><strong>Memory Timings:</strong> CAS latency, RAS to CAS delay, RAS precharge, active precharge</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Science of Memory Performance</h4>
-        <p>Memory technology has evolved to keep pace with increasing processor speeds. Each DDR generation has brought significant improvements in data transfer rates (measured in megatransfers per second). Multi-channel memory architectures (dual, triple, or quad channel) effectively widen the data path between the CPU and memory, doubling, tripling, or quadrupling bandwidth. ECC memory includes additional bits that can detect and correct single-bit errors, crucial for systems where data integrity is paramount, like servers. Virtual memory allows systems to use storage as an extension of RAM when physical memory is exhausted, though at a significant performance cost. Memory timings measure latency in clock cycles for various operations, with lower numbers generally indicating better performance, though they must be balanced against transfer rates.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Storage Technologies</h4>
-        <ul>
-          <li><strong>SSD Types:</strong> SATA SSDs, NVMe SSDs, M.2 SSDs, PCIe SSDs</li>
-          <li><strong>NAND Flash Types:</strong> SLC, MLC, TLC, QLC (differing in endurance and cost)</li>
-          <li><strong>RAID:</strong> Redundant Array of Independent Disks for performance and reliability</li>
-          <li><strong>3D XPoint:</strong> Non-volatile memory technology between DRAM and NAND flash</li>
-          <li><strong>Storage Interfaces:</strong> SATA III (6 Gbps), PCIe 3.0/4.0/5.0 (up to 64 GT/s)</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Storage Technology Landscape</h4>
-        <p>Modern storage offers a range of options balancing speed, capacity, and cost. SATA SSDs connect via the SATA interface, offering significant speed improvements over HDDs but limited by the interface's bandwidth. NVMe SSDs connect directly to the PCIe bus, bypassing SATA limitations for dramatically faster speeds. M.2 is a form factor that can accommodate both SATA and NVMe SSDs in a compact package. NAND flash types vary in how many bits are stored per cell: SLC (1 bit) offers the best endurance and performance but at the highest cost, while QLC (4 bits) provides better density at the cost of endurance and speed. RAID configurations combine multiple drives for improved performance, redundancy, or both. 3D XPoint is an emerging memory technology that bridges the gap between DRAM and NAND flash, offering near-DRAM speeds with persistence.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Advanced GPU Technologies</h4>
-        <ul>
-          <li><strong>Ray Tracing:</strong> Technique for rendering realistic lighting, shadows, and reflections</li>
-          <li><strong>DLSS (Deep Learning Super Sampling):</strong> AI-powered upscaling for improved performance</li>
-          <li><strong>FidelityFX Super Resolution:</strong> AMD's alternative to DLSS</li>
-          <li><strong>GPU Computing:</strong> Using GPUs for general-purpose computation (GPGPU)</li>
-          <li><strong>Multi-GPU Setups:</strong> SLI (NVIDIA) and CrossFire (AMD) for combining multiple GPUs</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>Modern Graphics Rendering Techniques</h4>
-        <p>GPU technology has evolved beyond simple rasterization to more sophisticated rendering techniques. Ray tracing simulates the physical behavior of light to produce incredibly realistic images with accurate shadows, reflections, and refractions, though it requires significant computational power. DLSS uses AI to render games at lower resolutions and then intelligently upscale them, offering performance comparable to lower resolutions with image quality approaching higher resolutions. FidelityFX Super Resolution is AMD's open-source alternative that provides similar benefits. Beyond graphics, GPUs are increasingly used for general-purpose computing (GPGPU) in scientific simulations, machine learning, and data analysis due to their parallel processing capabilities. Multi-GPU setups allow combining the power of multiple graphics cards, though support has become less common in recent generations.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Advanced Cooling Solutions</h4>
-        <ul>
-          <li><strong>Liquid Cooling Types:</strong> AIO (All-in-One) coolers, custom loops, phase change cooling</li>
-          <li><strong>Thermal Paste:</strong> Materials for improving heat transfer between CPU and cooler</li>
-          <li><strong>Case Airflow:</strong> Positive vs negative pressure, fan placement optimization</li>
-          <li><strong>Passive Cooling:</strong> Heat sinks without fans for silent operation</li>
-          <li><strong>Extreme Cooling:</strong> Liquid nitrogen, dry ice, and phase change cooling for overclocking</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Science of Heat Dissipation</h4>
-        <p>Effective cooling is crucial for maintaining performance and component longevity. Liquid cooling comes in various forms: AIO coolers offer a sealed, maintenance-free solution with a pump, radiator, and water block; custom loops provide superior performance and aesthetics but require maintenance and expertise. Thermal paste fills microscopic imperfections between surfaces, improving heat transfer - different formulations offer varying thermal conductivity and longevity. Case airflow design considers positive pressure (more intake than exhaust) to reduce dust infiltration or negative pressure (more exhaust than intake) for better heat removal, with strategically placed fans to create efficient air paths. Passive cooling relies on large heat sinks and natural convection, offering silent operation but limited cooling capacity. Extreme cooling methods like liquid nitrogen or phase change cooling are used primarily for competitive overclocking, achieving temperatures far below what conventional cooling can manage.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Peripherals and I/O Devices</h4>
-        <ul>
-          <li><strong>Input Devices:</strong> Keyboards, mice, scanners, microphones, webcams, game controllers</li>
-          <li><strong>Output Devices:</strong> Monitors, printers, speakers, projectors, headphones</li>
-          <li><strong>Input/Output Devices:</strong> Touchscreens, multifunction printers, VR headsets</li>
-          <li><strong>Connection Interfaces:</strong> USB (2.0, 3.x, 4), Thunderbolt, HDMI, DisplayPort, Bluetooth</li>
-          <li><strong>Ergonomics:</strong> Design principles for comfortable and efficient use of peripherals</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Human-Computer Interface</h4>
-        <p>Peripherals bridge the gap between users and computers, translating human actions into digital signals and vice versa. Input devices convert user actions into data the computer can process, with modern devices offering increasing precision and features like mechanical keyboards with customizable switches or gaming mice with adjustable DPI. Output devices present computer-generated information in forms humans can perceive, with monitors evolving from basic CRTs to high-resolution displays with high refresh rates and HDR support. Connection interfaces have evolved to meet increasing bandwidth demands, with USB4/Thunderbolt offering 40Gbps speeds and the ability to carry video, data, and power over a single cable. Ergonomics considers how to design peripherals that minimize discomfort and strain during extended use, preventing repetitive stress injuries and improving productivity.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>System Performance and Optimization</h4>
-        <ul>
-          <li><strong>Bottlenecks:</strong> Identifying components that limit system performance</li>
-          <li><strong>Benchmarking:</strong> Tools and methods for measuring system performance</li>
-          <li><strong>Overclocking:</strong> Running components at higher speeds than rated for improved performance</li>
-          <li><strong>System Optimization:</strong> Software and hardware tweaks for better performance</li>
-          <li><strong>Thermal Management:</strong> Monitoring and controlling system temperatures</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>Maximizing Computer Performance</h4>
-        <p>System performance is determined by the slowest component in any given task, known as the bottleneck. Identifying and addressing bottlenecks is key to improving performance - for example, a fast CPU paired with insufficient RAM will be limited by memory capacity. Benchmarking provides objective measurements of performance through standardized tests that simulate real-world workloads. Overclocking pushes components beyond their rated specifications for better performance, though it requires adequate cooling and can reduce component lifespan. System optimization involves both hardware adjustments (like ensuring proper airflow) and software tweaks (like updating drivers or disabling unnecessary startup programs). Thermal management is crucial as modern components automatically reduce performance (thermal throttling) when temperatures get too high to prevent damage.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Troubleshooting Common Issues</h4>
-        <ul>
-          <li><strong>Boot Problems:</strong> No power, beep codes, no display</li>
-          <li><strong>System Instability:</strong> Blue screens, random restarts, freezing</li>
-          <li><strong>Performance Issues:</strong> Slow system, high resource usage</li>
-          <li><strong>Hardware Failures:</strong> Diagnosing faulty components</li>
-          <li><strong>Driver Issues:</strong> Updating, rolling back, and troubleshooting drivers</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Art of Diagnosing Computer Problems</h4>
-        <p>Effective troubleshooting requires a systematic approach to identify and resolve issues. Boot problems often indicate fundamental hardware or configuration issues, with beep codes providing diagnostic information through speaker patterns. System instability can be caused by failing hardware, overheating, driver conflicts, or software issues, requiring careful isolation of variables. Performance issues often result from insufficient resources, malware, or excessive background processes. Hardware failures can be diagnosed through observation, testing components in known-working systems, or using specialized diagnostic tools. Driver issues are common sources of problems, as drivers are complex software that can have bugs or conflicts - updating to the latest version or rolling back to a previous stable version often resolves these issues.</p>
-      </div>
-      
-      <div class="advanced-topic">
-        <h4>Emerging Technologies</h4>
-        <ul>
-          <li><strong>Quantum Computing:</strong> Using quantum mechanics for computation</li>
-          <li><strong>Neuromorphic Computing:</strong> Hardware designed to mimic the human brain</li>
-          <li><strong>Optical Computing:</strong> Using photons instead of electrons for processing</li>
-          <li><strong>3D Stacked Chips:</strong> Vertically stacking components for improved density and performance</li>
-          <li><strong>Memristors:</strong> Memory resistors that can store and process information</li>
-        </ul>
-      </div>
-      
-      <div class="explanation">
-        <h4>The Future of Computing</h4>
-        <p>Computing technology continues to evolve at a rapid pace, with several emerging technologies poised to revolutionize the field. Quantum computing leverages quantum mechanical phenomena like superposition and entanglement to perform calculations that would be infeasible for classical computers, potentially revolutionizing fields like cryptography and drug discovery. Neuromorphic computing aims to mimic the structure and function of the human brain, creating hardware that excels at pattern recognition and adaptive learning. Optical computing uses photons instead of electrons, potentially offering much higher speeds and lower power consumption. 3D stacked chips address the limitations of traditional flat chip designs by building upward, improving density and reducing communication distances between components. Memristors are novel components that can both store and process information, potentially blurring the line between memory and computation.</p>
+      <div class="interactive-section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h3>Emerging Technologies</h3>
+          <i class="fas fa-chevron-down section-icon"></i>
+        </div>
+        <div class="section-content">
+          <div class="advanced-topic">
+            <h4>The Future of Computing</h4>
+            <ul>
+              <li><strong>Quantum Computing:</strong> Using quantum mechanics for computation</li>
+              <li><strong>Neuromorphic Computing:</strong> Hardware designed to mimic the human brain</li>
+              <li><strong>Optical Computing:</strong> Using photons instead of electrons for processing</li>
+              <li><strong>3D Stacked Chips:</strong> Vertically stacking components for improved density and performance</li>
+              <li><strong>Memristors:</strong> Memory resistors that can store and process information</li>
+            </ul>
+          </div>
+          
+          <div class="explanation">
+            <h4>The Next Generation of Computing</h4>
+            <p>Computing technology continues to evolve at a rapid pace, with several emerging technologies poised to revolutionize the field. Quantum computing leverages quantum mechanical phenomena like superposition and entanglement to perform calculations that would be infeasible for classical computers, potentially revolutionizing fields like cryptography and drug discovery. Neuromorphic computing aims to mimic the structure and function of the human brain, creating hardware that excels at pattern recognition and adaptive learning. Optical computing uses photons instead of electrons, potentially offering much higher speeds and lower power consumption. 3D stacked chips address the limitations of traditional flat chip designs by building upward, improving density and reducing communication distances between components. Memristors are novel components that can both store and process information, potentially blurring the line between memory and computation.</p>
+          </div>
+        </div>
       </div>
     </section>
     
