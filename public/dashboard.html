@@ -210,6 +210,9 @@
       text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
       animation: pulse 2s infinite;
     }
+    .nav-lavel{
+      font-size: 12px
+    }
     
     @keyframes pulse {
       0% { text-shadow: 0 0 5px rgba(0, 229, 255, 0.7); }
@@ -347,24 +350,54 @@
       100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 229, 255, 0.4); }
     }
     
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100px;
-      background: rgba(0, 30, 60, 0.8);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid rgba(0, 229, 255, 0.3);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      z-index: 10;
-    }
-    
-    .icon {
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: rgba(0, 30, 60, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 229, 255, 0.3);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  z-index: 10;
+  padding: 10px 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 20%;
+}
+
+.nav-label {
+  color: #90caf9;
+  font-size: 12px;
+  margin-top: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover .nav-label {
+  color: #00e5ff;
+}
+
+.nav-item:active .nav-label {
+  color: #00e5ff;
+}
+
+.icon.active + .nav-label {
+  color: #00e5ff;
+  font-weight: bold;
+}    .icon {
       font-size: 30px;
       color: #90caf9;
       cursor: pointer;
@@ -378,7 +411,7 @@
     }
     
     .icon.active {
-      background: rgba(0, 229, 255, 0.2);
+      background: rgba(0, 0, 0, 0.2);
       padding: 8px 12px;
       border-radius: 50%;
       color: #00e5ff;
