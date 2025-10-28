@@ -8,17 +8,29 @@
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
     
     body {
-      font-family: 'Roboto Mono', monospace;
-      margin: 0;
-      background: #212121;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #cfd8dc;
-      overflow: hidden;
-      position: relative;
-    }
+  font-family: 'Roboto Mono', monospace;
+  margin: 0;
+  background: #212121;
+  color: #cfd8dc;
+  overflow-y: auto; /* Changed from hidden to auto to enable vertical scrolling */
+  position: relative;
+}
+
+/* Main Container */
+.tech-container {
+  max-width: 420px;
+  width: 100%;
+  min-height: auto; /* Changed from 90vh to auto */
+  margin: 20px auto; /* Added margin for better spacing */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 
+    0 0 20px rgba(0, 0, 0, 0.5),
+    inset 0 0 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  border: 1px solid rgba(207, 216, 220, 0.2);
+  animation: containerEntry 0.8s ease forwards;
+}
     
     /* Blueprint Grid Background */
     .blueprint-grid {
