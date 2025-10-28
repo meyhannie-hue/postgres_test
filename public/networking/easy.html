@@ -353,16 +353,60 @@
             transform: scale(1.05);
         }
         .instructions {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 250px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #00ff88 rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Instructions header */
+        .instructions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        
+        .instructions-title {
+            color: #00ff88;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .instructions-toggle {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: white;
+            border-radius: 15px;
+            padding: 4px 10px;
             font-size: 12px;
-            line-height: 1.4;
-            max-height: 150px; /* Set a fixed height */
-            overflow-y: auto; /* Enable vertical scrolling */
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: #00ff88 rgba(0, 0, 0, 0.2); /* For Firefox */
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .instructions-toggle:hover {
+            background: rgba(0, 255, 136, 0.3);
+        }
+        
+        .instructions-content {
+            display: block;
+        }
+        
+        .instructions-content.hidden {
+            display: none;
         }
         
         /* Custom scrollbar for Webkit browsers */
@@ -385,15 +429,44 @@
         }
         
         .instructions h3 {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #00ff88;
-            font-size: 14px;
+            font-size: 16px;
         }
         .instructions ol {
-            padding-left: 15px;
+            padding-left: 20px;
+            margin-bottom: 15px;
         }
         .instructions li {
-            margin-bottom: 3px;
+            margin-bottom: 8px;
+        }
+        .instructions-section {
+            margin-bottom: 15px;
+        }
+        .instructions-section-title {
+            color: #00bbff;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        .cable-guide {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .cable-guide-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+        .cable-guide-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
         }
         .points-display, .coins-display {
             background: rgba(0, 0, 0, 0.3);
@@ -594,13 +667,29 @@
                 font-size: 11px;
             }
             .instructions {
-                font-size: 11px;
-                padding: 8px;
-                max-height: 120px; /* Adjusted for mobile */
+                font-size: 12px;
+                padding: 10px;
+                max-height: 200px;
+            }
+            .instructions-title {
+                font-size: 16px;
             }
             .instructions h3 {
-                font-size: 12px;
-                margin-bottom: 5px;
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            .instructions-section-title {
+                font-size: 13px;
+            }
+            .cable-guide {
+                gap: 10px;
+            }
+            .cable-guide-item {
+                padding: 6px 10px;
+            }
+            .cable-guide-color {
+                width: 16px;
+                height: 16px;
             }
             .points-display, .coins-display {
                 padding: 3px 8px;
@@ -690,17 +779,68 @@
                 </div>
                 <button class="reset-btn" onclick="resetLevel()">🔄 Reset Level</button>
                 <div class="instructions">
-                    <h3>How to Play:</h3>
-                    <ol>
-                        <li>Tap a cable type to select</li>
-                        <li>Tap a device port</li>
-                        <li>Tap another port to connect</li>
-                        <li>Complete before time runs out!</li>
-                        <li>Connect devices using the correct cable types</li>
-                        <li>Earn points for each correct connection</li>
-                        <li>Use hints if you get stuck</li>
-                        <li>Complete all levels to win the game</li>
-                    </ol>
+                    <div class="instructions-header">
+                        <div class="instructions-title">
+                            <span>📖</span> How to Play
+                        </div>
+                        <button class="instructions-toggle" onclick="toggleInstructions()">Hide</button>
+                    </div>
+                    <div class="instructions-content" id="instructionsContent">
+                        <div class="instructions-section">
+                            <div class="instructions-section-title">🎮 Game Objective</div>
+                            <p>Connect all network devices using the correct cable types before time runs out!</p>
+                        </div>
+                        
+                        <div class="instructions-section">
+                            <div class="instructions-section-title">🔌 How to Connect Devices</div>
+                            <ol>
+                                <li><strong>Select a cable type</strong> from the panel below (tap/click on it)</li>
+                                <li><strong>Tap on a device port</strong> (the circular connectors on each device)</li>
+                                <li><strong>Tap on another device's port</strong> to create a connection</li>
+                                <li>If the connection is valid, a colored line will appear between devices</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="instructions-section">
+                            <div class="instructions-section-title">🌐 Cable Types Guide</div>
+                            <div class="cable-guide">
+                                <div class="cable-guide-item">
+                                    <div class="cable-guide-color ethernet"></div>
+                                    <span>Ethernet: PC to Switch</span>
+                                </div>
+                                <div class="cable-guide-item">
+                                    <div class="cable-guide-color fiber"></div>
+                                    <span>Fiber: Router to Router</span>
+                                </div>
+                                <div class="cable-guide-item">
+                                    <div class="cable-guide-color crossover"></div>
+                                    <span>Crossover: PC to PC</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="instructions-section">
+                            <div class="instructions-section-title">🏆 Scoring & Rewards</div>
+                            <ul>
+                                <li>Each correct connection: +100 points × level</li>
+                                <li>Stars earned: +50 × level per connection</li>
+                                <li>Coins earned: +25 × level per connection</li>
+                                <li>Time bonus: +10 points × remaining seconds</li>
+                                <li>Wrong connection: -50 points, -25 stars, -10 coins, -5 seconds</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="instructions-section">
+                            <div class="instructions-section-title">💡 Tips & Hints</div>
+                            <ul>
+                                <li>Use the Hint button if you're stuck (limited to 3 per level)</li>
+                                <li>Plan your connections before making them</li>
+                                <li>Each device has a limited number of ports</li>
+                                <li>Complete all connections before time runs out!</li>
+                                <li>Higher levels give more rewards but are more challenging</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1438,6 +1578,20 @@
             dialog.classList.remove('show');
         }
         
+        // Toggle instructions visibility
+        function toggleInstructions() {
+            const content = document.getElementById('instructionsContent');
+            const toggle = document.querySelector('.instructions-toggle');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                toggle.textContent = 'Hide';
+            } else {
+                content.classList.add('hidden');
+                toggle.textContent = 'Show';
+            }
+        }
+        
         // Quit game and redirect
         function quitGame() {
             // Stop the timer
@@ -1468,4 +1622,3 @@
     </script>
 </body>
 </html>
-   
