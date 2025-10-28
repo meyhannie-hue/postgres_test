@@ -574,23 +574,50 @@
       text-align: center;
     }
     
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100px;
-      background: rgba(0, 30, 60, 0.8);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid rgba(0, 229, 255, 0.3);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      z-index: 10;
-    }
-    
+     footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: rgba(0, 30, 60, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 229, 255, 0.3);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  z-index: 10;
+  padding: 10px 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 20%;
+}
+
+.nav-label {
+  color: #90caf9;
+  font-size: 12px;
+  margin-top: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover .nav-label {
+  color: #00e5ff;
+}
+
+.nav-item:active .nav-label {
+  color: #00e5ff;
+}
+
     .icon {
       font-size: 30px;
       color: #90caf9;
@@ -777,13 +804,28 @@
       </div>
     </div>
     
-    <footer>
-      <div class="icon" onclick="gotoAbout()">🧾</div>
-      <div class="icon" onclick="gotoLeaderboard()">📊</div>
-      <div class="icon" onclick="gotoDashboard()">👑</div>
-      <div class="icon" onclick="gotoLearning()">📘</div>
-      <div class="icon active" onclick="gotoSetting()">⚙️</div>
-    </footer>
+      <footer>
+  <div class="nav-item">
+    <div class="icon" onclick="gotoAbout()">🧾</div>
+    <span class="nav-label">About</span>
+  </div>
+  <div class="nav-item">
+    <div class="icon" onclick="gotoLeaderboard()">📊</div>
+    <span class="nav-label">Leaderboard</span>
+  </div>
+  <div class="nav-item">
+    <div class="icon active" onclick="gotoDashboard()">👑</div>
+    <span class="nav-label">Dashboard</span>
+  </div>
+  <div class="nav-item">
+    <div class="icon" onclick="gotoLearning()">📘</div>
+    <span class="nav-label">Learning</span>
+  </div>
+  <div class="nav-item">
+    <div class="icon" onclick="gotoSetting()">⚙️</div>
+    <span class="nav-label">Settings</span>
+  </div>
+</footer>
   </div>
   
   <div class="toast" id="toast"></div>
