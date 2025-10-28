@@ -1628,165 +1628,215 @@
       }
     }
     // Tester logic with phases (updated for 4 phases)
-    async function testCable(){
-      // Increment attempts
-      attempts++;
+    // Tester logic with phases (updated for 4 phases)
+async function testCable(){
+  // Increment attempts
+  attempts++;
+  updateScoreboard();
+  
+  const {playerLeft, playerRight, slotsLeft, slotsRight} = getPlayerArrays();
+  const ledsLeft=[...document.querySelectorAll("#leds-left .led")];
+  const ledsRight=[...document.querySelectorAll("#leds-right .led")];
+  
+  // Reset all LEDs
+  ledsLeft.forEach(l=>l.classList.remove("on"));
+  ledsRight.forEach(l=>l.classList.remove("on"));
+  
+  // Remove any glow effects
+  document.querySelectorAll('.plug').forEach(plug => {
+    plug.classList.remove('glow-green', 'glow-red');
+  });
+  
+  document.getElementById("result").textContent="Testing...";
+  document.getElementById("result").className = "";
+  
+  // Evaluate based on phase first
+  let isCorrect = false;
+  
+  if(phase===1){
+    // Straight-through required (exact sequence check)
+    isCorrect = isStraightExact(playerLeft, playerRight);
+    if(isCorrect){
+      points += 760;
+      coins += 380;
       updateScoreboard();
+      updateProgress();
+      document.getElementById("result").textContent =
+        "✅ Correct! Straight-through cable built.";
+      document.getElementById("result").className = "success";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
       
-      const {playerLeft, playerRight, slotsLeft, slotsRight} = getPlayerArrays();
-      const ledsLeft=[...document.querySelectorAll("#leds-left .led")];
-      const ledsRight=[...document.querySelectorAll("#leds-right .led")];
+      // Give reward for this phase
+      await giveRewardForPhase(760, 380);
       
-      // Reset all LEDs
-      ledsLeft.forEach(l=>l.classList.remove("on"));
-      ledsRight.forEach(l=>l.classList.remove("on"));
+      // Show LED animation only for correct configuration
+      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
+      createDataPulse();
       
-      // Remove any glow effects
-      document.querySelectorAll('.plug').forEach(plug => {
-        plug.classList.remove('glow-green', 'glow-red');
+      // Next phase
+      setTimeout(() => {
+        phase = 2;
+        document.getElementById("phase-instruction").textContent =
+          "Phase 2: Build a Crossover cable (A–B)";
+        resetPlugs();
+        updateProgress();
+      }, 1200);
+    } else {
+      document.getElementById("result").textContent =
+        "❌ Wrong wiring for Straight-through. Try again!";
+      document.getElementById("result").className = "error";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+      
+      // Show error pattern - flash all LEDs briefly then turn off
+      await showErrorPattern(ledsLeft, ledsRight);
+    }
+  } else if(phase===2){
+    isCorrect = isCrossoverExact(playerLeft, playerRight);
+    if(isCorrect){
+      points += 760;
+      coins += 380;
+      updateScoreboard();
+      updateProgress();
+      document.getElementById("result").textContent =
+        "✅ Correct! Crossover cable built.";
+      document.getElementById("result").className = "success";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
+      
+      // Give reward for this phase
+      await giveRewardForPhase(760, 380);
+      
+      // Show LED animation only for correct configuration
+      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
+      createDataPulse();
+      
+      // Move to phase 3 (Roll-over)
+      setTimeout(() => {
+        phase = 3;
+        document.getElementById("phase-instruction").textContent =
+          "Phase 3: Build a Roll-over cable (Console cable) — reversed pins (1↔8, 2↔7...)";
+        resetPlugs();
+        updateProgress();
+      }, 1200);
+    } else {
+      document.getElementById("result").textContent =
+        "❌ Wrong wiring for Crossover. Try again!";
+      document.getElementById("result").className = "error";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+      
+      // Show error pattern - flash all LEDs briefly then turn off
+      await showErrorPattern(ledsLeft, ledsRight);
+    }
+  } else if(phase===3){
+    isCorrect = isRollOver(playerLeft, playerRight);
+    if(isCorrect){
+      points += 760;
+      coins += 380;
+      updateScoreboard();
+      updateProgress();
+      document.getElementById("result").textContent =
+        "✅ Correct! Roll-over (Console) cable built.";
+      document.getElementById("result").className = "success";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
+      
+      // Give reward for this phase
+      await giveRewardForPhase(760, 380);
+      
+      // Show LED animation only for correct configuration
+      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
+      createDataPulse();
+      
+      // Move to phase 4 (Faulty Detection)
+      setTimeout(() => {
+        phase = 4;
+        document.getElementById("phase-instruction").textContent =
+          "Phase 4: Faulty Cable Detection — fix the injected faults then test";
+        // inject faults into plugs for player to repair
+        injectFaults();
+        updateProgress();
+      }, 1200);
+    } else {
+      document.getElementById("result").textContent =
+        "❌ Wrong wiring for Roll-over. Try again!";
+      document.getElementById("result").className = "error";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+      
+      // Show error pattern - flash all LEDs briefly then turn off
+      await showErrorPattern(ledsLeft, ledsRight);
+    }
+  } else if(phase===4){
+    // For phase 4, require continuity EXACT (i.e., no missing, every left should have corresponding right)
+    isCorrect = continuityCheck(playerLeft, playerRight);
+    if(isCorrect){
+      points += 760;
+      coins += 380;
+      updateScoreboard();
+      updateProgress();
+      document.getElementById("result").textContent =
+        "🎉 All phases complete! Advanced sequencing passed. +3040 points, +1520 coins";
+      document.getElementById("result").className = "success";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
+      
+      // Call reward function for final phase
+      await giveRewardForPhase(760, 380);
+      
+      // Show LED animation only for correct configuration
+      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
+      createDataPulse();
+      
+      // Redirect to levels page after reward
+      setTimeout(() => {
+        window.location.href = "../levels/networkinglevels.html";
+      }, 2000);
+    } else {
+      document.getElementById("result").textContent =
+        "❌ Faults still present. Hanapin at ayusin (missing/wrong wires).";
+      document.getElementById("result").className = "error";
+      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+      
+      // Show error pattern - flash all LEDs briefly then turn off
+      await showErrorPattern(ledsLeft, ledsRight);
+    }
+  } else {
+    document.getElementById("result").textContent = "Unknown phase.";
+  }
+}
+
+// New function to show LED pattern for correct configurations
+async function showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight) {
+  // Show actual continuity on LEDs for correct configuration
+  for(let i=0;i<8;i++){
+    await new Promise(r=>setTimeout(r,300));
+    ledsLeft[i].classList.add("on");
+    const codeLeft = playerLeft[i];
+    if(codeLeft){
+      // Find all positions where this wire exists on the right
+      const rightPositions = [];
+      playerRight.forEach((code, idx) => {
+        if(code === codeLeft) {
+          rightPositions.push(idx);
+        }
       });
       
-      document.getElementById("result").textContent="Testing...";
-      document.getElementById("result").className = "";
-      
-      // Show actual continuity on LEDs regardless of phase
-      for(let i=0;i<8;i++){
-        await new Promise(r=>setTimeout(r,300));
-        ledsLeft[i].classList.add("on");
-        const codeLeft = playerLeft[i];
-        if(codeLeft){
-          // Find all positions where this wire exists on the right
-          const rightPositions = [];
-          playerRight.forEach((code, idx) => {
-            if(code === codeLeft) {
-              rightPositions.push(idx);
-            }
-          });
-          
-          // Light up all matching positions on the right
-          rightPositions.forEach(pos => {
-            ledsRight[pos].classList.add("on");
-          });
-        }
-      }
-      
-      // Evaluate based on phase
-      if(phase===1){
-        // Straight-through required (loose: exact sequence check same as original behavior)
-        const isStraight = isStraightExact(playerLeft, playerRight);
-        if(isStraight){
-          points += 760;
-          coins += 380;
-          updateScoreboard();
-          updateProgress();
-          document.getElementById("result").textContent =
-            "✅ Correct! Straight-through cable built.";
-          document.getElementById("result").className = "success";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-          createDataPulse();
-          // Give reward for this phase
-          await giveRewardForPhase(760, 380);
-          // Next phase
-          setTimeout(() => {
-            phase = 2;
-            document.getElementById("phase-instruction").textContent =
-              "Phase 2: Build a Crossover cable (A–B)";
-            resetPlugs();
-            updateProgress();
-          }, 1200);
-        } else {
-          document.getElementById("result").textContent =
-            "❌ Wrong wiring for Straight-through. Try again!";
-          document.getElementById("result").className = "error";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-        }
-      } else if(phase===2){
-        const isCrossover = isCrossoverExact(playerLeft, playerRight);
-        if(isCrossover){
-          points += 760;
-          coins += 380;
-          updateScoreboard();
-          updateProgress();
-          document.getElementById("result").textContent =
-            "✅ Correct! Crossover cable built.";
-          document.getElementById("result").className = "success";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-          createDataPulse();
-          // Give reward for this phase
-          await giveRewardForPhase(760, 380);
-          // Move to phase 3 (Roll-over)
-          setTimeout(() => {
-            phase = 3;
-            document.getElementById("phase-instruction").textContent =
-              "Phase 3: Build a Roll-over cable (Console cable) — reversed pins (1↔8, 2↔7...)";
-            resetPlugs();
-            updateProgress();
-          }, 1200);
-        } else {
-          document.getElementById("result").textContent =
-            "❌ Wrong wiring for Crossover. Try again!";
-          document.getElementById("result").className = "error";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-        }
-      } else if(phase===3){
-        const isRoll = isRollOver(playerLeft, playerRight);
-        if(isRoll){
-          points += 760;
-          coins += 380;
-          updateScoreboard();
-          updateProgress();
-          document.getElementById("result").textContent =
-            "✅ Correct! Roll-over (Console) cable built.";
-          document.getElementById("result").className = "success";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-          createDataPulse();
-          // Give reward for this phase
-          await giveRewardForPhase(760, 380);
-          // Move to phase 4 (Faulty Detection)
-          setTimeout(() => {
-            phase = 4;
-            document.getElementById("phase-instruction").textContent =
-              "Phase 4: Faulty Cable Detection — fix the injected faults then test";
-            // inject faults into plugs for player to repair
-            injectFaults();
-            updateProgress();
-          }, 1200);
-        } else {
-          document.getElementById("result").textContent =
-            "❌ Wrong wiring for Roll-over. Try again!";
-          document.getElementById("result").className = "error";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-        }
-      } else if(phase===4){
-        // For phase 4, require continuity EXACT (i.e., no missing, every left should have corresponding right)
-        const continuity = continuityCheck(playerLeft, playerRight);
-        if(continuity){
-          points += 760;
-          coins += 380;
-          updateScoreboard();
-          updateProgress();
-          document.getElementById("result").textContent =
-            "🎉 All phases complete! Advanced sequencing passed. +3040 points, +1520 coins";
-          document.getElementById("result").className = "success";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-          createDataPulse();
-          // Call reward function for final phase
-          await giveRewardForPhase(760, 380);
-          // Redirect to levels page after reward
-          setTimeout(() => {
-            window.location.href = "../levels/networkinglevels.html";
-          }, 2000);
-        } else {
-          document.getElementById("result").textContent =
-            "❌ Faults still present. Hanapin at ayusin (missing/wrong wires).";
-          document.getElementById("result").className = "error";
-          document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-        }
-      } else {
-        document.getElementById("result").textContent = "Unknown phase.";
-      }
+      // Light up all matching positions on the right
+      rightPositions.forEach(pos => {
+        ledsRight[pos].classList.add("on");
+      });
     }
-    
+  }
+}
+
+// New function to show error pattern for incorrect configurations
+async function showErrorPattern(ledsLeft, ledsRight) {
+  // Turn all LEDs on briefly to indicate error
+  ledsLeft.forEach(l=>l.classList.add("on"));
+  ledsRight.forEach(l=>l.classList.add("on"));
+  
+  await new Promise(r=>setTimeout(r,500));
+  
+  // Turn all LEDs off
+  ledsLeft.forEach(l=>l.classList.remove("on"));
+  ledsRight.forEach(l=>l.classList.remove("on"));
+}
     // Initialize game
     startTimer();
     updateScoreboard();
