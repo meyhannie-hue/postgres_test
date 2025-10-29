@@ -1627,6 +1627,21 @@ console.error("Reward API failed:", data);
 console.error("Reward API Error:", err);
 }
 }
+// Define the mapping for each phase
+function getPhaseMapping(phase) {
+    if (phase === 1 || phase === 4) {
+        // Straight-through: identity mapping
+        return [0,1,2,3,4,5,6,7];
+    } else if (phase === 2) {
+        // Crossover mapping: [0->2, 1->5, 2->0, 3->3, 4->4, 5->1, 6->6, 7->7]
+        return [2,5,0,3,4,1,6,7];
+    } else if (phase === 3) {
+        // Roll-over: [0->7, 1->6, 2->5, 3->4, 4->3, 5->2, 6->1, 7->0]
+        return [7,6,5,4,3,2,1,0];
+    }
+    return [0,1,2,3,4,5,6,7]; // Default to straight-through
+}
+
 // Tester logic with phases (updated for 4 phases)
 async function testCable(){
 // Increment attempts
@@ -1649,25 +1664,20 @@ plug.classList.remove('glow-green', 'glow-red');
 document.getElementById("result").textContent="Testing...";
 document.getElementById("result").className = "";
 
-// Show actual continuity on LEDs regardless of phase
-for(let i=0;i<8;i++){
-await new Promise(r=>setTimeout(r,300));
-ledsLeft[i].classList.add("on");
-const codeLeft = playerLeft[i];
-if(codeLeft){
-// Find all positions where this wire exists on the right
-const rightPositions = [];
-playerRight.forEach((code, idx) => {
-if(code === codeLeft) {
-rightPositions.push(idx);
-}
-});
+// Get mapping for current phase
+const mapping = getPhaseMapping(phase);
 
-// Light up all matching positions on the right
-rightPositions.forEach(pos => {
-ledsRight[pos].classList.add("on");
-});
-}
+// Light up LEDs according to the mapping
+for (let i = 0; i < 8; i++) {
+    await new Promise(r => setTimeout(r, 300));
+    
+    // Check if the connection is correct
+    if (playerLeft[i] && playerRight[mapping[i]] === playerLeft[i]) {
+        // Correct connection - light up both left and right
+        ledsLeft[i].classList.add("on");
+        ledsRight[mapping[i]].classList.add("on");
+    }
+    // If not correct, do nothing (both remain off)
 }
 
 // Evaluate based on phase
@@ -1758,9 +1768,9 @@ document.getElementById("result").className = "error";
 document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
 }
 } else if(phase===4){
-// For phase 4, require continuity EXACT (i.e., no missing, every left should have corresponding right)
-const continuity = continuityCheck(playerLeft, playerRight);
-if(continuity){
+// For phase 4, require straight-through (same as phase 1)
+const isStraight = isStraightExact(playerLeft, playerRight);
+if(isStraight){
 points += 760;
 coins += 380;
 updateScoreboard();
