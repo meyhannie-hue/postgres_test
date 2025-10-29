@@ -15,14 +15,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            overflow-y: auto; /* Changed from hidden to auto */
+            overflow-y: auto;
             min-height: 100vh;
             position: relative;
         }
         .game-container {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Changed from height to min-height */
+            min-height: 100vh;
             padding: 10px;
         }
         .header {
@@ -36,7 +36,7 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             flex-wrap: wrap;
-            position: sticky; /* Added to keep header visible when scrolling */
+            position: sticky;
             top: 0;
             z-index: 100;
         }
@@ -153,6 +153,10 @@
             background: #4caf50;
             border-color: #81c784;
         }
+        .port.invalid {
+            background: #ff6b6b;
+            border-color: #ff8787;
+        }
         .port.highlight {
             box-shadow: 0 0 15px #00ff88;
             animation: portGlow 1s infinite;
@@ -231,6 +235,24 @@
             position: absolute;
             pointer-events: none;
             z-index: 1;
+            height: 4px;
+            transform-origin: 0 50%;
+        }
+        .connection-line.invalid {
+            background: #ff0000 !important;
+            animation: invalidPulse 1s infinite;
+        }
+        .connection-line.replacing {
+            animation: replaceFlash 0.5s ease-out;
+        }
+        @keyframes replaceFlash {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        @keyframes invalidPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
         .message {
             position: fixed;
@@ -269,6 +291,7 @@
         .message.success h2 { color: #4caf50; }
         .message.error h2 { color: #ff6b6b; }
         .message.warning h2 { color: #ff9800; }
+        .message.info h2 { color: #00bbff; }
         .btn {
             background: linear-gradient(45deg, #00ff88, #00bbff);
             color: white;
@@ -798,6 +821,8 @@
                                 <li><strong>Tap on a device port</strong> (the circular connectors on each device)</li>
                                 <li><strong>Tap on another device's port</strong> to create a connection</li>
                                 <li>If the connection is valid, a colored line will appear between devices</li>
+                                <li>If the connection is invalid, a red line will appear and you'll be penalized</li>
+                                <li><strong>You can replace existing connections</strong> by connecting a new cable to an already connected port</li>
                             </ol>
                         </div>
                         
@@ -827,6 +852,7 @@
                                 <li>Coins earned: +25 × level per connection</li>
                                 <li>Time bonus: +10 points × remaining seconds</li>
                                 <li>Wrong connection: -50 points, -25 stars, -10 coins, -5 seconds</li>
+                                <li>Replacing a connection: No penalty if the new connection is valid</li>
                             </ul>
                         </div>
                         
@@ -836,6 +862,8 @@
                                 <li>Use the Hint button if you're stuck (limited to 3 per level)</li>
                                 <li>Plan your connections before making them</li>
                                 <li>Each device has a limited number of ports</li>
+                                <li>You can replace existing connections if you make a mistake</li>
+                                <li>Try different cable types if your connection is invalid</li>
                                 <li>Complete all connections before time runs out!</li>
                                 <li>Higher levels give more rewards but are more challenging</li>
                             </ul>
@@ -874,8 +902,15 @@
             hints: 3,
             isPlaying: true,
             currentCable: null,
-            connectionsMade: []
+            connectionsMade: [],
+            invalidConnections: [] // Track invalid connections
         };
+        
+        // Port connection tracking
+        let portConnections = {}; // Track which ports are connected to what
+        
+        // Connection details tracking
+        let connectionDetails = {}; // Store details about each connection
         
         // Device configurations
         const deviceTypes = {
@@ -913,6 +948,10 @@
             // Clear existing connection lines
             const existingLines = devicesArea.querySelectorAll('.connection-line');
             existingLines.forEach(l => l.remove());
+            
+            // Reset port connections
+            portConnections = {};
+            connectionDetails = {};
             
             let deviceCount = 0;
             const totalDevices = levelConfig.devices.reduce((sum, config) => sum + config.count, 0);
@@ -1112,18 +1151,14 @@
                 selectedPort.classList.add('highlight');
                 showMessage('Select another port to connect', 'info', 'Choose the second port for the connection');
             } else {
-                // Make connection
+                // Make connection attempt
                 const connection = {
                     cable: draggedCable,
                     port1: selectedPort,
                     port2: e.target
                 };
                 
-                if (isValidConnection(connection)) {
-                    makeConnection(connection);
-                } else {
-                    wrongConnection();
-                }
+                attemptConnection(connection);
                 
                 selectedPort.classList.remove('highlight');
                 selectedPort = null;
@@ -1142,18 +1177,14 @@
                 selectedPort = e.target;
                 showMessage('Select another port to connect', 'info', 'Choose the second port for the connection');
             } else {
-                // Make connection
+                // Make connection attempt
                 const connection = {
                     cable: draggedCable,
                     port1: selectedPort,
                     port2: e.target
                 };
                 
-                if (isValidConnection(connection)) {
-                    makeConnection(connection);
-                } else {
-                    wrongConnection();
-                }
+                attemptConnection(connection);
                 
                 selectedPort.classList.remove('highlight');
                 e.target.classList.remove('highlight');
@@ -1166,6 +1197,183 @@
             handlePortClick(e);
         }
         
+        // Attempt connection (valid or invalid)
+        function attemptConnection(connection) {
+            // Check if it's the same port
+            if (connection.port1.dataset.deviceId === connection.port2.dataset.deviceId && 
+                connection.port1.dataset.portId === connection.port2.dataset.portId) {
+                showMessage('Cannot connect to the same port!', 'error', 'Select two different ports');
+                return;
+            }
+            
+            // Create unique connection key
+            const connectionKey = `${connection.port1.dataset.deviceId}-${connection.port1.dataset.portId}-${connection.port2.dataset.deviceId}-${connection.port2.dataset.portId}`;
+            const reverseConnectionKey = `${connection.port2.dataset.deviceId}-${connection.port2.dataset.portId}-${connection.port1.dataset.deviceId}-${connection.port1.dataset.portId}`;
+            
+            // Check if connection already exists
+            if (gameState.connectionsMade.includes(connectionKey) || 
+                gameState.connectionsMade.includes(reverseConnectionKey) ||
+                gameState.invalidConnections.includes(connectionKey) || 
+                gameState.invalidConnections.includes(reverseConnectionKey)) {
+                showMessage('Connection already exists!', 'warning', 'Select different ports');
+                return;
+            }
+            
+            // Check if ports are already connected and remove existing connections
+            const port1Key = `${connection.port1.dataset.deviceId}-${connection.port1.dataset.portId}`;
+            const port2Key = `${connection.port2.dataset.deviceId}-${connection.port2.dataset.portId}`;
+            
+            let existingConnection1 = portConnections[port1Key];
+            let existingConnection2 = portConnections[port2Key];
+            
+            let isReplacement = false;
+            let wasValid = false;
+            
+            // Check if we're replacing an existing connection
+            if (existingConnection1) {
+                isReplacement = true;
+                wasValid = gameState.connectionsMade.includes(existingConnection1);
+                removeConnection(existingConnection1);
+            }
+            
+            if (existingConnection2 && existingConnection2 !== existingConnection1) {
+                isReplacement = true;
+                wasValid = wasValid || gameState.connectionsMade.includes(existingConnection2);
+                removeConnection(existingConnection2);
+            }
+            
+            // Create visual connection line
+            createConnectionLine(connection.port1, connection.port2, connection.cable, isReplacement);
+            
+            // Check if connection is valid
+            if (isValidConnection(connection)) {
+                // Valid connection
+                connection.port1.classList.add('connected');
+                connection.port1.classList.remove('invalid');
+                connection.port2.classList.add('connected');
+                connection.port2.classList.remove('invalid');
+                
+                // Update port connections
+                portConnections[port1Key] = connectionKey;
+                portConnections[port2Key] = connectionKey;
+                
+                // Store connection details
+                connectionDetails[connectionKey] = {
+                    cable: connection.cable,
+                    isValid: true,
+                    device1: connection.port1.dataset.deviceType,
+                    device2: connection.port2.dataset.deviceType
+                };
+                
+                // Update game state
+                gameState.connections++;
+                const pointsEarned = 50 * gameState.level;
+                const coinsEarned = 25 * gameState.level;
+                gameState.score += 100 * gameState.level;
+                gameState.points += pointsEarned;
+                gameState.coins += coinsEarned;
+                gameState.connectionsMade.push(connectionKey);
+                
+                // Create particles
+                createParticles(connection.port1);
+                createParticles(connection.port2);
+                
+                // Show replacement message if applicable
+                if (isReplacement) {
+                    if (wasValid) {
+                        showMessage('Connection Replaced!', 'success', 'Successfully replaced with a valid connection!');
+                    } else {
+                        showMessage('Connection Fixed!', 'success', 'Successfully fixed the invalid connection!');
+                    }
+                }
+                
+                updateUI();
+                
+                // Check win condition
+                if (gameState.connections >= levels[gameState.level - 1].targetConnections) {
+                    levelComplete();
+                }
+            } else {
+                // Invalid connection
+                connection.port1.classList.add('invalid');
+                connection.port1.classList.remove('connected');
+                connection.port2.classList.add('invalid');
+                connection.port2.classList.remove('connected');
+                
+                const line = document.querySelector(`.connection-line[data-connection="${connectionKey}"]`);
+                if (line) {
+                    line.classList.add('invalid');
+                }
+                
+                // Update port connections
+                portConnections[port1Key] = connectionKey;
+                portConnections[port2Key] = connectionKey;
+                
+                // Store connection details
+                connectionDetails[connectionKey] = {
+                    cable: connection.cable,
+                    isValid: false,
+                    device1: connection.port1.dataset.deviceType,
+                    device2: connection.port2.dataset.deviceType
+                };
+                
+                // Track invalid connection
+                gameState.invalidConnections.push(connectionKey);
+                
+                // Show replacement message if applicable
+                if (isReplacement) {
+                    if (wasValid) {
+                        showMessage('Invalid Replacement!', 'error', 'The new connection is invalid. Try a different cable type.');
+                    } else {
+                        showMessage('Still Invalid!', 'error', 'The new connection is still invalid. Try a different cable type.');
+                    }
+                }
+                
+                // Apply penalty
+                wrongConnection();
+            }
+        }
+        
+        // Remove existing connection
+        function removeConnection(connectionKey) {
+            // Remove from game state
+            const index1 = gameState.connectionsMade.indexOf(connectionKey);
+            const index2 = gameState.invalidConnections.indexOf(connectionKey);
+            
+            if (index1 !== -1) {
+                gameState.connectionsMade.splice(index1, 1);
+                gameState.connections = Math.max(0, gameState.connections - 1);
+            }
+            
+            if (index2 !== -1) {
+                gameState.invalidConnections.splice(index2, 1);
+            }
+            
+            // Remove visual connection line with animation
+            const line = document.querySelector(`.connection-line[data-connection="${connectionKey}"]`);
+            if (line) {
+                line.classList.add('replacing');
+                setTimeout(() => line.remove(), 500);
+            }
+            
+            // Remove port connections
+            Object.keys(portConnections).forEach(key => {
+                if (portConnections[key] === connectionKey) {
+                    delete portConnections[key];
+                    
+                    // Find and update the port visual state
+                    const [deviceId, portId] = key.split('-');
+                    const port = document.querySelector(`.device[data-device-id="${deviceId}"] .port[data-port-id="${portId}"]`);
+                    if (port) {
+                        port.classList.remove('connected', 'invalid');
+                    }
+                }
+            });
+            
+            // Remove connection details
+            delete connectionDetails[connectionKey];
+        }
+        
         // Validate connection
         function isValidConnection(connection) {
             const device1 = connection.port1.dataset.deviceType;
@@ -1174,13 +1382,6 @@
             
             // Check if devices are different
             if (connection.port1.dataset.deviceId === connection.port2.dataset.deviceId) {
-                return false;
-            }
-            
-            // Check if connection already exists
-            const connectionKey = `${connection.port1.dataset.deviceId}-${connection.port2.dataset.deviceId}`;
-            const reverseConnectionKey = `${connection.port2.dataset.deviceId}-${connection.port1.dataset.deviceId}`;
-            if (gameState.connectionsMade.includes(connectionKey) || gameState.connectionsMade.includes(reverseConnectionKey)) {
                 return false;
             }
             
@@ -1204,42 +1405,19 @@
             return true;
         }
         
-        // Make valid connection
-        function makeConnection(connection) {
-            connection.port1.classList.add('connected');
-            connection.port2.classList.add('connected');
-            
-            // Create visual connection line
-            createConnectionLine(connection.port1, connection.port2, connection.cable);
-            
-            // Update game state
-            gameState.connections++;
-            const pointsEarned = 50 * gameState.level;
-            const coinsEarned = 25 * gameState.level;
-            gameState.score += 100 * gameState.level;
-            gameState.points += pointsEarned;
-            gameState.coins += coinsEarned;
-            gameState.connectionsMade.push(
-                `${connection.port1.dataset.deviceId}-${connection.port2.dataset.deviceId}`
-            );
-            
-            // Create particles
-            createParticles(connection.port1);
-            createParticles(connection.port2);
-            
-            updateUI();
-            
-            // Check win condition
-            if (gameState.connections >= levels[gameState.level - 1].targetConnections) {
-                levelComplete();
-            }
-        }
-        
         // Create visual connection line
-        function createConnectionLine(port1, port2, cableType) {
+        function createConnectionLine(port1, port2, cableType, isReplacement = false) {
             const devicesArea = document.getElementById('devicesArea');
             const line = document.createElement('div');
             line.className = 'connection-line';
+            
+            if (isReplacement) {
+                line.classList.add('replacing');
+            }
+            
+            // Create unique connection key
+            const connectionKey = `${port1.dataset.deviceId}-${port1.dataset.portId}-${port2.dataset.deviceId}-${port2.dataset.portId}`;
+            line.dataset.connection = connectionKey;
             
             const rect1 = port1.getBoundingClientRect();
             const rect2 = port2.getBoundingClientRect();
@@ -1254,11 +1432,9 @@
             const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
             
             line.style.width = length + 'px';
-            line.style.height = '4px';
             line.style.left = x1 + 'px';
             line.style.top = y1 + 'px';
             line.style.transform = `rotate(${angle}deg)`;
-            line.style.transformOrigin = '0 50%';
             
             // Set cable color
             if (cableType === 'ethernet') line.style.background = '#ff6b6b';
@@ -1330,7 +1506,7 @@
                 document.getElementById('hintBtn').textContent = `💡 Hint (${gameState.hints})`;
                 
                 // Find a valid connection and highlight ports
-                const ports = document.querySelectorAll('.port:not(.connected)');
+                const ports = document.querySelectorAll('.port:not(.connected):not(.invalid)');
                 for (let i = 0; i < ports.length; i++) {
                     for (let j = i + 1; j < ports.length; j++) {
                         const connection = {
@@ -1360,6 +1536,7 @@
             clearInterval(timerInterval);
             gameState.connections = 0;
             gameState.connectionsMade = [];
+            gameState.invalidConnections = [];
             gameState.timeLeft = 60 + (gameState.level * 10);
             gameState.isPlaying = true;
             selectedPort = null;
@@ -1427,6 +1604,7 @@
                     gameState.timeLeft = 60 + (gameState.level * 10);
                     gameState.connections = 0;
                     gameState.connectionsMade = [];
+                    gameState.invalidConnections = [];
                     gameState.isPlaying = true;
                     selectedPort = null;
                     
@@ -1493,6 +1671,7 @@
             gameState.isPlaying = true;
             gameState.currentCable = null;
             gameState.connectionsMade = [];
+            gameState.invalidConnections = [];
             
             // Reset UI
             document.getElementById('timer').classList.remove('warning');
@@ -1608,6 +1787,15 @@
                 0%, 100% { transform: translateX(0); }
                 25% { transform: translateX(-10px); }
                 75% { transform: translateX(10px); }
+            }
+            @keyframes invalidPulse {
+                0%, 100% { opacity: 0.7; }
+                50% { opacity: 1; }
+            }
+            @keyframes replaceFlash {
+                0% { opacity: 1; }
+                50% { opacity: 0.3; }
+                100% { opacity: 1; }
             }
         `;
         document.head.appendChild(style);
