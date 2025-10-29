@@ -1,1846 +1,1796 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ethernet Cable Tester Challenge</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --neon-cyan: #00ffff;
-      --neon-green: #00ff7f;
-      --neon-orange: #ff6600;
-      --neon-yellow: #ffff00;
-      --neon-magenta: #ff00ff;
-      --dark-bg: #0a0a1a;
-      --deep-blue: #1a1a3a;
-      --grid-color: rgba(0, 255, 255, 0.1);
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(135deg, var(--dark-bg) 0%, var(--deep-blue) 100%);
-      color: #eee;
-      text-align: center;
-      padding: 10px;
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
-      padding-top: 70px; /* Space for header */
-    }
-    
-    /* Header Styles */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: rgba(10, 10, 26, 0.8);
-      color: #fff;
-      padding: 15px 20px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0, 86, 179, 0.5);
-    }
-    
-    .header-title {
-      font-size: 20px;
-      flex-grow: 1;
-      text-align: center;
-      font-weight: bold;
-      color: var(--neon-cyan);
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
-      animation: glow 2s infinite alternate;
-      position: relative;
-    }
-    
-    @keyframes glow {
-      from { text-shadow: 0 0 5px rgba(0, 255, 255, 0.7); }
-      to { text-shadow: 0 0 15px rgba(0, 255, 255, 0.9); }
-    }
-    
-    .back-button { 
-      cursor: pointer; 
-      font-size: 20px; 
-      color: var(--neon-magenta);
-      transition: transform 0.2s ease, color 0.3s ease;
-    }
-    
-    .back-button:hover { 
-      transform: scale(1.2) rotate(-30deg); 
-      color: #ff5eff;
-    }
-    
-    .placeholder { width: 30px; }
-    
-    /* Circuit board grid background */
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        linear-gradient(var(--grid-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-      background-size: 40px 40px;
-      z-index: -1;
-      opacity: 0.5;
-    }
-    
-    /* Digital Rain Background */
-    .digital-rain {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.05;
-      pointer-events: none;
-    }
-    
-    /* Circuit Traces */
-    .circuit-traces {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.2;
-      pointer-events: none;
-    }
-    
-    .circuit-trace {
-      position: absolute;
-      background: linear-gradient(90deg, transparent, #00d4ff, transparent);
-      height: 2px;
-      animation: traceFlow 8s linear infinite;
-    }
-    
-    @keyframes traceFlow {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    
-    /* Floating Particles */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
-    
-    .particle {
-      position: absolute;
-      background: var(--neon-cyan);
-      border-radius: 50%;
-      opacity: 0.3;
-      animation: float 15s infinite linear;
-    }
-    
-    @keyframes float {
-      0% {
-        transform: translateY(100vh) translateX(0);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.3;
-      }
-      90% {
-        opacity: 0.3;
-      }
-      100% {
-        transform: translateY(-100vh) translateX(100px);
-        opacity: 0;
-      }
-    }
-    
-    /* Instructions Section */
-    .instructions { 
-      max-width: 800px;
-      background: rgba(10, 10, 26, 0.7); 
-      border: 1px solid var(--neon-cyan); 
-      border-radius: 8px; 
-      padding: 15px 20px; 
-      margin: 10px auto; 
-      font-size: 14px; 
-      line-height: 1.5; 
-      color: #e0f7fa; 
-      animation: fadeIn 1.2s ease-in-out;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .instructions::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-      animation: scan-line 3s linear infinite;
-    }
-    
-    @keyframes scan-line {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(100%); }
-    }
-    
-    .instructions strong { color: var(--neon-cyan); }
-    
-    .tutorial-box { 
-      margin: 15px auto; 
-      padding: 12px 15px; 
-      border: 1px solid var(--neon-cyan); 
-      border-radius: 8px; 
-      background: rgba(10, 10, 26, 0.8); 
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); 
-      text-align: center; 
-      max-width: 500px; 
-      min-height: 80px;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .tutorial-box::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 255, 255, 0.05) 2px,
-        rgba(0, 255, 255, 0.05) 4px
-      );
-      z-index: -1;
-    }
-    
-    .tutorial-step { 
-      font-size: 14px; 
-      color: #e0f7fa; 
-      opacity: 0; 
-      transform: translateY(10px); 
-      transition: opacity 0.6s ease, transform 0.6s ease; 
-      position: relative;
-    }
-    
-    .tutorial-step.active { 
-      opacity: 1; 
-      transform: translateY(0); 
-      color: var(--neon-cyan); 
-      animation: typing 1.5s steps(20, end);
-    }
-    
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    
-    .start-btn { 
-      margin-top: 20px; 
-      padding: 10px 18px; 
-      font-size: 16px; 
-      font-weight: bold; 
-      background: linear-gradient(45deg, #9527ae, var(--neon-cyan));
-      color: #ffffff; 
-      border: none; 
-      border-radius: 8px; 
-      cursor: pointer; 
-      transition: 0.2s;
-      font-family: 'Orbitron', sans-serif;
-      box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .start-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s;
-    }
-    
-    .start-btn:hover::before {
-      left: 100%;
-    }
-    
-    .start-btn:hover { 
-      background: linear-gradient(45deg, #219150, var(--neon-magenta)); 
-      color: #ffffff; 
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.7); 
-    }
-    
-    /* Game Section */
-    .game-section { 
-      display: none; 
-      flex-direction: column; 
-      align-items: center; 
-      width: 100%; 
-      opacity: 0; 
-      animation: fadeIn 1s ease forwards; 
-    }
-    
-    @keyframes fadeIn { 
-      from { opacity: 0; transform: translateY(10px); } 
-      to { opacity: 1; transform: translateY(0); } 
-    }
-    
-    h1 {
-      color: var(--neon-cyan);
-      font-size: 1.8rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
-      letter-spacing: 1px;
-    }
-    .subtitle {
-      color: var(--neon-green);
-      font-size: 0.9rem;
-      margin-bottom: 15px;
-      text-shadow: 0 0 5px var(--neon-green);
-    }
-    .phase-instruction {
-      color: var(--neon-yellow);
-      font-size: 0.9rem;
-      margin: 15px 0;
-      padding: 10px;
-      border: 1px solid var(--neon-yellow);
-      border-radius: 5px;
-      background: rgba(255, 255, 0, 0.06);
-      box-shadow: 0 0 10px var(--neon-yellow);
-      max-width: 90%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 15px 0;
-      flex-wrap: wrap;
-    }
-    .plug-container {
-      position: relative;
-      margin-bottom: 15px;
-    }
-    .plug {
-      display: grid;
-      grid-template-columns: repeat(8, 30px);
-      gap: 3px;
-      background: rgba(20, 20, 40, 0.8);
-      padding: 10px;
-      border-radius: 8px;
-      border: 2px solid var(--neon-cyan);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-      justify-content: center;
-    }
-    .plug-title {
-      color: var(--neon-cyan);
-      margin-bottom: 8px;
-      font-weight: 700;
-      text-shadow: 0 0 5px var(--neon-cyan);
-      font-size: 0.9rem;
-    }
-    .slot {
-      width: 30px;
-      height: 45px;
-      border: 2px solid #555;
-      background: rgba(10, 10, 20, 0.7);
-      border-radius: 4px;
-      position: relative;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow: hidden;
-    }
-    .slot:hover {
-      border-color: var(--neon-green);
-      box-shadow: 0 0 10px var(--neon-green);
-    }
-    .slot.highlight {
-      border-color: var(--neon-green);
-      box-shadow: 0 0 10px var(--neon-green);
-    }
-    .pin-number {
-      position: absolute;
-      top: 2px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 8px;
-      color: var(--neon-cyan);
-      z-index: 2;
-    }
-    .wire {
-      width: 100%;
-      height: 100%;
-      border-radius: 4px;
-      cursor: grab;
-      margin: 0;
-      text-align: center;
-      font-size: 7px;
-      line-height: 1;
-      color: #fff;
-      font-weight: bold;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-    .wire:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px currentColor;
-    }
-    .wire-top {
-      height: 50%;
-      width: 100%;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-    }
-    .wire-bottom {
-      height: 50%;
-      width: 100%;
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-    }
-    .wire-label {
-      position: absolute;
-      bottom: 2px;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      font-size: 6px;
-      color: #fff;
-      font-weight: bold;
-      z-index: 1;
-      text-shadow: 0 0 2px #000;
-      padding: 0 2px;
-    }
-    #wire-pool {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      margin: 15px;
-      padding: 10px;
-      background: rgba(20, 20, 40, 0.5);
-      border-radius: 10px;
-      border: 1px solid var(--neon-cyan);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-    }
-    #wire-pool .wire {
-      position: relative;
-      width: 80px;
-      height: 25px;
-      cursor: grab;
-    }
-    .tester {
-      margin-top: 20px;
-      background: rgba(10, 10, 20, 0.8);
-      padding: 15px;
-      border-radius: 10px;
-      width: 95%;
-      margin-left: auto;
-      margin-right: auto;
-      border: 2px solid var(--neon-green);
-      box-shadow: 0 0 15px rgba(0, 255, 127, 0.5);
-    }
-    .tester-title {
-      color: var(--neon-green);
-      margin-bottom: 10px;
-      font-weight: 700;
-      text-shadow: 0 0 5px var(--neon-green);
-      font-size: 0.9rem;
-    }
-    .leds {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .led-column {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 45%;
-      background: rgba(10, 10, 20, 0.7);
-      border: 1px solid var(--neon-cyan);
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-      margin-bottom: 10px;
-    }
-    .led-column-title {
-      color: var(--neon-cyan);
-      font-size: 0.8rem;
-      margin-bottom: 8px;
-      text-shadow: 0 0 5px var(--neon-cyan);
-    }
-    .led-row {
-      display: flex;
-      gap: 5px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .led {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #333;
-      border: 1px solid #555;
-      position: relative;
-      transition: all 0.3s;
-    }
-    .led.on {
-      background: var(--neon-green);
-      box-shadow: 0 0 15px var(--neon-green);
-    }
-    .led-label {
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 8px;
-      color: var(--neon-cyan);
-    }
-    button {
-      margin: 8px 5px;
-      padding: 10px 15px;
-      border: none;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      text-transform: uppercase;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 0.8rem;
-    }
-    .btn-test {
-      background: var(--neon-green);
-      color: #000;
-      box-shadow: 0 0 10px var(--neon-green);
-    }
-    .btn-test:hover {
-      background: #00ff9f;
-      box-shadow: 0 0 20px var(--neon-green);
-      transform: translateY(-2px);
-    }
-    .btn-reset {
-      background: var(--neon-orange);
-      color: #000;
-      box-shadow: 0 0 10px var(--neon-orange);
-    }
-    .btn-reset:hover {
-      background: #ff7700;
-      box-shadow: 0 0 20px var(--neon-orange);
-      transform: translateY(-2px);
-    }
-    #result {
-      margin-top: 10px;
-      font-weight: 700;
-      min-height: 24px;
-      font-size: 0.9rem;
-    }
-    .success {
-      color: var(--neon-green);
-      text-shadow: 0 0 10px var(--neon-green);
-    }
-    .error {
-      color: var(--neon-magenta);
-      text-shadow: 0 0 10px var(--neon-magenta);
-    }
-    #scoreboard {
-      margin-top: 15px;
-      font-size: 1rem;
-      color: var(--neon-yellow);
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      padding: 10px;
-      background: rgba(20, 20, 40, 0.5);
-      border-radius: 10px;
-      border: 1px solid var(--neon-yellow);
-      box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
-      flex-wrap: wrap;
-    }
-    .score-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 80px;
-    }
-    .score-label {
-      font-size: 0.8rem;
-      color: var(--neon-cyan);
-    }
-    .score-value {
-      font-size: 1.2rem;
-      font-weight: 700;
-      text-shadow: 0 0 5px var(--neon-yellow);
-    }
-    .game-controls {
-      margin: 15px 0;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .timer {
-      color: var(--neon-orange);
-      font-size: 1rem;
-      font-weight: 700;
-      text-shadow: 0 0 5px var(--neon-orange);
-    }
-    .progress-container {
-      width: 90%;
-      height: 15px;
-      background: rgba(20, 20, 40, 0.7);
-      border-radius: 10px;
-      margin: 15px auto;
-      border: 1px solid var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
-      border-radius: 10px;
-      box-shadow: 0 0 10px var(--neon-green);
-      transition: width 0.5s ease;
-    }
-    .data-pulse {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: var(--neon-green);
-      border-radius: 50%;
-      box-shadow: 0 0 15px var(--neon-green);
-      opacity: 0;
-      z-index: 10;
-    }
-    @keyframes pulse {
-      0% {
-        opacity: 0;
-        transform: scale(0.5);
-      }
-      50% {
-        opacity: 1;
-        transform: scale(1.2);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(1.5);
-      }
-    }
-    .glow-green {
-      animation: glow-green 1.5s infinite alternate;
-    }
-    @keyframes glow-green {
-      from {
-        box-shadow: 0 0 10px var(--neon-green);
-      }
-      to {
-        box-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
-      }
-    }
-    .glow-red {
-      animation: glow-red 1.5s infinite alternate;
-    }
-    @keyframes glow-red {
-      from {
-        box-shadow: 0 0 10px var(--neon-magenta);
-      }
-      to {
-        box-shadow: 0 0 20px var(--neon-magenta), 0 0 30px var(--neon-magenta);
-      }
-    }
-    .hint {
-      font-size: 0.8rem;
-      margin-top: 8px;
-      color: #cfe8ff;
-    }
-    
-    /* Mobile drag ghost element */
-    .drag-ghost {
-      position: fixed;
-      pointer-events: none;
-      z-index: 1000;
-      opacity: 0.8;
-      transform: translate(-50%, -50%);
-    }
-    
-    /* Media queries for larger screens */
-    @media (min-width: 768px) {
-      body {
-        padding: 20px;
-      }
-      
-      h1 {
-        font-size: 2.5rem;
-        letter-spacing: 2px;
-      }
-      
-      .subtitle {
-        font-size: 1rem;
-        margin-bottom: 20px;
-      }
-      
-      .phase-instruction {
-        font-size: 1.1rem;
-        max-width: 800px;
-      }
-      
-      .container {
-        gap: 50px;
-        margin: 20px 0;
-      }
-      
-      .plug {
-        grid-template-columns: repeat(8, 40px);
-        gap: 5px;
-        padding: 15px;
-      }
-      
-      .plug-title {
-        font-size: 1rem;
-        margin-bottom: 10px;
-      }
-      
-      .slot {
-        width: 40px;
-        height: 60px;
-      }
-      
-      .pin-number {
-        font-size: 10px;
-      }
-      
-      .wire {
-        font-size: 8px;
-      }
-      
-      .wire-label {
-        font-size: 7px;
-      }
-      
-      #wire-pool {
-        gap: 10px;
-        margin: 20px;
-        padding: 15px;
-      }
-      
-      #wire-pool .wire {
-        width: 120px;
-        height: 30px;
-      }
-      
-      .tester {
-        width: 700px;
-        padding: 20px;
-        margin-top: 30px;
-      }
-      
-      .tester-title {
-        font-size: 1rem;
-        margin-bottom: 15px;
-      }
-      
-      .leds {
-        gap: 30px;
-        margin: 15px 0;
-      }
-      
-      .led-column {
-        padding: 15px;
-      }
-      
-      .led-column-title {
-        font-size: 14px;
-        margin-bottom: 10px;
-      }
-      
-      .led {
-        width: 30px;
-        height: 30px;
-      }
-      
-      .led-label {
-        bottom: -20px;
-        font-size: 10px;
-      }
-      
-      button {
-        margin: 10px;
-        padding: 12px 25px;
-        font-size: 1rem;
-      }
-      
-      #result {
-        margin-top: 15px;
-        font-size: 1.1rem;
-        min-height: 30px;
-      }
-      
-      #scoreboard {
-        font-size: 1.2rem;
-        gap: 30px;
-        padding: 15px;
-      }
-      
-      .score-label {
-        font-size: 0.9rem;
-      }
-      
-      .score-value {
-        font-size: 1.5rem;
-      }
-      
-      .game-controls {
-        margin: 20px 0;
-        gap: 20px;
-      }
-      
-      .timer {
-        font-size: 1.2rem;
-      }
-      
-      .progress-container {
-        width: 80%;
-        height: 20px;
-        margin: 20px auto;
-      }
-      
-      .data-pulse {
-        width: 10px;
-        height: 10px;
-      }
-      
-      .hint {
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethernet Cable Tester Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+--neon-cyan: #00ffff;
+--neon-green: #00ff7f;
+--neon-orange: #ff6600;
+--neon-yellow: #ffff00;
+--neon-magenta: #ff00ff;
+--dark-bg: #0a0a1a;
+--deep-blue: #1a1a3a;
+--grid-color: rgba(0, 255, 255, 0.1);
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: 'Orbitron', sans-serif;
+background: linear-gradient(135deg, var(--dark-bg) 0%, var(--deep-blue) 100%);
+color: #eee;
+text-align: center;
+padding: 10px;
+min-height: 100vh;
+position: relative;
+overflow-x: hidden;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+user-select: none;
+padding-top: 70px; /* Space for header */
+}
+
+/* Header Styles */
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background-color: rgba(10, 10, 26, 0.8);
+color: #fff;
+padding: 15px 20px;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+z-index: 1000;
+box-shadow: 0 4px 15px rgba(0, 86, 179, 0.5);
+}
+
+.header-title {
+font-size: 20px;
+flex-grow: 1;
+text-align: center;
+font-weight: bold;
+color: var(--neon-cyan);
+text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+animation: glow 2s infinite alternate;
+position: relative;
+}
+
+@keyframes glow {
+from { text-shadow: 0 0 5px rgba(0, 255, 255, 0.7); }
+to { text-shadow: 0 0 15px rgba(0, 255, 255, 0.9); }
+}
+
+.back-button {
+cursor: pointer;
+font-size: 20px;
+color: var(--neon-magenta);
+transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.back-button:hover {
+transform: scale(1.2) rotate(-30deg);
+color: #ff5eff;
+}
+
+.placeholder { width: 30px; }
+
+/* Circuit board grid background */
+body::before {
+content: "";
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-image:
+linear-gradient(var(--grid-color) 1px, transparent 1px),
+linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+background-size: 40px 40px;
+z-index: -1;
+opacity: 0.5;
+}
+
+/* Digital Rain Background */
+.digital-rain {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+opacity: 0.05;
+pointer-events: none;
+}
+
+/* Circuit Traces */
+.circuit-traces {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+opacity: 0.2;
+pointer-events: none;
+}
+
+.circuit-trace {
+position: absolute;
+background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+height: 2px;
+animation: traceFlow 8s linear infinite;
+}
+
+@keyframes traceFlow {
+0% { transform: translateX(-100%); }
+100% { transform: translateX(100%); }
+}
+
+/* Floating Particles */
+.particles {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+pointer-events: none;
+}
+
+.particle {
+position: absolute;
+background: var(--neon-cyan);
+border-radius: 50%;
+opacity: 0.3;
+animation: float 15s infinite linear;
+}
+
+@keyframes float {
+0% {
+transform: translateY(100vh) translateX(0);
+opacity: 0;
+}
+10% {
+opacity: 0.3;
+}
+90% {
+opacity: 0.3;
+}
+100% {
+transform: translateY(-100vh) translateX(100px);
+opacity: 0;
+}
+}
+
+/* Instructions Section */
+.instructions {
+max-width: 800px;
+background: rgba(10, 10, 26, 0.7);
+border: 1px solid var(--neon-cyan);
+border-radius: 8px;
+padding: 15px 20px;
+margin: 10px auto;
+font-size: 14px;
+line-height: 1.5;
+color: #e0f7fa;
+animation: fadeIn 1.2s ease-in-out;
+box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+position: relative;
+overflow: hidden;
+}
+
+.instructions::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 2px;
+background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+animation: scan-line 3s linear infinite;
+}
+
+@keyframes scan-line {
+0% { transform: translateY(-100%); }
+100% { transform: translateY(100%); }
+}
+
+.instructions strong { color: var(--neon-cyan); }
+
+.tutorial-box {
+margin: 15px auto;
+padding: 12px 15px;
+border: 1px solid var(--neon-cyan);
+border-radius: 8px;
+background: rgba(10, 10, 26, 0.8);
+box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+text-align: center;
+max-width: 500px;
+min-height: 80px;
+position: relative;
+overflow: hidden;
+}
+
+.tutorial-box::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: repeating-linear-gradient(
+90deg,
+transparent,
+transparent 2px,
+rgba(0, 255, 255, 0.05) 2px,
+rgba(0, 255, 255, 0.05) 4px
+);
+z-index: -1;
+}
+
+.tutorial-step {
+font-size: 14px;
+color: #e0f7fa;
+opacity: 0;
+transform: translateY(10px);
+transition: opacity 0.6s ease, transform 0.6s ease;
+position: relative;
+}
+
+.tutorial-step.active {
+opacity: 1;
+transform: translateY(0);
+color: var(--neon-cyan);
+animation: typing 1.5s steps(20, end);
+}
+
+@keyframes typing {
+from { width: 0; }
+to { width: 100%; }
+}
+
+.start-btn {
+margin-top: 20px;
+padding: 10px 18px;
+font-size: 16px;
+font-weight: bold;
+background: linear-gradient(45deg, #9527ae, var(--neon-cyan));
+color: #ffffff;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: 0.2s;
+font-family: 'Orbitron', sans-serif;
+box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
+position: relative;
+overflow: hidden;
+}
+
+.start-btn::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+transition: left 0.5s;
+}
+
+.start-btn:hover::before {
+left: 100%;
+}
+
+.start-btn:hover {
+background: linear-gradient(45deg, #219150, var(--neon-magenta));
+color: #ffffff;
+box-shadow: 0 0 12px rgba(0, 229, 255, 0.7);
+}
+
+/* Game Section */
+.game-section {
+display: none;
+flex-direction: column;
+align-items: center;
+width: 100%;
+opacity: 0;
+animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+color: var(--neon-cyan);
+font-size: 1.8rem;
+font-weight: 900;
+text-transform: uppercase;
+margin-bottom: 10px;
+text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+letter-spacing: 1px;
+}
+.subtitle {
+color: var(--neon-green);
+font-size: 0.9rem;
+margin-bottom: 15px;
+text-shadow: 0 0 5px var(--neon-green);
+}
+.phase-instruction {
+color: var(--neon-yellow);
+font-size: 0.9rem;
+margin: 15px 0;
+padding: 10px;
+border: 1px solid var(--neon-yellow);
+border-radius: 5px;
+background: rgba(255, 255, 0, 0.06);
+box-shadow: 0 0 10px var(--neon-yellow);
+max-width: 90%;
+margin-left: auto;
+margin-right: auto;
+}
+.container {
+display: flex;
+justify-content: center;
+gap: 20px;
+margin: 15px 0;
+flex-wrap: wrap;
+}
+.plug-container {
+position: relative;
+margin-bottom: 15px;
+}
+.plug {
+display: grid;
+grid-template-columns: repeat(8, 30px);
+gap: 3px;
+background: rgba(20, 20, 40, 0.8);
+padding: 10px;
+border-radius: 8px;
+border: 2px solid var(--neon-cyan);
+box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+justify-content: center;
+}
+.plug-title {
+color: var(--neon-cyan);
+margin-bottom: 8px;
+font-weight: 700;
+text-shadow: 0 0 5px var(--neon-cyan);
+font-size: 0.9rem;
+}
+.slot {
+width: 30px;
+height: 45px;
+border: 2px solid #555;
+background: rgba(10, 10, 20, 0.7);
+border-radius: 4px;
+position: relative;
+transition: all 0.3s ease;
+display: flex;
+flex-direction: column;
+align-items: center;
+overflow: hidden;
+}
+.slot:hover {
+border-color: var(--neon-green);
+box-shadow: 0 0 10px var(--neon-green);
+}
+.slot.highlight {
+border-color: var(--neon-green);
+box-shadow: 0 0 10px var(--neon-green);
+}
+.pin-number {
+position: absolute;
+top: 2px;
+left: 50%;
+transform: translateX(-50%);
+font-size: 8px;
+color: var(--neon-cyan);
+z-index: 2;
+}
+.wire {
+width: 100%;
+height: 100%;
+border-radius: 4px;
+cursor: grab;
+margin: 0;
+text-align: center;
+font-size: 7px;
+line-height: 1;
+color: #fff;
+font-weight: bold;
+transition: transform 0.2s, box-shadow 0.2s;
+display: flex;
+flex-direction: column;
+position: absolute;
+top: 0;
+left: 0;
+z-index: 1;
+}
+.wire:hover {
+transform: scale(1.05);
+box-shadow: 0 0 10px currentColor;
+}
+.wire-top {
+height: 50%;
+width: 100%;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+}
+.wire-bottom {
+height: 50%;
+width: 100%;
+border-bottom-left-radius: 4px;
+border-bottom-right-radius: 4px;
+}
+.wire-label {
+position: absolute;
+bottom: 2px;
+left: 0;
+width: 100%;
+text-align: center;
+font-size: 6px;
+color: #fff;
+font-weight: bold;
+z-index: 1;
+text-shadow: 0 0 2px #000;
+padding: 0 2px;
+}
+#wire-pool {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+justify-content: center;
+margin: 15px;
+padding: 10px;
+background: rgba(20, 20, 40, 0.5);
+border-radius: 10px;
+border: 1px solid var(--neon-cyan);
+box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+#wire-pool .wire {
+position: relative;
+width: 80px;
+height: 25px;
+cursor: grab;
+}
+.tester {
+margin-top: 20px;
+background: rgba(10, 10, 20, 0.8);
+padding: 15px;
+border-radius: 10px;
+width: 95%;
+margin-left: auto;
+margin-right: auto;
+border: 2px solid var(--neon-green);
+box-shadow: 0 0 15px rgba(0, 255, 127, 0.5);
+}
+.tester-title {
+color: var(--neon-green);
+margin-bottom: 10px;
+font-weight: 700;
+text-shadow: 0 0 5px var(--neon-green);
+font-size: 0.9rem;
+}
+.leds {
+display: flex;
+justify-content: space-between;
+margin: 10px 0;
+gap: 15px;
+flex-wrap: wrap;
+}
+.led-column {
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 45%;
+background: rgba(10, 10, 20, 0.7);
+border: 1px solid var(--neon-cyan);
+border-radius: 8px;
+padding: 10px;
+box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+margin-bottom: 10px;
+}
+.led-column-title {
+color: var(--neon-cyan);
+font-size: 0.8rem;
+margin-bottom: 8px;
+text-shadow: 0 0 5px var(--neon-cyan);
+}
+.led-row {
+display: flex;
+gap: 5px;
+justify-content: center;
+flex-wrap: wrap;
+}
+.led {
+width: 20px;
+height: 20px;
+border-radius: 50%;
+background: #333;
+border: 1px solid #555;
+position: relative;
+transition: all 0.3s;
+}
+.led.on {
+background: var(--neon-green);
+box-shadow: 0 0 15px var(--neon-green);
+}
+.led-label {
+position: absolute;
+bottom: -15px;
+left: 50%;
+transform: translateX(-50%);
+font-size: 8px;
+color: var(--neon-cyan);
+}
+button {
+margin: 8px 5px;
+padding: 10px 15px;
+border: none;
+font-family: 'Orbitron', sans-serif;
+font-weight: 700;
+text-transform: uppercase;
+border-radius: 6px;
+cursor: pointer;
+transition: all 0.3s;
+font-size: 0.8rem;
+}
+.btn-test {
+background: var(--neon-green);
+color: #000;
+box-shadow: 0 0 10px var(--neon-green);
+}
+.btn-test:hover {
+background: #00ff9f;
+box-shadow: 0 0 20px var(--neon-green);
+transform: translateY(-2px);
+}
+.btn-reset {
+background: var(--neon-orange);
+color: #000;
+box-shadow: 0 0 10px var(--neon-orange);
+}
+.btn-reset:hover {
+background: #ff7700;
+box-shadow: 0 0 20px var(--neon-orange);
+transform: translateY(-2px);
+}
+#result {
+margin-top: 10px;
+font-weight: 700;
+min-height: 24px;
+font-size: 0.9rem;
+}
+.success {
+color: var(--neon-green);
+text-shadow: 0 0 10px var(--neon-green);
+}
+.error {
+color: var(--neon-magenta);
+text-shadow: 0 0 10px var(--neon-magenta);
+}
+#scoreboard {
+margin-top: 15px;
+font-size: 1rem;
+color: var(--neon-yellow);
+display: flex;
+justify-content: center;
+gap: 15px;
+padding: 10px;
+background: rgba(20, 20, 40, 0.5);
+border-radius: 10px;
+border: 1px solid var(--neon-yellow);
+box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+flex-wrap: wrap;
+}
+.score-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+min-width: 80px;
+}
+.score-label {
+font-size: 0.8rem;
+color: var(--neon-cyan);
+}
+.score-value {
+font-size: 1.2rem;
+font-weight: 700;
+text-shadow: 0 0 5px var(--neon-yellow);
+}
+.game-controls {
+margin: 15px 0;
+display: flex;
+justify-content: center;
+gap: 10px;
+flex-wrap: wrap;
+}
+.timer {
+color: var(--neon-orange);
+font-size: 1rem;
+font-weight: 700;
+text-shadow: 0 0 5px var(--neon-orange);
+}
+.progress-container {
+width: 90%;
+height: 15px;
+background: rgba(20, 20, 40, 0.7);
+border-radius: 10px;
+margin: 15px auto;
+border: 1px solid var(--neon-cyan);
+box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+overflow: hidden;
+}
+.progress-bar {
+height: 100%;
+width: 0%;
+background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+border-radius: 10px;
+box-shadow: 0 0 10px var(--neon-green);
+transition: width 0.5s ease;
+}
+.data-pulse {
+position: absolute;
+width: 8px;
+height: 8px;
+background: var(--neon-green);
+border-radius: 50%;
+box-shadow: 0 0 15px var(--neon-green);
+opacity: 0;
+z-index: 10;
+}
+@keyframes pulse {
+0% {
+opacity: 0;
+transform: scale(0.5);
+}
+50% {
+opacity: 1;
+transform: scale(1.2);
+}
+100% {
+opacity: 0;
+transform: scale(1.5);
+}
+}
+.glow-green {
+animation: glow-green 1.5s infinite alternate;
+}
+@keyframes glow-green {
+from {
+box-shadow: 0 0 10px var(--neon-green);
+}
+to {
+box-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
+}
+}
+.glow-red {
+animation: glow-red 1.5s infinite alternate;
+}
+@keyframes glow-red {
+from {
+box-shadow: 0 0 10px var(--neon-magenta);
+}
+to {
+box-shadow: 0 0 20px var(--neon-magenta), 0 0 30px var(--neon-magenta);
+}
+}
+.hint {
+font-size: 0.8rem;
+margin-top: 8px;
+color: #cfe8ff;
+}
+
+/* Mobile drag ghost element */
+.drag-ghost {
+position: fixed;
+pointer-events: none;
+z-index: 1000;
+opacity: 0.8;
+transform: translate(-50%, -50%);
+}
+
+/* Media queries for larger screens */
+@media (min-width: 768px) {
+body {
+padding: 20px;
+}
+
+h1 {
+font-size: 2.5rem;
+letter-spacing: 2px;
+}
+
+.subtitle {
+font-size: 1rem;
+margin-bottom: 20px;
+}
+
+.phase-instruction {
+font-size: 1.1rem;
+max-width: 800px;
+}
+
+.container {
+gap: 50px;
+margin: 20px 0;
+}
+
+.plug {
+grid-template-columns: repeat(8, 40px);
+gap: 5px;
+padding: 15px;
+}
+
+.plug-title {
+font-size: 1rem;
+margin-bottom: 10px;
+}
+
+.slot {
+width: 40px;
+height: 60px;
+}
+
+.pin-number {
+font-size: 10px;
+}
+
+.wire {
+font-size: 8px;
+}
+
+.wire-label {
+font-size: 7px;
+}
+
+#wire-pool {
+gap: 10px;
+margin: 20px;
+padding: 15px;
+}
+
+#wire-pool .wire {
+width: 120px;
+height: 30px;
+}
+
+.tester {
+width: 700px;
+padding: 20px;
+margin-top: 30px;
+}
+
+.tester-title {
+font-size: 1rem;
+margin-bottom: 15px;
+}
+
+.leds {
+gap: 30px;
+margin: 15px 0;
+}
+
+.led-column {
+padding: 15px;
+}
+
+.led-column-title {
+font-size: 14px;
+margin-bottom: 10px;
+}
+
+.led {
+width: 30px;
+height: 30px;
+}
+
+.led-label {
+bottom: -20px;
+font-size: 10px;
+}
+
+button {
+margin: 10px;
+padding: 12px 25px;
+font-size: 1rem;
+}
+
+#result {
+margin-top: 15px;
+font-size: 1.1rem;
+min-height: 30px;
+}
+
+#scoreboard {
+font-size: 1.2rem;
+gap: 30px;
+padding: 15px;
+}
+
+.score-label {
+font-size: 0.9rem;
+}
+
+.score-value {
+font-size: 1.5rem;
+}
+
+.game-controls {
+margin: 20px 0;
+gap: 20px;
+}
+
+.timer {
+font-size: 1.2rem;
+}
+
+.progress-container {
+width: 80%;
+height: 20px;
+margin: 20px auto;
+}
+
+.data-pulse {
+width: 10px;
+height: 10px;
+}
+
+.hint {
+font-size: 0.9rem;
+}
+}
+</style>
 </head>
 <body>
-  <!-- Digital Rain Background -->
-  <canvas class="digital-rain" id="digitalRain"></canvas>
-  
-  <!-- Circuit Board Pattern -->
-  <div class="circuit-board"></div>
-  
-  <!-- Circuit Traces -->
-  <div class="circuit-traces" id="circuitTraces"></div>
-  
-  <!-- Floating Particles -->
-  <div class="particles" id="particles"></div>
-  
-  <!-- Header with Back Button -->
-  <header>
-    <div class="back-button" onclick="window.location.href='../levels/networkinglevels.html'">⤺</div>
-    <div class="header-title">Ethernet Cable Tester Challenge</div>
-    <div class="placeholder"></div>
-  </header>
-  
-  <!-- Instructions -->
-  <div class="instructions" id="instructions">
-    <h1 style="margin-top: 0;">Ethernet Cable Tester Challenge</h1>
-    <p><strong>Instructions:</strong></p>
-    <ul>
-      <li>Drag and drop wires from the pool to the correct pins on both plugs.</li>
-      <li>Complete 4 phases: Straight-through, Crossover, Roll-over, and Fault Detection.</li>
-      <li>Each phase requires a different wiring configuration.</li>
-      <li>Use the "Show Hint" button if you need help with the wiring pattern.</li>
-      <li>Click "Crimp & Test" to check your work and advance to the next phase.</li>
-    </ul>
-    <div class="tutorial-box" id="tutorialBox">
-      <div class="tutorial-step active">👋 Welcome to the Ethernet Cable Tester Challenge!</div>
-      <div class="tutorial-step">🔌 Learn to wire different types of Ethernet cables.</div>
-      <div class="tutorial-step">🧪 Test your knowledge of network cabling standards.</div>
-      <div class="tutorial-step">🏆 Earn points and coins for each completed phase.</div>
-      <div class="tutorial-step">▶ Click "Start Game" when ready!</div>
-    </div>
-    <button class="start-btn" onclick="startGame()">▶ Start Game</button>
-  </div>
-  
-  <!-- Game Section -->
-  <div class="game-section" id="gameSection">
-    <p class="subtitle">Build the correct cable and test it!</p>
-    
-    <div class="phase-instruction" id="phase-instruction">
-      Phase 1: Build a Straight-through cable (A–A or B–B)
-    </div>
-    
-    <div id="wire-pool"></div>
-    
-    <div class="container">
-      <div class="plug-container">
-        <h3 class="plug-title">Left Plug</h3>
-        <div class="plug" id="plug-left"></div>
-      </div>
-      <div class="plug-container">
-        <h3 class="plug-title">Right Plug</h3>
-        <div class="plug" id="plug-right"></div>
-      </div>
-    </div>
-    
-    <div class="game-controls">
-      <button class="btn-reset" onclick="resetPlugs()">Reset Plugs</button>
-      <button class="btn-test" onclick="testCable()">Crimp & Test</button>
-      <button class="btn-test" onclick="showHint()" title="Quick hint">Show Hint</button>
-    </div>
-    
-    <div class="timer" id="timer">Time: 00:00</div>
-    
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>
-    
-    <div class="tester">
-      <h3 class="tester-title">Cable Tester</h3>
-      <div class="leds">
-        <div class="led-column">
-          <div class="led-column-title">Left Plug</div>
-          <div class="led-row" id="leds-left"></div>
-        </div>
-        <div class="led-column">
-          <div class="led-column-title">Right Plug</div>
-          <div class="led-row" id="leds-right"></div>
-        </div>
-      </div>
-      <p id="result"></p>
-      <p id="hint-area" class="hint"></p>
-    </div>
-    
-    <div id="scoreboard">
-      <div class="score-item">
-        <span class="score-label">Points</span>
-        <span class="score-value" id="points">0</span>
-      </div>
-      <div class="score-item">
-        <span class="score-label">Coins</span>
-        <span class="score-value" id="coins">0</span>
-      </div>
-      <div class="score-item">
-        <span class="score-label">Attempts</span>
-        <span class="score-value" id="attempts">0</span>
-      </div>
-    </div>
-  </div>
-  
-  <script>
-    // Create floating particles
-    const particlesContainer = document.getElementById('particles');
-    const particleCount = 15;
-    
-    for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      
-      // Random size between 2px and 6px
-      const size = Math.random() * 4 + 2;
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      
-      // Random position
-      particle.style.left = `${Math.random() * 100}%`;
-      particle.style.top = `${Math.random() * 100}%`;
-      
-      // Random animation delay
-      particle.style.animationDelay = `${Math.random() * 15}s`;
-      
-      particlesContainer.appendChild(particle);
-    }
-    
-    // Create circuit traces
-    const circuitTraces = document.getElementById('circuitTraces');
-    const traceCount = 8;
-    
-    for (let i = 0; i < traceCount; i++) {
-      const trace = document.createElement('div');
-      trace.className = 'circuit-trace';
-      trace.style.top = `${Math.random() * 100}%`;
-      trace.style.width = `${Math.random() * 30 + 10}%`;
-      trace.style.animationDelay = `${Math.random() * 8}s`;
-      trace.style.animationDuration = `${Math.random() * 5 + 5}s`;
-      circuitTraces.appendChild(trace);
-    }
-    
-    // Digital Rain Effect
-    const rainCanvas = document.getElementById('digitalRain');
-    const rainCtx = rainCanvas.getContext('2d');
-    
-    // Function to set canvas size
-    function setCanvasSize() {
-      rainCanvas.width = window.innerWidth;
-      rainCanvas.height = window.innerHeight;
-    }
-    
-    // Set initial canvas size
-    setCanvasSize();
-    
-    // Characters for the digital rain
-    const characters = '01';
-    const fontSize = 14;
-    let columns = rainCanvas.width / fontSize;
-    const drops = [];
-    
-    // Initialize drops
-    for (let i = 0; i < columns; i++) {
-      drops[i] = Math.random() * rainCanvas.height;
-    }
-    
-    // Draw the digital rain
-    function drawRain() {
-      rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
-      rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
-      
-      rainCtx.fillStyle = '#00ffff';
-      rainCtx.font = `${fontSize}px monospace`;
-      
-      for (let i = 0; i < drops.length; i++) {
-        const text = characters.charAt(Math.floor(Math.random() * characters.length));
-        rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
-        
-        if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        
-        drops[i]++;
-      }
-    }
-    
-    // Animation loop for digital rain with reduced frame rate
-    let rainAnimationId;
-    function startRainAnimation() {
-      if (rainAnimationId) {
-        cancelAnimationFrame(rainAnimationId);
-      }
-      
-      function animate() {
-        drawRain();
-        rainAnimationId = requestAnimationFrame(animate);
-      }
-      
-      // Run at lower frame rate to improve performance
-      setInterval(() => {
-        if (rainAnimationId) {
-          animate();
-        }
-      }, 100);
-    }
-    
-    startRainAnimation();
-    
-    // Resize canvas when window is resized
-    window.addEventListener('resize', () => {
-      setCanvasSize();
-      // Recalculate columns after resize
-      columns = rainCanvas.width / fontSize;
-      // Reinitialize drops array for new canvas size
-      drops.length = 0;
-      for (let i = 0; i < columns; i++) {
-        drops[i] = Math.random() * rainCanvas.height;
-      }
-    });
-    
-    // Tutorial steps
-    const steps = document.querySelectorAll(".tutorial-step");
-    let stepIndex = 0;
-    setInterval(() => {
-      steps.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
-      stepIndex = (stepIndex + 1) % steps.length;
-    }, 3000);
-    
-    const wires = [
-      {color:"Green/White", code:"gw", bg:"#009900", topColor:"#ffffff", bottomColor:"#009900", abbr:"G/W"},
-      {color:"Green", code:"g", bg:"#006600", topColor:"#006600", bottomColor:"#006600", abbr:"G"},
-      {color:"Orange/White", code:"ow", bg:"#cc5200", topColor:"#ffffff", bottomColor:"#cc5200", abbr:"O/W"},
-      {color:"Blue", code:"b", bg:"#003399", topColor:"#003399", bottomColor:"#003399", abbr:"B"},
-      {color:"Blue/White", code:"bw", bg:"#3366cc", topColor:"#ffffff", bottomColor:"#3366cc", abbr:"B/W"},
-      {color:"Orange", code:"o", bg:"#cc3300", topColor:"#cc3300", bottomColor:"#cc3300", abbr:"O"},
-      {color:"Brown/White", code:"brw", bg:"#996633", topColor:"#ffffff", bottomColor:"#996633", abbr:"Br/W"},
-      {color:"Brown", code:"br", bg:"#330000", topColor:"#330000", bottomColor:"#330000", abbr:"Br"}
-    ];
-    
-    const standards = {
-      A:["gw","g","ow","b","bw","o","brw","br"],
-      B:["ow","o","gw","b","bw","g","brw","br"]
-    };
-    // Roll-over (console) is reverse mapping of A (left) -> reversed(A) (right)
-    // we'll accept either orientation (A<->revA or B<->revB)
-    function reversed(arr){ return [...arr].slice().reverse(); }
-    const standardsExtra = {
-      rollA: reversed(standards.A),
-      rollB: reversed(standards.B)
-    };
-    let phase = 1; // now we have 1..4
-    let points = 0;
-    let coins = 0;
-    let attempts = 0;
-    let startTime = Date.now();
-    let timerInterval;
-    
-    // Touch drag variables
-    let draggedElement = null;
-    let touchOffsetX = 0;
-    let touchOffsetY = 0;
-    let dragGhost = null;
-    
-    // Start game function
-    function startGame() {
-      document.getElementById("instructions").style.display = "none";
-      const section = document.getElementById("gameSection");
-      section.style.display = "flex";
-      section.style.animation = "fadeIn 1s ease forwards";
-    }
-    
-    // Start timer
-    function startTimer() {
-      timerInterval = setInterval(updateTimer, 1000);
-    }
-    
-    function updateTimer() {
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
-      const seconds = (elapsed % 60).toString().padStart(2, '0');
-      document.getElementById('timer').textContent = `Time: ${minutes}:${seconds}`;
-    }
-    
-    // Update progress bar (now maps phases to percentages)
-    function updateProgress() {
-      const progressMap = {1:25,2:50,3:75,4:100};
-      const progress = progressMap[phase] || 0;
-      document.getElementById('progress-bar').style.width = `${progress}%`;
-    }
-    
-    // Wire pool
-    const pool=document.getElementById("wire-pool");
-    function populatePool() {
-      pool.innerHTML="";
-      wires.forEach(w=>{
-        const wireDiv = document.createElement("div");
-        wireDiv.className = "wire";
-        wireDiv.draggable = true;
-        wireDiv.dataset.code = w.code;
-        
-        // Create top part
-        const topPart = document.createElement("div");
-        topPart.className = "wire-top";
-        topPart.style.background = w.topColor;
-        
-        // Create bottom part
-        const bottomPart = document.createElement("div");
-        bottomPart.className = "wire-bottom";
-        bottomPart.style.background = w.bottomColor;
-        
-        // Create label
-        const label = document.createElement("div");
-        label.className = "wire-label";
-        label.textContent = w.color;
-        
-        wireDiv.appendChild(topPart);
-        wireDiv.appendChild(bottomPart);
-        wireDiv.appendChild(label);
-        
-        // Desktop drag events
-        wireDiv.addEventListener("dragstart", drag);
-        
-        // Mobile touch events
-        wireDiv.addEventListener("touchstart", handleTouchStart, {passive: false});
-        wireDiv.addEventListener("touchmove", handleTouchMove, {passive: false});
-        wireDiv.addEventListener("touchend", handleTouchEnd, {passive: false});
-        
-        pool.appendChild(wireDiv);
-      });
-    }
-    populatePool();
-    
-    // Slots for left/right plugs
-    function makePlug(id){
-      const plug=document.getElementById(id);
-      plug.innerHTML="";
-      for(let i=0;i<8;i++){
-        const slot=document.createElement("div");
-        slot.className="slot";
-        slot.dataset.pos=i;
-        
-        // Add pin number
-        const pinLabel = document.createElement("div");
-        pinLabel.className="pin-number";
-        pinLabel.textContent = i+1;
-        slot.appendChild(pinLabel);
-        
-        // Desktop drag events
-        slot.addEventListener("dragover",e=>e.preventDefault());
-        slot.addEventListener("drop",drop);
-        
-        // Mobile touch events
-        slot.addEventListener("touchover",e=>e.preventDefault());
-        slot.addEventListener("touchenter", highlightSlot);
-        slot.addEventListener("touchleave", unhighlightSlot);
-        
-        plug.appendChild(slot);
-      }
-    }
-    makePlug("plug-left");
-    makePlug("plug-right");
-    
-    // Tester LEDs
-    function makeLEDs(id){
-      const holder=document.getElementById(id);
-      holder.innerHTML="";
-      for(let i=0;i<8;i++){
-        const led=document.createElement("div");
-        led.className="led";
-        
-        // Add pin number to LED
-        const ledLabel = document.createElement("div");
-        ledLabel.className="led-label";
-        ledLabel.textContent = i+1;
-        led.appendChild(ledLabel);
-        
-        holder.appendChild(led);
-      }
-    }
-    makeLEDs("leds-left");
-    makeLEDs("leds-right");
-    
-    // Desktop drag functions
-    function drag(e){
-      e.dataTransfer.setData("code",e.target.dataset.code);
-    }
-    
-    function drop(e){
-      e.preventDefault();
-      // ensure we drop into slot even if child element targeted
-      const slot = e.target.closest('.slot');
-      if(!slot) return;
-      const code=e.dataTransfer.getData("code");
-      
-      // Find the wire data
-      const wireData = wires.find(w => w.code === code);
-      if (!wireData) return;
-      
-      // Remove existing wire if any
-      const existingWire = slot.querySelector('.wire');
-      if (existingWire) {
-        existingWire.remove();
-      }
-      
-      // Create new wire element
-      const wireDiv = document.createElement("div");
-      wireDiv.className = "wire";
-      wireDiv.dataset.code = code;
-      
-      // Create top part
-      const topPart = document.createElement("div");
-      topPart.className = "wire-top";
-      topPart.style.background = wireData.topColor;
-      
-      // Create bottom part
-      const bottomPart = document.createElement("div");
-      bottomPart.className = "wire-bottom";
-      bottomPart.style.background = wireData.bottomColor;
-      
-      // Create label - use abbreviation for slot
-      const label = document.createElement("div");
-      label.className = "wire-label";
-      label.textContent = wireData.abbr;
-      
-      wireDiv.appendChild(topPart);
-      wireDiv.appendChild(bottomPart);
-      wireDiv.appendChild(label);
-      
-      // Add a visual indicator for successful drop
-      slot.style.borderColor = "#00ff7f";
-      setTimeout(() => {
-        slot.style.borderColor = "#555";
-      }, 500);
-      
-      slot.appendChild(wireDiv);
-    }
-    
-    // Mobile touch functions
-    function handleTouchStart(e) {
-      e.preventDefault();
-      
-      const touch = e.touches[0];
-      draggedElement = e.target.closest('.wire');
-      
-      if (!draggedElement) return;
-      
-      // Store the initial touch position
-      const rect = draggedElement.getBoundingClientRect();
-      touchOffsetX = touch.clientX - rect.left;
-      touchOffsetY = touch.clientY - rect.top;
-      
-      // Create a visual drag ghost
-      dragGhost = draggedElement.cloneNode(true);
-      dragGhost.classList.add('drag-ghost');
-      dragGhost.style.width = rect.width + 'px';
-      dragGhost.style.height = rect.height + 'px';
-      document.body.appendChild(dragGhost);
-      
-      // Position the ghost at the touch point
-      updateDragGhostPosition(touch.clientX, touch.clientY);
-      
-      // Store the wire code
-      draggedElement.dataset.code = draggedElement.dataset.code;
-    }
-    
-    function handleTouchMove(e) {
-      e.preventDefault();
-      
-      if (!draggedElement || !dragGhost) return;
-      
-      const touch = e.touches[0];
-      updateDragGhostPosition(touch.clientX, touch.clientY);
-      
-      // Find the element under the touch point
-      const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-      const slot = elementBelow?.closest('.slot');
-      
-      // Highlight the slot if we're over one
-      document.querySelectorAll('.slot').forEach(s => s.classList.remove('highlight'));
-      if (slot) {
-        slot.classList.add('highlight');
-      }
-    }
-    
-    function handleTouchEnd(e) {
-      e.preventDefault();
-      
-      if (!draggedElement) return;
-      
-      const touch = e.changedTouches[0];
-      const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-      const slot = elementBelow?.closest('.slot');
-      
-      // Remove the drag ghost
-      if (dragGhost) {
-        dragGhost.remove();
-        dragGhost = null;
-      }
-      
-      // Remove highlights
-      document.querySelectorAll('.slot').forEach(s => s.classList.remove('highlight'));
-      
-      // If we're over a slot, drop the wire
-      if (slot) {
-        const code = draggedElement.dataset.code;
-        
-        // Find the wire data
-        const wireData = wires.find(w => w.code === code);
-        if (!wireData) return;
-        
-        // Remove existing wire if any
-        const existingWire = slot.querySelector('.wire');
-        if (existingWire) {
-          existingWire.remove();
-        }
-        
-        // Create new wire element
-        const wireDiv = document.createElement("div");
-        wireDiv.className = "wire";
-        wireDiv.dataset.code = code;
-        
-        // Create top part
-        const topPart = document.createElement("div");
-        topPart.className = "wire-top";
-        topPart.style.background = wireData.topColor;
-        
-        // Create bottom part
-        const bottomPart = document.createElement("div");
-        bottomPart.className = "wire-bottom";
-        bottomPart.style.background = wireData.bottomColor;
-        
-        // Create label - use abbreviation for slot
-        const label = document.createElement("div");
-        label.className = "wire-label";
-        label.textContent = wireData.abbr;
-        
-        wireDiv.appendChild(topPart);
-        wireDiv.appendChild(bottomPart);
-        wireDiv.appendChild(label);
-        
-        // Add a visual indicator for successful drop
-        slot.style.borderColor = "#00ff7f";
-        setTimeout(() => {
-          slot.style.borderColor = "#555";
-        }, 500);
-        
-        slot.appendChild(wireDiv);
-      }
-      
-      draggedElement = null;
-    }
-    
-    function updateDragGhostPosition(x, y) {
-      if (dragGhost) {
-        dragGhost.style.left = x + 'px';
-        dragGhost.style.top = y + 'px';
-      }
-    }
-    
-    function highlightSlot(e) {
-      e.target.closest('.slot').classList.add('highlight');
-    }
-    
-    function unhighlightSlot(e) {
-      e.target.closest('.slot').classList.remove('highlight');
-    }
-    
-    function resetPlugs(){
-      makePlug("plug-left");
-      makePlug("plug-right");
-      populatePool();
-      document.getElementById("result").textContent="";
-      document.getElementById("hint-area").textContent = "";
-      makeLEDs("leds-left");
-      makeLEDs("leds-right");
-      
-      // Remove any glow effects
-      document.querySelectorAll('.plug').forEach(plug => {
-        plug.classList.remove('glow-green', 'glow-red');
-      });
-    }
-    
-    function updateScoreboard(){
-      document.getElementById("points").textContent = points;
-      document.getElementById("coins").textContent = coins;
-      document.getElementById("attempts").textContent = attempts;
-    }
-    
-    // Create data pulse animation
-    function createDataPulse() {
-      const leftPlug = document.getElementById('plug-left');
-      const rightPlug = document.getElementById('plug-right');
-      
-      // Create multiple pulses
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
-          const pulse = document.createElement('div');
-          pulse.className = 'data-pulse';
-          
-          // Start at left plug
-          const leftRect = leftPlug.getBoundingClientRect();
-          pulse.style.left = `${leftRect.left + leftRect.width/2}px`;
-          pulse.style.top = `${leftRect.top + leftRect.height/2}px`;
-          document.body.appendChild(pulse);
-          
-          // Animate to right plug
-          setTimeout(() => {
-            const rightRect = rightPlug.getBoundingClientRect();
-            pulse.style.transition = 'all 1s ease-in-out';
-            pulse.style.left = `${rightRect.left + rightRect.width/2}px`;
-            pulse.style.top = `${rightRect.top + rightRect.height/2}px`;
-            pulse.style.opacity = '1';
-            
-            // End animation
-            setTimeout(() => {
-              pulse.style.animation = 'pulse 0.5s forwards';
-              setTimeout(() => pulse.remove(), 500);
-            }, 1000);
-          }, 100);
-        }, i * 300);
-      }
-    }
-    // Helper: get player arrays
-    function getPlayerArrays(){
-      const slotsLeft=[...document.querySelectorAll("#plug-left .slot")];
-      const slotsRight=[...document.querySelectorAll("#plug-right .slot")];
-      const playerLeft=slotsLeft.map(s=>s.querySelector('.wire')?.dataset.code || null);
-      const playerRight=slotsRight.map(s=>s.querySelector('.wire')?.dataset.code || null);
-      return {playerLeft, playerRight, slotsLeft, slotsRight};
-    }
-    // Continuity check (loose): each left wire must exist somewhere on right (used by original behavior)
-    function continuityCheck(playerLeft, playerRight){
-      for(let i=0;i<8;i++){
-        const code = playerLeft[i];
-        if(!code) return false; // missing wire
-        const matchIndex = playerRight.indexOf(code);
-        if(matchIndex === -1) return false; // not connected
-      }
-      return true;
-    }
-    // Exact straight: same sequence (A or B)
-    function isStraightExact(playerLeft, playerRight){
-      return (JSON.stringify(playerLeft) === JSON.stringify(standards.A) &&
-              JSON.stringify(playerRight) === JSON.stringify(standards.A)) ||
-             (JSON.stringify(playerLeft) === JSON.stringify(standards.B) &&
-              JSON.stringify(playerRight) === JSON.stringify(standards.B));
-    }
-    // Exact crossover (A->B or B->A)
-    function isCrossoverExact(playerLeft, playerRight){
-      return (JSON.stringify(playerLeft) === JSON.stringify(standards.A) &&
-              JSON.stringify(playerRight) === JSON.stringify(standards.B)) ||
-             (JSON.stringify(playerLeft) === JSON.stringify(standards.B) &&
-              JSON.stringify(playerRight) === JSON.stringify(standards.A));
-    }
-    // Roll-over (console) check: left = A and right = reversed(A) or left = B and right = reversed(B)
-    function isRollOver(playerLeft, playerRight){
-      return (JSON.stringify(playerLeft) === JSON.stringify(standards.A) &&
-              JSON.stringify(playerRight) === JSON.stringify(standardsExtra.rollA)) ||
-             (JSON.stringify(playerLeft) === JSON.stringify(standards.B) &&
-              JSON.stringify(playerRight) === JSON.stringify(standardsExtra.rollB)) ||
-             // allow the other orientation (reversed on left)
-             (JSON.stringify(playerRight) === JSON.stringify(standards.A) &&
-              JSON.stringify(playerLeft) === JSON.stringify(standardsExtra.rollA)) ||
-             (JSON.stringify(playerRight) === JSON.stringify(standards.B) &&
-              JSON.stringify(playerLeft) === JSON.stringify(standardsExtra.rollB));
-    }
-    // Advanced sequencing check: continuity + exact ordering for LEDs (left pins must map to right pins in same order)
-    function advancedSequenceCheck(playerLeft, playerRight){
-      // require no missing wires
-      if(playerLeft.includes(null) || playerRight.includes(null)) return false;
-      // require the right to be exact match with left (straight-through orientation) OR exact cross-over? 
-      // For advanced we'll require exact straight-through (same index) and the LED sequence must match 1..8
-      for(let i=0;i<8;i++){
-        if(playerLeft[i] !== playerRight[i]) return false;
-      }
-      return true;
-    }
-    // Inject faults for Phase 4: add 1-2 faults (missing or wrong wire)
-    function injectFaults(){
-      // First pre-populate a correct straight cable (choose random A or B)
-      resetPlugs(); // creates empty slots and pool
-      const use = Math.random() < 0.5 ? 'A' : 'B';
-      const leftSeq = standards[use];
-      const rightSeq = standards[use];
-      // Fill slots with correct wires
-      const leftSlots = document.querySelectorAll('#plug-left .slot');
-      const rightSlots = document.querySelectorAll('#plug-right .slot');
-      for(let i=0;i<8;i++){
-        placeWireInSlot(leftSeq[i], leftSlots[i]);
-        placeWireInSlot(rightSeq[i], rightSlots[i]);
-      }
-      // Now choose 1-2 faults
-      const faultCount = Math.random() < 0.7 ? 1 : 2;
-      const indices = [];
-      while(indices.length < faultCount){
-        const idx = Math.floor(Math.random()*8);
-        if(!indices.includes(idx)) indices.push(idx);
-      }
-      indices.forEach(idx=>{
-        const kind = Math.random() < 0.5 ? 'missing' : 'wrong';
-        if(kind === 'missing'){
-          // remove wire from one side (player must add it back)
-          const side = Math.random() < 0.5 ? 'left' : 'right';
-          const slot = side==='left' ? document.querySelectorAll('#plug-left .slot')[idx] : document.querySelectorAll('#plug-right .slot')[idx];
-          const w = slot.querySelector('.wire');
-          if(w) w.remove();
-        } else {
-          // place a wrong wire (swap with another random code)
-          const wrongCode = wires.filter(w=>w.code !== leftSeq[idx])[Math.floor(Math.random()*7)].code;
-          const side = Math.random() < 0.5 ? 'left' : 'right';
-          const slot = side==='left' ? document.querySelectorAll('#plug-left .slot')[idx] : document.querySelectorAll('#plug-right .slot')[idx];
-          // replace with wrong
-          const existing = slot.querySelector('.wire'); if(existing) existing.remove();
-          placeWireInSlot(wrongCode, slot);
-        }
-      });
-      document.getElementById('result').textContent = `⚠️ Faults injected: ${indices.length} issue(s). Ayusin ang cable bago mag-test.`;
-      document.getElementById('result').className = "error";
-    }
-    // Helper to place a wire element into a slot by code
-    function placeWireInSlot(code, slot){
-      const wireData = wires.find(w => w.code === code);
-      if(!wireData) return;
-      const existing = slot.querySelector('.wire'); if(existing) existing.remove();
-      const wireDiv = document.createElement("div");
-      wireDiv.className = "wire";
-      wireDiv.dataset.code = code;
-      const topPart = document.createElement("div"); topPart.className = "wire-top"; topPart.style.background = wireData.topColor;
-      const bottomPart = document.createElement("div"); bottomPart.className = "wire-bottom"; bottomPart.style.background = wireData.bottomColor;
-      const label = document.createElement("div"); label.className = "wire-label"; label.textContent = wireData.abbr;
-      wireDiv.appendChild(topPart); wireDiv.appendChild(bottomPart); wireDiv.appendChild(label);
-      slot.appendChild(wireDiv);
-    }
-    // Show hint
-    function showHint(){
-      const hintArea = document.getElementById('hint-area');
-      if(phase===1 || phase===2){
-        hintArea.textContent = "Hint: Straight-through = Both ends same standard (A–A or B–B). Crossover = A–B or B–A.";
-      } else if(phase===3){
-        hintArea.textContent = "Hint: Roll-over = left and right are reversed (pin 1↔8, 2↔7 ...).";
-      } else if(phase===4){
-        hintArea.textContent = "Hint: Faulty Cable: hanapin ang missing or wrong wires. I-drag ang tamang wire mula sa pool.";
-      }
-      setTimeout(()=>hintArea.textContent="",8000);
-    }
-    // Reward logic
-    async function giveRewardForPhase(phasePoints, phaseCoins) {
-      const username = localStorage.getItem("loggedInUser");
-      if (!username) {
-        console.log("No username found in localStorage. Please login first.");
-        return;
-      }
-      try {
-        const response = await fetch("https://postgres-test-p05s.onrender.com/api/reward", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username,                     // ✅ required
-            points: phasePoints,
-            coins: phaseCoins,
-            reason: `Completed Phase ${phase}`
-          })
-        });
-        const data = await response.json();
-        if (data.success) {
-          console.log(`🎁 Reward Granted: +${phasePoints} Points, +${phaseCoins} Coins for Phase ${phase}`);
-        } else {
-          console.error("Reward API failed:", data);
-        }
-      } catch (err) {
-        console.error("Reward API Error:", err);
-      }
-    }
-    // Tester logic with phases (updated for 4 phases)
-    // Tester logic with phases (updated for 4 phases)
+<!-- Digital Rain Background -->
+<canvas class="digital-rain" id="digitalRain"></canvas>
+
+<!-- Circuit Board Pattern -->
+<div class="circuit-board"></div>
+
+<!-- Circuit Traces -->
+<div class="circuit-traces" id="circuitTraces"></div>
+
+<!-- Floating Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Header with Back Button -->
+<header>
+<div class="back-button" onclick="window.location.href='../levels/networkinglevels.html'">⤺</div>
+<div class="header-title">Ethernet Cable Tester Challenge</div>
+<div class="placeholder"></div>
+</header>
+
+<!-- Instructions -->
+<div class="instructions" id="instructions">
+<h1 style="margin-top: 0;">Ethernet Cable Tester Challenge</h1>
+<p><strong>Instructions:</strong></p>
+<ul>
+<li>Drag and drop wires from the pool to the correct pins on both plugs.</li>
+<li>Complete 4 phases: Straight-through, Crossover, Roll-over, and Fault Detection.</li>
+<li>Each phase requires a different wiring configuration.</li>
+<li>Use the "Show Hint" button if you need help with the wiring pattern.</li>
+<li>Click "Crimp & Test" to check your work and advance to the next phase.</li>
+</ul>
+<div class="tutorial-box" id="tutorialBox">
+<div class="tutorial-step active">👋 Welcome to the Ethernet Cable Tester Challenge!</div>
+<div class="tutorial-step">🔌 Learn to wire different types of Ethernet cables.</div>
+<div class="tutorial-step">🧪 Test your knowledge of network cabling standards.</div>
+<div class="tutorial-step">🏆 Earn points and coins for each completed phase.</div>
+<div class="tutorial-step">▶ Click "Start Game" when ready!</div>
+</div>
+<button class="start-btn" onclick="startGame()">▶ Start Game</button>
+</div>
+
+<!-- Game Section -->
+<div class="game-section" id="gameSection">
+<p class="subtitle">Build the correct cable and test it!</p>
+
+<div class="phase-instruction" id="phase-instruction">
+Phase 1: Build a Straight-through cable (A–A or B–B)
+</div>
+
+<div id="wire-pool"></div>
+
+<div class="container">
+<div class="plug-container">
+<h3 class="plug-title">Left Plug</h3>
+<div class="plug" id="plug-left"></div>
+</div>
+<div class="plug-container">
+<h3 class="plug-title">Right Plug</h3>
+<div class="plug" id="plug-right"></div>
+</div>
+</div>
+
+<div class="game-controls">
+<button class="btn-reset" onclick="resetPlugs()">Reset Plugs</button>
+<button class="btn-test" onclick="testCable()">Crimp & Test</button>
+<button class="btn-test" onclick="showHint()" title="Quick hint">Show Hint</button>
+</div>
+
+<div class="timer" id="timer">Time: 00:00</div>
+
+<div class="progress-container">
+<div class="progress-bar" id="progress-bar"></div>
+</div>
+
+<div class="tester">
+<h3 class="tester-title">Cable Tester</h3>
+<div class="leds">
+<div class="led-column">
+<div class="led-column-title">Left Plug</div>
+<div class="led-row" id="leds-left"></div>
+</div>
+<div class="led-column">
+<div class="led-column-title">Right Plug</div>
+<div class="led-row" id="leds-right"></div>
+</div>
+</div>
+<p id="result"></p>
+<p id="hint-area" class="hint"></p>
+</div>
+
+<div id="scoreboard">
+<div class="score-item">
+<span class="score-label">Points</span>
+<span class="score-value" id="points">0</span>
+</div>
+<div class="score-item">
+<span class="score-label">Coins</span>
+<span class="score-value" id="coins">0</span>
+</div>
+<div class="score-item">
+<span class="score-label">Attempts</span>
+<span class="score-value" id="attempts">0</span>
+</div>
+</div>
+</div>
+
+<script>
+// Create floating particles
+const particlesContainer = document.getElementById('particles');
+const particleCount = 15;
+
+for (let i = 0; i < particleCount; i++) {
+const particle = document.createElement('div');
+particle.className = 'particle';
+
+// Random size between 2px and 6px
+const size = Math.random() * 4 + 2;
+particle.style.width = `${size}px`;
+particle.style.height = `${size}px`;
+
+// Random position
+particle.style.left = `${Math.random() * 100}%`;
+particle.style.top = `${Math.random() * 100}%`;
+
+// Random animation delay
+particle.style.animationDelay = `${Math.random() * 15}s`;
+
+particlesContainer.appendChild(particle);
+}
+
+// Create circuit traces
+const circuitTraces = document.getElementById('circuitTraces');
+const traceCount = 8;
+
+for (let i = 0; i < traceCount; i++) {
+const trace = document.createElement('div');
+trace.className = 'circuit-trace';
+trace.style.top = `${Math.random() * 100}%`;
+trace.style.width = `${Math.random() * 30 + 10}%`;
+trace.style.animationDelay = `${Math.random() * 8}s`;
+trace.style.animationDuration = `${Math.random() * 5 + 5}s`;
+circuitTraces.appendChild(trace);
+}
+
+// Digital Rain Effect
+const rainCanvas = document.getElementById('digitalRain');
+const rainCtx = rainCanvas.getContext('2d');
+
+// Function to set canvas size
+function setCanvasSize() {
+rainCanvas.width = window.innerWidth;
+rainCanvas.height = window.innerHeight;
+}
+
+// Set initial canvas size
+setCanvasSize();
+
+// Characters for the digital rain
+const characters = '01';
+const fontSize = 14;
+let columns = rainCanvas.width / fontSize;
+const drops = [];
+
+// Initialize drops
+for (let i = 0; i < columns; i++) {
+drops[i] = Math.random() * rainCanvas.height;
+}
+
+// Draw the digital rain
+function drawRain() {
+rainCtx.fillStyle = 'rgba(10, 25, 41, 0.05)';
+rainCtx.fillRect(0, 0, rainCanvas.width, rainCanvas.height);
+
+rainCtx.fillStyle = '#00ffff';
+rainCtx.font = `${fontSize}px monospace`;
+
+for (let i = 0; i < drops.length; i++) {
+const text = characters.charAt(Math.floor(Math.random() * characters.length));
+rainCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+if (drops[i] * fontSize > rainCanvas.height && Math.random() > 0.975) {
+drops[i] = 0;
+}
+
+drops[i]++;
+}
+}
+
+// Animation loop for digital rain with reduced frame rate
+let rainAnimationId;
+function startRainAnimation() {
+if (rainAnimationId) {
+cancelAnimationFrame(rainAnimationId);
+}
+
+function animate() {
+drawRain();
+rainAnimationId = requestAnimationFrame(animate);
+}
+
+// Run at lower frame rate to improve performance
+setInterval(() => {
+if (rainAnimationId) {
+animate();
+}
+}, 100);
+}
+
+startRainAnimation();
+
+// Resize canvas when window is resized
+window.addEventListener('resize', () => {
+setCanvasSize();
+// Recalculate columns after resize
+columns = rainCanvas.width / fontSize;
+// Reinitialize drops array for new canvas size
+drops.length = 0;
+for (let i = 0; i < columns; i++) {
+drops[i] = Math.random() * rainCanvas.height;
+}
+});
+
+// Tutorial steps
+const steps = document.querySelectorAll(".tutorial-step");
+let stepIndex = 0;
+setInterval(() => {
+steps.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
+stepIndex = (stepIndex + 1) % steps.length;
+}, 3000);
+
+const wires = [
+{color:"Green/White", code:"gw", bg:"#009900", topColor:"#ffffff", bottomColor:"#009900", abbr:"G/W"},
+{color:"Green", code:"g", bg:"#006600", topColor:"#006600", bottomColor:"#006600", abbr:"G"},
+{color:"Orange/White", code:"ow", bg:"#cc5200", topColor:"#ffffff", bottomColor:"#cc5200", abbr:"O/W"},
+{color:"Blue", code:"b", bg:"#003399", topColor:"#003399", bottomColor:"#003399", abbr:"B"},
+{color:"Blue/White", code:"bw", bg:"#3366cc", topColor:"#ffffff", bottomColor:"#3366cc", abbr:"B/W"},
+{color:"Orange", code:"o", bg:"#cc3300", topColor:"#cc3300", bottomColor:"#cc3300", abbr:"O"},
+{color:"Brown/White", code:"brw", bg:"#996633", topColor:"#ffffff", bottomColor:"#996633", abbr:"Br/W"},
+{color:"Brown", code:"br", bg:"#330000", topColor:"#330000", bottomColor:"#330000", abbr:"Br"}
+];
+
+const standards = {
+A:["gw","g","ow","b","bw","o","brw","br"],
+B:["ow","o","gw","b","bw","g","brw","br"]
+};
+// Roll-over (console) is reverse mapping of A (left) -> reversed(A) (right)
+// we'll accept either orientation (A<->revA or B<->revB)
+function reversed(arr){ return [...arr].slice().reverse(); }
+const standardsExtra = {
+rollA: reversed(standards.A),
+rollB: reversed(standards.B)
+};
+let phase = 1; // now we have 1..4
+let points = 0;
+let coins = 0;
+let attempts = 0;
+let startTime = Date.now();
+let timerInterval;
+
+// Touch drag variables
+let draggedElement = null;
+let touchOffsetX = 0;
+let touchOffsetY = 0;
+let dragGhost = null;
+
+// Start game function
+function startGame() {
+document.getElementById("instructions").style.display = "none";
+const section = document.getElementById("gameSection");
+section.style.display = "flex";
+section.style.animation = "fadeIn 1s ease forwards";
+}
+
+// Start timer
+function startTimer() {
+timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+const elapsed = Math.floor((Date.now() - startTime) / 1000);
+const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+const seconds = (elapsed % 60).toString().padStart(2, '0');
+document.getElementById('timer').textContent = `Time: ${minutes}:${seconds}`;
+}
+
+// Update progress bar (now maps phases to percentages)
+function updateProgress() {
+const progressMap = {1:25,2:50,3:75,4:100};
+const progress = progressMap[phase] || 0;
+document.getElementById('progress-bar').style.width = `${progress}%`;
+}
+
+// Wire pool
+const pool=document.getElementById("wire-pool");
+function populatePool() {
+pool.innerHTML="";
+wires.forEach(w=>{
+const wireDiv = document.createElement("div");
+wireDiv.className = "wire";
+wireDiv.draggable = true;
+wireDiv.dataset.code = w.code;
+
+// Create top part
+const topPart = document.createElement("div");
+topPart.className = "wire-top";
+topPart.style.background = w.topColor;
+
+// Create bottom part
+const bottomPart = document.createElement("div");
+bottomPart.className = "wire-bottom";
+bottomPart.style.background = w.bottomColor;
+
+// Create label
+const label = document.createElement("div");
+label.className = "wire-label";
+label.textContent = w.color;
+
+wireDiv.appendChild(topPart);
+wireDiv.appendChild(bottomPart);
+wireDiv.appendChild(label);
+
+// Desktop drag events
+wireDiv.addEventListener("dragstart", drag);
+
+// Mobile touch events
+wireDiv.addEventListener("touchstart", handleTouchStart, {passive: false});
+wireDiv.addEventListener("touchmove", handleTouchMove, {passive: false});
+wireDiv.addEventListener("touchend", handleTouchEnd, {passive: false});
+
+pool.appendChild(wireDiv);
+});
+}
+populatePool();
+
+// Slots for left/right plugs
+function makePlug(id){
+const plug=document.getElementById(id);
+plug.innerHTML="";
+for(let i=0;i<8;i++){
+const slot=document.createElement("div");
+slot.className="slot";
+slot.dataset.pos=i;
+
+// Add pin number
+const pinLabel = document.createElement("div");
+pinLabel.className="pin-number";
+pinLabel.textContent = i+1;
+slot.appendChild(pinLabel);
+
+// Desktop drag events
+slot.addEventListener("dragover",e=>e.preventDefault());
+slot.addEventListener("drop",drop);
+
+// Mobile touch events
+slot.addEventListener("touchover",e=>e.preventDefault());
+slot.addEventListener("touchenter", highlightSlot);
+slot.addEventListener("touchleave", unhighlightSlot);
+
+plug.appendChild(slot);
+}
+}
+makePlug("plug-left");
+makePlug("plug-right");
+
+// Tester LEDs
+function makeLEDs(id){
+const holder=document.getElementById(id);
+holder.innerHTML="";
+for(let i=0;i<8;i++){
+const led=document.createElement("div");
+led.className="led";
+
+// Add pin number to LED
+const ledLabel = document.createElement("div");
+ledLabel.className="led-label";
+ledLabel.textContent = i+1;
+led.appendChild(ledLabel);
+
+holder.appendChild(led);
+}
+}
+makeLEDs("leds-left");
+makeLEDs("leds-right");
+
+// Desktop drag functions
+function drag(e){
+e.dataTransfer.setData("code",e.target.dataset.code);
+}
+
+function drop(e){
+e.preventDefault();
+// ensure we drop into slot even if child element targeted
+const slot = e.target.closest('.slot');
+if(!slot) return;
+const code=e.dataTransfer.getData("code");
+
+// Find the wire data
+const wireData = wires.find(w => w.code === code);
+if (!wireData) return;
+
+// Remove existing wire if any
+const existingWire = slot.querySelector('.wire');
+if (existingWire) {
+existingWire.remove();
+}
+
+// Create new wire element
+const wireDiv = document.createElement("div");
+wireDiv.className = "wire";
+wireDiv.dataset.code = code;
+
+// Create top part
+const topPart = document.createElement("div");
+topPart.className = "wire-top";
+topPart.style.background = wireData.topColor;
+
+// Create bottom part
+const bottomPart = document.createElement("div");
+bottomPart.className = "wire-bottom";
+bottomPart.style.background = wireData.bottomColor;
+
+// Create label - use abbreviation for slot
+const label = document.createElement("div");
+label.className = "wire-label";
+label.textContent = wireData.abbr;
+
+wireDiv.appendChild(topPart);
+wireDiv.appendChild(bottomPart);
+wireDiv.appendChild(label);
+
+// Add a visual indicator for successful drop
+slot.style.borderColor = "#00ff7f";
+setTimeout(() => {
+slot.style.borderColor = "#555";
+}, 500);
+
+slot.appendChild(wireDiv);
+}
+
+// Mobile touch functions
+function handleTouchStart(e) {
+e.preventDefault();
+
+const touch = e.touches[0];
+draggedElement = e.target.closest('.wire');
+
+if (!draggedElement) return;
+
+// Store the initial touch position
+const rect = draggedElement.getBoundingClientRect();
+touchOffsetX = touch.clientX - rect.left;
+touchOffsetY = touch.clientY - rect.top;
+
+// Create a visual drag ghost
+dragGhost = draggedElement.cloneNode(true);
+dragGhost.classList.add('drag-ghost');
+dragGhost.style.width = rect.width + 'px';
+dragGhost.style.height = rect.height + 'px';
+document.body.appendChild(dragGhost);
+
+// Position the ghost at the touch point
+updateDragGhostPosition(touch.clientX, touch.clientY);
+
+// Store the wire code
+draggedElement.dataset.code = draggedElement.dataset.code;
+}
+
+function handleTouchMove(e) {
+e.preventDefault();
+
+if (!draggedElement || !dragGhost) return;
+
+const touch = e.touches[0];
+updateDragGhostPosition(touch.clientX, touch.clientY);
+
+// Find the element under the touch point
+const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+const slot = elementBelow?.closest('.slot');
+
+// Highlight the slot if we're over one
+document.querySelectorAll('.slot').forEach(s => s.classList.remove('highlight'));
+if (slot) {
+slot.classList.add('highlight');
+}
+}
+
+function handleTouchEnd(e) {
+e.preventDefault();
+
+if (!draggedElement) return;
+
+const touch = e.changedTouches[0];
+const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+const slot = elementBelow?.closest('.slot');
+
+// Remove the drag ghost
+if (dragGhost) {
+dragGhost.remove();
+dragGhost = null;
+}
+
+// Remove highlights
+document.querySelectorAll('.slot').forEach(s => s.classList.remove('highlight'));
+
+// If we're over a slot, drop the wire
+if (slot) {
+const code = draggedElement.dataset.code;
+
+// Find the wire data
+const wireData = wires.find(w => w.code === code);
+if (!wireData) return;
+
+// Remove existing wire if any
+const existingWire = slot.querySelector('.wire');
+if (existingWire) {
+existingWire.remove();
+}
+
+// Create new wire element
+const wireDiv = document.createElement("div");
+wireDiv.className = "wire";
+wireDiv.dataset.code = code;
+
+// Create top part
+const topPart = document.createElement("div");
+topPart.className = "wire-top";
+topPart.style.background = wireData.topColor;
+
+// Create bottom part
+const bottomPart = document.createElement("div");
+bottomPart.className = "wire-bottom";
+bottomPart.style.background = wireData.bottomColor;
+
+// Create label - use abbreviation for slot
+const label = document.createElement("div");
+label.className = "wire-label";
+label.textContent = wireData.abbr;
+
+wireDiv.appendChild(topPart);
+wireDiv.appendChild(bottomPart);
+wireDiv.appendChild(label);
+
+// Add a visual indicator for successful drop
+slot.style.borderColor = "#00ff7f";
+setTimeout(() => {
+slot.style.borderColor = "#555";
+}, 500);
+
+slot.appendChild(wireDiv);
+}
+
+draggedElement = null;
+}
+
+function updateDragGhostPosition(x, y) {
+if (dragGhost) {
+dragGhost.style.left = x + 'px';
+dragGhost.style.top = y + 'px';
+}
+}
+
+function highlightSlot(e) {
+e.target.closest('.slot').classList.add('highlight');
+}
+
+function unhighlightSlot(e) {
+e.target.closest('.slot').classList.remove('highlight');
+}
+
+function resetPlugs(){
+makePlug("plug-left");
+makePlug("plug-right");
+populatePool();
+document.getElementById("result").textContent="";
+document.getElementById("hint-area").textContent = "";
+makeLEDs("leds-left");
+makeLEDs("leds-right");
+
+// Remove any glow effects
+document.querySelectorAll('.plug').forEach(plug => {
+plug.classList.remove('glow-green', 'glow-red');
+});
+}
+
+function updateScoreboard(){
+document.getElementById("points").textContent = points;
+document.getElementById("coins").textContent = coins;
+document.getElementById("attempts").textContent = attempts;
+}
+
+// Create data pulse animation
+function createDataPulse() {
+const leftPlug = document.getElementById('plug-left');
+const rightPlug = document.getElementById('plug-right');
+
+// Create multiple pulses
+for (let i = 0; i < 5; i++) {
+setTimeout(() => {
+const pulse = document.createElement('div');
+pulse.className = 'data-pulse';
+
+// Start at left plug
+const leftRect = leftPlug.getBoundingClientRect();
+pulse.style.left = `${leftRect.left + leftRect.width/2}px`;
+pulse.style.top = `${leftRect.top + leftRect.height/2}px`;
+document.body.appendChild(pulse);
+
+// Animate to right plug
+setTimeout(() => {
+const rightRect = rightPlug.getBoundingClientRect();
+pulse.style.transition = 'all 1s ease-in-out';
+pulse.style.left = `${rightRect.left + rightRect.width/2}px`;
+pulse.style.top = `${rightRect.top + rightRect.height/2}px`;
+pulse.style.opacity = '1';
+
+// End animation
+setTimeout(() => {
+pulse.style.animation = 'pulse 0.5s forwards';
+setTimeout(() => pulse.remove(), 500);
+}, 1000);
+}, 100);
+}, i * 300);
+}
+}
+// Helper: get player arrays
+function getPlayerArrays(){
+const slotsLeft=[...document.querySelectorAll("#plug-left .slot")];
+const slotsRight=[...document.querySelectorAll("#plug-right .slot")];
+const playerLeft=slotsLeft.map(s=>s.querySelector('.wire')?.dataset.code || null);
+const playerRight=slotsRight.map(s=>s.querySelector('.wire')?.dataset.code || null);
+return {playerLeft, playerRight, slotsLeft, slotsRight};
+}
+// Continuity check (loose): each left wire must exist somewhere on right (used by original behavior)
+function continuityCheck(playerLeft, playerRight){
+for(let i=0;i<8;i++){
+const code = playerLeft[i];
+if(!code) return false; // missing wire
+const matchIndex = playerRight.indexOf(code);
+if(matchIndex === -1) return false; // not connected
+}
+return true;
+}
+// Exact straight: same sequence (A or B)
+function isStraightExact(playerLeft, playerRight){
+return (JSON.stringify(playerLeft) === JSON.stringify(standards.A) &&
+JSON.stringify(playerRight) === JSON.stringify(standards.A)) ||
+(JSON.stringify(playerLeft) === JSON.stringify(standards.B) &&
+JSON.stringify(playerRight) === JSON.stringify(standards.B));
+}
+// Exact crossover (A->B or B->A)
+function isCrossoverExact(playerLeft, playerRight){
+return (JSON.stringify(playerLeft) === JSON.stringify(standards.A) &&
+JSON.stringify(playerRight) === JSON.stringify(standards.B)) ||
+(JSON.stringify(playerLeft) === JSON.stringify(standards.B) &&
+JSON.stringify(playerRight) === JSON.stringify(standards.A));
+}
+// Roll-over (console) check: left = A and right = reversed(A) or left = B and right = reversed(B)
+function isRollOver(playerLeft, playerRight){
+return (JSON.stringify(playerLeft) === JSON.stringify(standards.A) &&
+JSON.stringify(playerRight) === JSON.stringify(standardsExtra.rollA)) ||
+(JSON.stringify(playerLeft) === JSON.stringify(standards.B) &&
+JSON.stringify(playerRight) === JSON.stringify(standardsExtra.rollB)) ||
+// allow the other orientation (reversed on left)
+(JSON.stringify(playerRight) === JSON.stringify(standards.A) &&
+JSON.stringify(playerLeft) === JSON.stringify(standardsExtra.rollA)) ||
+(JSON.stringify(playerRight) === JSON.stringify(standards.B) &&
+JSON.stringify(playerLeft) === JSON.stringify(standardsExtra.rollB));
+}
+// Advanced sequencing check: continuity + exact ordering for LEDs (left pins must map to right pins in same order)
+function advancedSequenceCheck(playerLeft, playerRight){
+// require no missing wires
+if(playerLeft.includes(null) || playerRight.includes(null)) return false;
+// require the right to be exact match with left (straight-through orientation) OR exact cross-over?
+// For advanced we'll require exact straight-through (same index) and the LED sequence must match 1..8
+for(let i=0;i<8;i++){
+if(playerLeft[i] !== playerRight[i]) return false;
+}
+return true;
+}
+// Inject faults for Phase 4: add 1-2 faults (missing or wrong wire)
+function injectFaults(){
+// First pre-populate a correct straight cable (choose random A or B)
+resetPlugs(); // creates empty slots and pool
+const use = Math.random() < 0.5 ? 'A' : 'B';
+const leftSeq = standards[use];
+const rightSeq = standards[use];
+// Fill slots with correct wires
+const leftSlots = document.querySelectorAll('#plug-left .slot');
+const rightSlots = document.querySelectorAll('#plug-right .slot');
+for(let i=0;i<8;i++){
+placeWireInSlot(leftSeq[i], leftSlots[i]);
+placeWireInSlot(rightSeq[i], rightSlots[i]);
+}
+// Now choose 1-2 faults
+const faultCount = Math.random() < 0.7 ? 1 : 2;
+const indices = [];
+while(indices.length < faultCount){
+const idx = Math.floor(Math.random()*8);
+if(!indices.includes(idx)) indices.push(idx);
+}
+indices.forEach(idx=>{
+const kind = Math.random() < 0.5 ? 'missing' : 'wrong';
+if(kind === 'missing'){
+// remove wire from one side (player must add it back)
+const side = Math.random() < 0.5 ? 'left' : 'right';
+const slot = side==='left' ? document.querySelectorAll('#plug-left .slot')[idx] : document.querySelectorAll('#plug-right .slot')[idx];
+const w = slot.querySelector('.wire');
+if(w) w.remove();
+} else {
+// place a wrong wire (swap with another random code)
+const wrongCode = wires.filter(w=>w.code !== leftSeq[idx])[Math.floor(Math.random()*7)].code;
+const side = Math.random() < 0.5 ? 'left' : 'right';
+const slot = side==='left' ? document.querySelectorAll('#plug-left .slot')[idx] : document.querySelectorAll('#plug-right .slot')[idx];
+// replace with wrong
+const existing = slot.querySelector('.wire'); if(existing) existing.remove();
+placeWireInSlot(wrongCode, slot);
+}
+});
+document.getElementById('result').textContent = `⚠️ Faults injected: ${indices.length} issue(s). Ayusin ang cable bago mag-test.`;
+document.getElementById('result').className = "error";
+}
+// Helper to place a wire element into a slot by code
+function placeWireInSlot(code, slot){
+const wireData = wires.find(w => w.code === code);
+if(!wireData) return;
+const existing = slot.querySelector('.wire'); if(existing) existing.remove();
+const wireDiv = document.createElement("div");
+wireDiv.className = "wire";
+wireDiv.dataset.code = code;
+const topPart = document.createElement("div"); topPart.className = "wire-top"; topPart.style.background = wireData.topColor;
+const bottomPart = document.createElement("div"); bottomPart.className = "wire-bottom"; bottomPart.style.background = wireData.bottomColor;
+const label = document.createElement("div"); label.className = "wire-label"; label.textContent = wireData.abbr;
+wireDiv.appendChild(topPart); wireDiv.appendChild(bottomPart); wireDiv.appendChild(label);
+slot.appendChild(wireDiv);
+}
+// Show hint
+function showHint(){
+const hintArea = document.getElementById('hint-area');
+if(phase===1 || phase===2){
+hintArea.textContent = "Hint: Straight-through = Both ends same standard (A–A or B–B). Crossover = A–B or B–A.";
+} else if(phase===3){
+hintArea.textContent = "Hint: Roll-over = left and right are reversed (pin 1↔8, 2↔7 ...).";
+} else if(phase===4){
+hintArea.textContent = "Hint: Faulty Cable: hanapin ang missing or wrong wires. I-drag ang tamang wire mula sa pool.";
+}
+setTimeout(()=>hintArea.textContent="",8000);
+}
+// Reward logic
+async function giveRewardForPhase(phasePoints, phaseCoins) {
+const username = localStorage.getItem("loggedInUser");
+if (!username) {
+console.log("No username found in localStorage. Please login first.");
+return;
+}
+try {
+const response = await fetch("https://postgres-test-p05s.onrender.com/api/reward", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+username, // ✅ required
+points: phasePoints,
+coins: phaseCoins,
+reason: `Completed Phase ${phase}`
+})
+});
+const data = await response.json();
+if (data.success) {
+console.log(`🎁 Reward Granted: +${phasePoints} Points, +${phaseCoins} Coins for Phase ${phase}`);
+} else {
+console.error("Reward API failed:", data);
+}
+} catch (err) {
+console.error("Reward API Error:", err);
+}
+}
+// Tester logic with phases (updated for 4 phases)
 async function testCable(){
-  // Increment attempts
-  attempts++;
-  updateScoreboard();
-  
-  const {playerLeft, playerRight, slotsLeft, slotsRight} = getPlayerArrays();
-  const ledsLeft=[...document.querySelectorAll("#leds-left .led")];
-  const ledsRight=[...document.querySelectorAll("#leds-right .led")];
-  
-  // Reset all LEDs
-  ledsLeft.forEach(l=>l.classList.remove("on"));
-  ledsRight.forEach(l=>l.classList.remove("on"));
-  
-  // Remove any glow effects
-  document.querySelectorAll('.plug').forEach(plug => {
-    plug.classList.remove('glow-green', 'glow-red');
-  });
-  
-  document.getElementById("result").textContent="Testing...";
-  document.getElementById("result").className = "";
-  
-  // Evaluate based on phase first
-  let isCorrect = false;
-  
-  if(phase===1){
-    // Straight-through required (exact sequence check)
-    isCorrect = isStraightExact(playerLeft, playerRight);
-    if(isCorrect){
-      points += 760;
-      coins += 380;
-      updateScoreboard();
-      updateProgress();
-      document.getElementById("result").textContent =
-        "✅ Correct! Straight-through cable built.";
-      document.getElementById("result").className = "success";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-      
-      // Give reward for this phase
-      await giveRewardForPhase(760, 380);
-      
-      // Show LED animation only for correct configuration
-      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
-      createDataPulse();
-      
-      // Next phase
-      setTimeout(() => {
-        phase = 2;
-        document.getElementById("phase-instruction").textContent =
-          "Phase 2: Build a Crossover cable (A–B)";
-        resetPlugs();
-        updateProgress();
-      }, 1200);
-    } else {
-      document.getElementById("result").textContent =
-        "❌ Wrong wiring for Straight-through. Try again!";
-      document.getElementById("result").className = "error";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-      
-      // Show error pattern - flash all LEDs briefly then turn off
-      await showErrorPattern(ledsLeft, ledsRight);
-    }
-  } else if(phase===2){
-    isCorrect = isCrossoverExact(playerLeft, playerRight);
-    if(isCorrect){
-      points += 760;
-      coins += 380;
-      updateScoreboard();
-      updateProgress();
-      document.getElementById("result").textContent =
-        "✅ Correct! Crossover cable built.";
-      document.getElementById("result").className = "success";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-      
-      // Give reward for this phase
-      await giveRewardForPhase(760, 380);
-      
-      // Show LED animation only for correct configuration
-      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
-      createDataPulse();
-      
-      // Move to phase 3 (Roll-over)
-      setTimeout(() => {
-        phase = 3;
-        document.getElementById("phase-instruction").textContent =
-          "Phase 3: Build a Roll-over cable (Console cable) — reversed pins (1↔8, 2↔7...)";
-        resetPlugs();
-        updateProgress();
-      }, 1200);
-    } else {
-      document.getElementById("result").textContent =
-        "❌ Wrong wiring for Crossover. Try again!";
-      document.getElementById("result").className = "error";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-      
-      // Show error pattern - flash all LEDs briefly then turn off
-      await showErrorPattern(ledsLeft, ledsRight);
-    }
-  } else if(phase===3){
-    isCorrect = isRollOver(playerLeft, playerRight);
-    if(isCorrect){
-      points += 760;
-      coins += 380;
-      updateScoreboard();
-      updateProgress();
-      document.getElementById("result").textContent =
-        "✅ Correct! Roll-over (Console) cable built.";
-      document.getElementById("result").className = "success";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-      
-      // Give reward for this phase
-      await giveRewardForPhase(760, 380);
-      
-      // Show LED animation only for correct configuration
-      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
-      createDataPulse();
-      
-      // Move to phase 4 (Faulty Detection)
-      setTimeout(() => {
-        phase = 4;
-        document.getElementById("phase-instruction").textContent =
-          "Phase 4: Faulty Cable Detection — fix the injected faults then test";
-        // inject faults into plugs for player to repair
-        injectFaults();
-        updateProgress();
-      }, 1200);
-    } else {
-      document.getElementById("result").textContent =
-        "❌ Wrong wiring for Roll-over. Try again!";
-      document.getElementById("result").className = "error";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-      
-      // Show error pattern - flash all LEDs briefly then turn off
-      await showErrorPattern(ledsLeft, ledsRight);
-    }
-  } else if(phase===4){
-    // For phase 4, require continuity EXACT (i.e., no missing, every left should have corresponding right)
-    isCorrect = continuityCheck(playerLeft, playerRight);
-    if(isCorrect){
-      points += 760;
-      coins += 380;
-      updateScoreboard();
-      updateProgress();
-      document.getElementById("result").textContent =
-        "🎉 All phases complete! Advanced sequencing passed. +3040 points, +1520 coins";
-      document.getElementById("result").className = "success";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
-      
-      // Call reward function for final phase
-      await giveRewardForPhase(760, 380);
-      
-      // Show LED animation only for correct configuration
-      await showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight);
-      createDataPulse();
-      
-      // Redirect to levels page after reward
-      setTimeout(() => {
-        window.location.href = "../levels/networkinglevels.html";
-      }, 2000);
-    } else {
-      document.getElementById("result").textContent =
-        "❌ Faults still present. Hanapin at ayusin (missing/wrong wires).";
-      document.getElementById("result").className = "error";
-      document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
-      
-      // Show error pattern - flash all LEDs briefly then turn off
-      await showErrorPattern(ledsLeft, ledsRight);
-    }
-  } else {
-    document.getElementById("result").textContent = "Unknown phase.";
-  }
+// Increment attempts
+attempts++;
+updateScoreboard();
+
+const {playerLeft, playerRight, slotsLeft, slotsRight} = getPlayerArrays();
+const ledsLeft=[...document.querySelectorAll("#leds-left .led")];
+const ledsRight=[...document.querySelectorAll("#leds-right .led")];
+
+// Reset all LEDs
+ledsLeft.forEach(l=>l.classList.remove("on"));
+ledsRight.forEach(l=>l.classList.remove("on"));
+
+// Remove any glow effects
+document.querySelectorAll('.plug').forEach(plug => {
+plug.classList.remove('glow-green', 'glow-red');
+});
+
+document.getElementById("result").textContent="Testing...";
+document.getElementById("result").className = "";
+
+// Show actual continuity on LEDs regardless of phase
+for(let i=0;i<8;i++){
+await new Promise(r=>setTimeout(r,300));
+ledsLeft[i].classList.add("on");
+const codeLeft = playerLeft[i];
+if(codeLeft){
+// Find all positions where this wire exists on the right
+const rightPositions = [];
+playerRight.forEach((code, idx) => {
+if(code === codeLeft) {
+rightPositions.push(idx);
+}
+});
+
+// Light up all matching positions on the right
+rightPositions.forEach(pos => {
+ledsRight[pos].classList.add("on");
+});
+}
 }
 
-// New function to show LED pattern for correct configurations
-async function showLEDPattern(playerLeft, playerRight, ledsLeft, ledsRight) {
-  // Show actual continuity on LEDs for correct configuration
-  for(let i=0;i<8;i++){
-    await new Promise(r=>setTimeout(r,300));
-    ledsLeft[i].classList.add("on");
-    const codeLeft = playerLeft[i];
-    if(codeLeft){
-      // Find all positions where this wire exists on the right
-      const rightPositions = [];
-      playerRight.forEach((code, idx) => {
-        if(code === codeLeft) {
-          rightPositions.push(idx);
-        }
-      });
-      
-      // Light up all matching positions on the right
-      rightPositions.forEach(pos => {
-        ledsRight[pos].classList.add("on");
-      });
-    }
-  }
+// Evaluate based on phase
+if(phase===1){
+// Straight-through required (loose: exact sequence check same as original behavior)
+const isStraight = isStraightExact(playerLeft, playerRight);
+if(isStraight){
+points += 760;
+coins += 380;
+updateScoreboard();
+updateProgress();
+document.getElementById("result").textContent =
+"✅ Correct! Straight-through cable built.";
+document.getElementById("result").className = "success";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
+createDataPulse();
+// Give reward for this phase
+await giveRewardForPhase(760, 380);
+// Next phase
+setTimeout(() => {
+phase = 2;
+document.getElementById("phase-instruction").textContent =
+"Phase 2: Build a Crossover cable (A–B)";
+resetPlugs();
+updateProgress();
+}, 1200);
+} else {
+document.getElementById("result").textContent =
+"❌ Wrong wiring for Straight-through. Try again!";
+document.getElementById("result").className = "error";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+}
+} else if(phase===2){
+const isCrossover = isCrossoverExact(playerLeft, playerRight);
+if(isCrossover){
+points += 760;
+coins += 380;
+updateScoreboard();
+updateProgress();
+document.getElementById("result").textContent =
+"✅ Correct! Crossover cable built.";
+document.getElementById("result").className = "success";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
+createDataPulse();
+// Give reward for this phase
+await giveRewardForPhase(760, 380);
+// Move to phase 3 (Roll-over)
+setTimeout(() => {
+phase = 3;
+document.getElementById("phase-instruction").textContent =
+"Phase 3: Build a Roll-over cable (Console cable) — reversed pins (1↔8, 2↔7...)";
+resetPlugs();
+updateProgress();
+}, 1200);
+} else {
+document.getElementById("result").textContent =
+"❌ Wrong wiring for Crossover. Try again!";
+document.getElementById("result").className = "error";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+}
+} else if(phase===3){
+const isRoll = isRollOver(playerLeft, playerRight);
+if(isRoll){
+points += 760;
+coins += 380;
+updateScoreboard();
+updateProgress();
+document.getElementById("result").textContent =
+"✅ Correct! Roll-over (Console) cable built.";
+document.getElementById("result").className = "success";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
+createDataPulse();
+// Give reward for this phase
+await giveRewardForPhase(760, 380);
+// Move to phase 4 (Faulty Detection)
+setTimeout(() => {
+phase = 4;
+document.getElementById("phase-instruction").textContent =
+"Phase 4: Faulty Cable Detection — fix the injected faults then test";
+// inject faults into plugs for player to repair
+injectFaults();
+updateProgress();
+}, 1200);
+} else {
+document.getElementById("result").textContent =
+"❌ Wrong wiring for Roll-over. Try again!";
+document.getElementById("result").className = "error";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+}
+} else if(phase===4){
+// For phase 4, require continuity EXACT (i.e., no missing, every left should have corresponding right)
+const continuity = continuityCheck(playerLeft, playerRight);
+if(continuity){
+points += 760;
+coins += 380;
+updateScoreboard();
+updateProgress();
+document.getElementById("result").textContent =
+"🎉 All phases complete! Advanced sequencing passed. +3040 points, +1520 coins";
+document.getElementById("result").className = "success";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-green'); });
+createDataPulse();
+// Call reward function for final phase
+await giveRewardForPhase(760, 380);
+// Redirect to levels page after reward
+setTimeout(() => {
+window.location.href = "../levels/networkinglevels.html";
+}, 2000);
+} else {
+document.getElementById("result").textContent =
+"❌ Faults still present. Hanapin at ayusin (missing/wrong wires).";
+document.getElementById("result").className = "error";
+document.querySelectorAll('.plug').forEach(plug => { plug.classList.add('glow-red'); });
+}
+} else {
+document.getElementById("result").textContent = "Unknown phase.";
+}
 }
 
-// New function to show error pattern for incorrect configurations
-async function showErrorPattern(ledsLeft, ledsRight) {
-  // Turn all LEDs on briefly to indicate error
-  ledsLeft.forEach(l=>l.classList.add("on"));
-  ledsRight.forEach(l=>l.classList.add("on"));
-  
-  await new Promise(r=>setTimeout(r,500));
-  
-  // Turn all LEDs off
-  ledsLeft.forEach(l=>l.classList.remove("on"));
-  ledsRight.forEach(l=>l.classList.remove("on"));
-}
-    // Initialize game
-    startTimer();
-    updateScoreboard();
-    updateProgress();
-  </script>
+// Initialize game
+startTimer();
+updateScoreboard();
+updateProgress();
+</script>
 </body>
 </html>
